@@ -1,0 +1,49 @@
+group 'com.engagelab.privates.flutter_plugin_engagelab'
+version '1.0'
+
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+        maven { url 'https://developer.huawei.com/repo/' }
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:4.1.0'
+    }
+}
+
+rootProject.allprojects {
+    repositories {
+        google()
+        mavenCentral()
+        maven { url 'https://developer.huawei.com/repo/' }
+    }
+}
+
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 30
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    defaultConfig {
+        minSdkVersion 19
+    }
+}
+dependencies {
+    implementation 'com.engagelab:engagelab:3.0.0.release'
+    implementation 'com.engagelab.plugin:google:3.0.0.release'
+    implementation 'com.google.firebase:firebase-messaging:23.0.8'
+    implementation 'com.engagelab.plugin:huawei:3.0.0.release'
+    implementation 'com.huawei.hms:push:6.5.0.300'
+    implementation 'com.engagelab.plugin:mi_global:3.0.0.release'
+    implementation 'com.engagelab.plugin:meizu:3.0.0.release'
+    implementation 'com.engagelab.plugin:oppo:3.0.0.release'
+    implementation 'com.engagelab.plugin:oppo_msp_push:3.0.0.release'
+    implementation 'com.engagelab.plugin:vivo:3.0.0.release'
+}

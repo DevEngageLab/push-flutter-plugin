@@ -1,0 +1,30 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.engagelab.privates.flutter_plugin_engagelab">
+
+    <application>
+
+        <!-- 由于此类具有长连接功能，手机厂商省电优化时可能直接杀死包名带Engagelab字样的service -->
+        <!-- 所以需要开发者继承com.engagelab.app.component.MTCommonService，提升长连接存活率，已达到提高消息到达率的目的 -->
+        <service
+            android:name="com.engagelab.privates.flutter_plugin_engagelab.UserService"
+            android:exported="false"
+            android:process="${ENGAGELAB_PRIVATES_PROCESS}">
+            <intent-filter>
+                <action android:name="com.engagelab.privates.intent.USER_SERVICE" />
+            </intent-filter>
+        </service>
+
+        <!-- 用于接收Engagelab业务的回调，包含了长连接状态/通知开关状态/通知消息到达/通知消息点击/通知消息删除/自定义消息/厂商token回调 -->
+        <!-- 不需要配置子进程，此回调中在主进程中，方便业务操作 -->
+        <receiver
+            android:name="com.engagelab.privates.flutter_plugin_engagelab.UserReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.engagelab.privates.intent.USER_RECEIVER" />
+            </intent-filter>
+        </receiver>
+
+    </application>
+    <!-- 必须，网络权限 -->
+    <uses-permission android:name="android.permission.INTERNET" />
+</manifest>
