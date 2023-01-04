@@ -1,15 +1,66 @@
 # flutter_plugin_engagelab
 
-A new Flutter plugin.
+### 安装
 
-## Getting Started
+在工程 pubspec.yaml 中加入 dependencies
 
-This project is a starting point for a Flutter
-[plug-in package](https://flutter.dev/developing-packages/),
-a specialized package that includes platform-specific implementation code for
-Android and/or iOS.
+```
+  
+//github  集成
+dependencies:
+  flutter_plugin_engagelab:
+    git:
+      url: git://github.com/DevEngageLab/push-flutter-plugin.git
+      ref: main
+      
+// pub 集成
+dependencies:
+  flutter_plugin_engagelab: 1.0.0
+```
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+### 配置
+
+##### Android:
+
+在 `/android/app/build.gradle` 中添加下列代码：
+
+```groovy
+android: {
+  ....
+  defaultConfig {
+    applicationId "替换成自己应用 ID"
+    ....
+    manifestPlaceholders = [
+                ENGAGELAB_PRIVATES_APPKEY : "你的appkey",
+                ENGAGELAB_PRIVATES_CHANNEL: "developer",
+                ENGAGELAB_PRIVATES_PROCESS: ":remote",
+                XIAOMI_GLOBAL_APPID            : "",//小米厂商，有就填自己的，没有就不用填，保留为""
+                XIAOMI_GLOBAL_APPKEY           : "",//小米厂商，有就填自己的，没有就不用填，保留为""
+                MEIZU_APPID            : "",//魅族厂商，有就填自己的，没有就不用填，保留为""
+                MEIZU_APPKEY           : "",//魅族厂商，有就填自己的，没有就不用填，保留为""
+                OPPO_APPID             : "",//OPPO厂商，有就填自己的，没有就不用填，保留为""
+                OPPO_APPKEY            : "",//OPPO厂商，有就填自己的，没有就不用填，保留为""
+                OPPO_APPSECRET         : "",//OPPO厂商，有就填自己的，没有就不用填，保留为""
+                VIVO_APPID             : "",//VIVO厂商，有就填自己的，没有就不用填，保留为""
+                VIVO_APPKEY            : ""//VIVO厂商，有就填自己的，没有就不用填，保留为""
+        ]
+  }    
+}
+```
+
+##### iOS:
+
+- 在 xcode8 之后需要点开推送选项： TARGETS -> Capabilities -> Push Notification 设为 on 状态
+
+### 使用
+
+```dart
+import 'package:flutter_plugin_engagelab/flutter_plugin_engagelab.dart';
+```
+
+### APIs
+
+**注意** : 需要先调用 FlutterPluginEngagelab.init 来初始化插件，才能保证其他功能正常工作。
+
+ [参考](./documents/APIs.md)
 

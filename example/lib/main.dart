@@ -57,7 +57,7 @@ class _MyAppState extends State<MyApp> {
     FlutterPluginEngagelab.configDebugMode(true);
     if (Platform.isIOS) {
       FlutterPluginEngagelab.initIos(
-        appKey: "fcc545917674d6f06c141704",
+        appKey: "你的appkey",
         channel: "testChannel",
       );
     } else if (Platform.isAndroid) {

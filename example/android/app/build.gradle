@@ -51,8 +51,7 @@ android {
                 OPPO_APPKEY            : "",
                 OPPO_APPSECRET         : "",
                 VIVO_APPID             : "",
-                VIVO_APPKEY            : "",
-                HONOR_APPID            : ""
+                VIVO_APPKEY            : ""
         ]
     }
 
