@@ -295,7 +295,9 @@ NSDictionary *_completeLaunchNotification;
 
 - (void)networkDidLogin:(NSNotification *)notification {
   NSLog(@"networkDidLogin 登录成功%@ \n", notification.userInfo.description);
-    [self callBackChannel:@"networkDidLogin" arguments:@"true"];
+  NSMutableDictionary *data = @{}.mutableCopy;
+  data[@"enable"] = @YES;
+  [self callBackChannel:@"networkDidLogin" arguments:[data toJsonString]];
 }
 
 

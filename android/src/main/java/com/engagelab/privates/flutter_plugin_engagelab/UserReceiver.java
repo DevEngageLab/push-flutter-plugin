@@ -23,7 +23,7 @@ public class UserReceiver extends MTCommonReceiver {
     @Override
     public void onNotificationStatus(Context context, boolean enable) {
         FlutterPluginEngagelabPlugin.logD(TAG, "onNotificationStatus:" + enable);
-        FlutterPluginEngagelabPlugin.onCommonReceiver("onNotificationStatus", enable + "");
+        FlutterPluginEngagelabPlugin.onCommonReceiver("onNotificationStatus", MsgToJson.booleanToJson(enable));
     }
 
     /**
@@ -35,7 +35,7 @@ public class UserReceiver extends MTCommonReceiver {
     @Override
     public void onConnectStatus(Context context, boolean enable) {
         FlutterPluginEngagelabPlugin.logD(TAG, "onConnectState:" + enable);
-        FlutterPluginEngagelabPlugin.onCommonReceiver("onConnectStatus", enable + "");
+        FlutterPluginEngagelabPlugin.onCommonReceiver("onConnectStatus", MsgToJson.booleanToJson(enable));
     }
 
     /**
@@ -47,7 +47,7 @@ public class UserReceiver extends MTCommonReceiver {
     @Override
     public void onNotificationArrived(Context context, NotificationMessage notificationMessage) {
         FlutterPluginEngagelabPlugin.logD(TAG, "onNotificationArrived:" + notificationMessage.toString());
-        FlutterPluginEngagelabPlugin.onCommonReceiver("onNotificationArrived", notificationMessage.toString());
+        FlutterPluginEngagelabPlugin.onCommonReceiver("onNotificationArrived", MsgToJson.notificationMessageToJson(notificationMessage));
     }
 
     /**
@@ -59,7 +59,7 @@ public class UserReceiver extends MTCommonReceiver {
     @Override
     public void onNotificationClicked(Context context, NotificationMessage notificationMessage) {
         FlutterPluginEngagelabPlugin.logD(TAG, "onNotificationClicked:" + notificationMessage.toString());
-        FlutterPluginEngagelabPlugin.onCommonReceiver("onNotificationClicked", notificationMessage.toString());
+        FlutterPluginEngagelabPlugin.onCommonReceiver("onNotificationClicked", MsgToJson.notificationMessageToJson(notificationMessage));
     }
 
     /**
@@ -71,7 +71,7 @@ public class UserReceiver extends MTCommonReceiver {
     @Override
     public void onNotificationDeleted(Context context, NotificationMessage notificationMessage) {
         FlutterPluginEngagelabPlugin.logD(TAG, "onNotificationDeleted:" + notificationMessage.toString());
-        FlutterPluginEngagelabPlugin.onCommonReceiver("onNotificationDeleted", notificationMessage.toString());
+        FlutterPluginEngagelabPlugin.onCommonReceiver("onNotificationDeleted", MsgToJson.notificationMessageToJson(notificationMessage));
     }
 
     /**
@@ -83,7 +83,7 @@ public class UserReceiver extends MTCommonReceiver {
     @Override
     public void onCustomMessage(Context context, CustomMessage customMessage) {
         FlutterPluginEngagelabPlugin.logD(TAG, "onCustomMessage:" + customMessage.toString());
-        FlutterPluginEngagelabPlugin.onCommonReceiver("onCustomMessage", customMessage.toString());
+        FlutterPluginEngagelabPlugin.onCommonReceiver("onCustomMessage", MsgToJson.customMessageToJson(customMessage));
     }
 
     /**
@@ -95,7 +95,7 @@ public class UserReceiver extends MTCommonReceiver {
     @Override
     public void onPlatformToken(Context context, PlatformTokenMessage platformTokenMessage) {
         FlutterPluginEngagelabPlugin.logD(TAG, "onPlatformToken:" + platformTokenMessage.toString());
-        FlutterPluginEngagelabPlugin.onCommonReceiver("onPlatformToken", platformTokenMessage.toString());
+        FlutterPluginEngagelabPlugin.onCommonReceiver("onPlatformToken", MsgToJson.platformTokenMessageToJson(platformTokenMessage));
     }
 
 }

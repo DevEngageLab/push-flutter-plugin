@@ -43,14 +43,12 @@ class _MyAppState extends State<MyApp> {
         // debugLable = "flutter onMTCommonReceiver: $message";
         if (Comparable.compare(event_name, "onConnectStatus") == 0 ||
             Comparable.compare(event_name, "networkDidLogin") == 0) {
-          if (Comparable.compare(event_data, "true") == 0) {
             FlutterPluginEngagelab.getRegistrationId().then((rid) {
               FlutterPluginEngagelab.printMy("flutter get registration id : $rid");
               setState(() {
                 _platformVersion = "$rid";
               });
             });
-          }
         }
       });
     });
