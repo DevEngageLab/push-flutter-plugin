@@ -41,13 +41,13 @@ NSDictionary *_completeLaunchNotification;
   FlutterPluginEngagelabPlugin* instance = [[FlutterPluginEngagelabPlugin alloc] init];
 //  [registrar addMethodCallDelegate:instance channel:channel];
     instance.channel = channel;
-    
+
     [registrar addApplicationDelegate:instance];
     [registrar addMethodCallDelegate:instance channel:channel];
 }
 
 - (void)handleMethodCall:(FlutterMethodCall*)call result:(FlutterResult)result {
-    
+
 //  if ([@"getPlatformVersion" isEqualToString:call.method]) {
 //    result([@"iOS " stringByAppendingString:[[UIDevice currentDevice] systemVersion]]);
 //  } else {
@@ -55,7 +55,7 @@ NSDictionary *_completeLaunchNotification;
 //  }
     NSString* name = call.method;
     NSArray * data =  call.arguments;
-    
+
     if ([name isEqualToString:(@"init")]) {
         [self initSdk:data result:result];
       }else if ([name isEqualToString:(@"getRegistrationId")]){
@@ -66,8 +66,10 @@ NSDictionary *_completeLaunchNotification;
           [self resetBadge];
       }else if ([name isEqualToString:(@"configDebugMode")]){
           [self setDebugMode:data];
+      }else if ([name isEqualToString:(@"checkNotificationAuthorization")]){
+          [self checkNotificationAuthorization];
       }else{
-          
+
             result(FlutterMethodNotImplemented);
       }
 }
@@ -165,12 +167,10 @@ NSDictionary *_completeLaunchNotification;
         //    }
         }
         [MTPushService registerForRemoteNotificationConfig:entity delegate:self];
-    
+
 //    [[UIApplication sharedApplication] registerForRemoteNotifications];
 
 
-      // 检测通知授权情况。可选项，不一定要放在此处，可以运行一定时间后再调用
-      [self performSelector:@selector(checkNotificationAuthorization) withObject:nil afterDelay:10];
 
 
   NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
@@ -263,7 +263,7 @@ NSDictionary *_completeLaunchNotification;
         }
 
     [self callBackChannel:@"didReceiveNotificationResponse" arguments:[[self jpushFormatAPNSDic:userInfo] toJsonString]];
-    
+
         completionHandler();  // 系统要求执行这个方法
 }
 
@@ -305,6 +305,7 @@ NSDictionary *_completeLaunchNotification;
 
 // 检测通知权限授权情况
 - (void)checkNotificationAuthorization {
+    NSLog(@"checkNotificationAuthorization  \n");
   [MTPushService requestNotificationAuthorization:^(MTPushAuthorizationStatus status) {
     // run in main thread, you can custom ui
     NSLog(@"notification authorization status:%lu", status);
@@ -313,10 +314,17 @@ NSDictionary *_completeLaunchNotification;
 }
 // 通知未授权时提示，是否进入系统设置允许通知，仅供参考
 - (void)alertNotificationAuthorization:(MTPushAuthorizationStatus)status {
-  if (status < MTPushAuthorizationStatusAuthorized) {
-    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"允许通知" message:@"是否进入设置允许通知？" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK", nil];
-    [alertView show];
-  }
+    NSMutableDictionary *data = @{}.mutableCopy;
+    if (status < MTPushAuthorizationStatusAuthorized) {
+        //不同意
+        data[@"enable"] = @NO;
+    } else {
+        //同意
+        data[@"enable"] = @YES;
+    }
+
+    NSLog(@"checkNotificationAuthorization data: %@ \n", data);
+    [self callBackChannel:@"checkNotificationAuthorization" arguments:[data toJsonString]];
 }
 
 // log NSSet with UTF8

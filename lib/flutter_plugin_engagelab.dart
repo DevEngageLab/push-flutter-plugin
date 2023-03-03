@@ -362,4 +362,13 @@ class FlutterPluginEngagelab {
     printMy("uploadPlatformToken");
     _channel.invokeMethod("uploadPlatformToken", [platform, token, region]);
   }
+
+
+  /**
+   * 检测通知权限授权情况
+   */
+  static checkNotificationAuthorizationIos(){
+    printMy("checkNotificationAuthorizationIos");
+    _channel.invokeMethod("checkNotificationAuthorization", []);
+  }
 }

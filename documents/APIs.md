@@ -22,6 +22,7 @@
       - "didReceiveNotificationResponse":通知消息点击回调，内容为通知消息体
       - "networkDidReceiveMessage":自定义消息回调，内容为通知消息体
       - "networkDidLogin":登陆成功
+      - "checkNotificationAuthorization":检测通知权限授权情况
   - message["event_data"]: 为对应内容
 
 

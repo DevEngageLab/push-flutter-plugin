@@ -58,6 +58,7 @@ class _MyAppState extends State<MyApp> {
         appKey: "你的appkey",
         channel: "testChannel",
       );
+      FlutterPluginEngagelab.checkNotificationAuthorizationIos();
     } else if (Platform.isAndroid) {
       FlutterPluginEngagelab.initAndroid();
     }
