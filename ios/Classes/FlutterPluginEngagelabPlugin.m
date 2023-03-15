@@ -123,6 +123,7 @@ NSDictionary *_completeLaunchNotification;
 -(void)setBadge:(NSArray* )data {
     int value = [[data objectAtIndex:0] intValue];
     NSLog(@"setBadge value: %d",value);
+    [UIApplication sharedApplication].applicationIconBadgeNumber = value;
     [MTPushService setBadge:value];
 }
 
