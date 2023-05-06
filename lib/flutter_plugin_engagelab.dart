@@ -101,10 +101,6 @@ class FlutterPluginEngagelab {
   }
 
 
-  static setTcpSSL(enable) {
-    printMy("setTcpSSL:" + enable.toString());
-    _channel.invokeMethod("setTcpSSL", [enable]);
-  }
 
   /**
    * 配置使用国密加密
@@ -376,5 +372,13 @@ class FlutterPluginEngagelab {
   static checkNotificationAuthorizationIos(){
     printMy("checkNotificationAuthorizationIos");
     _channel.invokeMethod("checkNotificationAuthorization", []);
+  }
+
+  /**
+   * @param enable  tcp是否加密，true为加密，false为不加密
+   */
+  static setTcpSSLIos(enable) {
+    printMy("setTcpSSL:" + enable.toString());
+    _channel.invokeMethod("setTcpSSL", [enable]);
   }
 }

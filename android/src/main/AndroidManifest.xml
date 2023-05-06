@@ -1,7 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.engagelab.privates.flutter_plugin_engagelab">
 
-    <application>
+    <application
+        android:name="com.engagelab.privates.flutter_plugin_engagelab.MTApplication">
 
         <!-- 由于此类具有长连接功能，手机厂商省电优化时可能直接杀死包名带Engagelab字样的service -->
         <!-- 所以需要开发者继承com.engagelab.app.component.MTCommonService，提升长连接存活率，已达到提高消息到达率的目的 -->
@@ -23,6 +24,13 @@
                 <action android:name="com.engagelab.privates.intent.USER_RECEIVER" />
             </intent-filter>
         </receiver>
+
+        <meta-data
+            android:name="APP_TCP_SSL"
+            android:value="${APP_TCP_SSL}" />
+        <meta-data
+            android:name="APP_DEBUG"
+            android:value="${APP_DEBUG}" />
 
     </application>
     <!-- 必须，网络权限 -->
