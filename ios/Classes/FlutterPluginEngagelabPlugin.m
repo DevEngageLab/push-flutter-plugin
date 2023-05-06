@@ -68,6 +68,8 @@ NSDictionary *_completeLaunchNotification;
           [self setDebugMode:data];
       }else if ([name isEqualToString:(@"checkNotificationAuthorization")]){
           [self checkNotificationAuthorization];
+      }else if ([name isEqualToString:(@"setTcpSSL")]){
+          [self setTcpSSL:data];
       }else{
 
             result(FlutterMethodNotImplemented);
@@ -138,6 +140,11 @@ NSDictionary *_completeLaunchNotification;
     if (value) {
         [MTPushService setDebugMode];
     }
+}
+
+-(void)setTcpSSL:(NSArray* )data {
+    bool value = [data objectAtIndex:0];
+    [MTPushService setTcpSSL:value];
 }
 
 

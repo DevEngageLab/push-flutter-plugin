@@ -100,6 +100,12 @@ class FlutterPluginEngagelab {
     _channel.invokeMethod("configDebugMode", [enable]);
   }
 
+
+  static setTcpSSL(enable) {
+    printMy("setTcpSSL:" + enable.toString());
+    _channel.invokeMethod("setTcpSSL", [enable]);
+  }
+
   /**
    * 配置使用国密加密
    *
