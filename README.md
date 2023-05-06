@@ -34,15 +34,18 @@ android: {
                 ENGAGELAB_PRIVATES_APPKEY : "你的appkey",
                 ENGAGELAB_PRIVATES_CHANNEL: "developer",
                 ENGAGELAB_PRIVATES_PROCESS: ":remote",
-                XIAOMI_GLOBAL_APPID            : "",//小米厂商，有就填自己的，没有就不用填，保留为""
-                XIAOMI_GLOBAL_APPKEY           : "",//小米厂商，有就填自己的，没有就不用填，保留为""
-                MEIZU_APPID            : "",//魅族厂商，有就填自己的，没有就不用填，保留为""
-                MEIZU_APPKEY           : "",//魅族厂商，有就填自己的，没有就不用填，保留为""
-                OPPO_APPID             : "",//OPPO厂商，有就填自己的，没有就不用填，保留为""
-                OPPO_APPKEY            : "",//OPPO厂商，有就填自己的，没有就不用填，保留为""
-                OPPO_APPSECRET         : "",//OPPO厂商，有就填自己的，没有就不用填，保留为""
+                XIAOMI_GLOBAL_APPID            : "",//小米厂商，有就填MI-自己的，没有就不用填，保留为""
+                XIAOMI_GLOBAL_APPKEY           : "",//小米厂商，有就填MI-自己的，没有就不用填，保留为""
+                MEIZU_APPID            : "",//魅族厂商，有就填MZ-自己的，没有就不用填，保留为""
+                MEIZU_APPKEY           : "",//魅族厂商，有就填MZ-自己的，没有就不用填，保留为""
+                OPPO_APPID             : "",//OPPO厂商，有就填OP-自己的，没有就不用填，保留为""
+                OPPO_APPKEY            : "",//OPPO厂商，有就填OP-自己的，没有就不用填，保留为""
+                OPPO_APPSECRET         : "",//OPPO厂商，有就填OP-自己的，没有就不用填，保留为""
                 VIVO_APPID             : "",//VIVO厂商，有就填自己的，没有就不用填，保留为""
-                VIVO_APPKEY            : ""//VIVO厂商，有就填自己的，没有就不用填，保留为""
+                VIVO_APPKEY            : "",//VIVO厂商，有就填自己的，没有就不用填，保留为""
+                HONOR_APPID            : "",//荣耀厂商，有就填自己的，没有就不用填，保留为""
+                APP_TCP_SSL            : "",//android tcp连接是否加密，填true为加密，其他为不加密，可保留为""
+                APP_DEBUG            : ""//android log debug模式，填true为debug模式，其他为非debug模式，可保留为""
         ]
   }    
 }

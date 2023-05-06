@@ -36,14 +36,32 @@ android {
     }
 }
 dependencies {
-    implementation 'com.engagelab:engagelab:3.0.0.release'
-    implementation 'com.engagelab.plugin:google:3.0.0.release'
-    implementation 'com.google.firebase:firebase-messaging:23.0.8'
-    implementation 'com.engagelab.plugin:huawei:3.0.0.release'
-    implementation 'com.huawei.hms:push:6.5.0.300'
-    implementation 'com.engagelab.plugin:mi_global:3.0.0.release'
-    implementation 'com.engagelab.plugin:meizu:3.0.0.release'
-    implementation 'com.engagelab.plugin:oppo:3.0.0.release'
-    implementation 'com.engagelab.plugin:oppo_msp_push:3.0.0.release'
-    implementation 'com.engagelab.plugin:vivo:3.0.0.release'
+    //必须 主包
+    implementation 'com.engagelab:engagelab:3.4.0' // 此处以3.4.0 版本为例。
+    //可选，google厂商
+    implementation 'com.engagelab.plugin:google:3.4.0' // 此处以3.4.0 版本为例。
+    //可选，honor厂商
+    implementation 'com.engagelab.plugin:honor:3.4.0' // 此处以3.4.0 版本为例。
+    implementation 'com.engagelab.plugin:honor_th_push:3.4.0' // 此处以3.4.0 版本为例。
+    //可选，huawei厂商
+    implementation 'com.engagelab.plugin:huawei:3.4.0' // 此处以3.4.0 版本为例。
+    //可选，mi厂商，海外版
+    implementation 'com.engagelab.plugin:mi_global:3.4.0' // 此处以3.4.0 版本为例。
+    //可选，meizu厂商
+    implementation 'com.engagelab.plugin:meizu:3.4.0' // 此处以3.4.0 版本为例。
+    //可选，oppo厂商
+    implementation 'com.engagelab.plugin:oppo:3.4.0' // 此处以3.4.0 版本为例。
+    implementation 'com.engagelab.plugin:oppo_th_push:3.4.0' // 此处以3.4.0 版本为例。
+    //可选，vivo厂商
+    implementation 'com.engagelab.plugin:vivo:3.4.0' // 此处以3.4.0 版本为例。
+
+    // google push need，不需要 google 通道，则删除
+    implementation 'com.google.firebase:firebase-messaging:23.1.1'
+
+    // huawei push need，不需要 huawei 通道，则删除
+    implementation 'com.huawei.hms:push:6.7.0.300'
+    //oppo以下依赖都需要添加，不需要 oppo 通道，则删除
+    implementation 'com.google.code.gson:gson:2.6.2'
+    implementation 'commons-codec:commons-codec:1.6'
+    implementation 'androidx.annotation:annotation:1.1.0'
 }
