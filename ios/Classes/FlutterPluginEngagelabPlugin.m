@@ -33,6 +33,7 @@
 @implementation FlutterPluginEngagelabPlugin
 
 NSDictionary *_completeLaunchNotification;
+NSData * _deviceToken;
 
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar>*)registrar {
   FlutterMethodChannel* channel = [FlutterMethodChannel
@@ -107,6 +108,12 @@ NSDictionary *_completeLaunchNotification;
                           channel:channel
                  apsForProduction:[isProduction boolValue]
             advertisingIdentifier:advertisingId];
+    NSData * deviceToken = _deviceToken;
+    JPLog(@"Device Token deviceToken: %@", deviceToken);
+    if (nil != deviceToken) {
+        JPLog(@"Device Token set deviceToken: %@", deviceToken);
+        [MTPushService registerDeviceToken:deviceToken];
+    }
 }
 
 
@@ -207,6 +214,7 @@ NSDictionary *_completeLaunchNotification;
                              ntohl(tokenBytes[3]), ntohl(tokenBytes[4]), ntohl(tokenBytes[5]),
                              ntohl(tokenBytes[6]), ntohl(tokenBytes[7])];
        JPLog(@"Device Token: %@", tokenString);
+       _deviceToken = deviceToken;
        [MTPushService registerDeviceToken:deviceToken];
 }
 
