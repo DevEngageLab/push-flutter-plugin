@@ -365,6 +365,101 @@ class FlutterPluginEngagelab {
     _channel.invokeMethod("uploadPlatformToken", [platform, token, region]);
   }
 
+  /**
+   * 新增标签。
+   *
+   * @param params = { "sequence": number, "tags": ["tag1", "tag2"] }
+   */
+  static addTags(params) {
+    printMy("addTags");
+    _channel.invokeMethod("addTags", [params]);
+  }
+
+  /**
+   * 删除标签。
+   *
+   * @param params = { "sequence": number, "tags": ["tag1", "tag2"] }
+   */
+  static deleteTags(params) {
+    printMy("deleteTags");
+    _channel.invokeMethod("deleteTags", [params]);
+  }
+
+  /**
+   * 更新标签。ios setTags
+   *
+   * @param params = { "sequence": number, "tags": ["tag1", "tag2"] }
+   */
+  static updateTags(params) {
+    printMy("updateTags");
+    _channel.invokeMethod("updateTags", [params]);
+  }
+
+
+  /**
+   * 查询标签。 ios为校验validTag
+   *
+   * @param params = { "sequence": number, "tag": "tag1" }
+   */
+  static queryTag(params) {
+    printMy("queryTag");
+    _channel.invokeMethod("queryTag", [params]);
+  }
+
+  /**
+   * 删除所有标签。
+   *
+   * @param sequence = number
+   */
+  static deleteAllTag(sequence) {
+    printMy("deleteAllTag");
+    _channel.invokeMethod("deleteAllTag", [sequence]);
+  }
+
+
+
+  /**
+   * 查询所有标签。
+   *
+   * @param sequence = number
+   */
+  static queryAllTag(sequence) {
+    printMy("queryAllTag");
+    _channel.invokeMethod("queryAllTag", [sequence]);
+  }
+
+
+  /**
+   * 设置别名。
+   *
+   * @param sequence = number
+   * @param alias = string
+   */
+  static setAlias(sequence,alias) {
+    printMy("setAlias");
+    _channel.invokeMethod("setAlias", [sequence,alias]);
+  }
+
+  /**
+   * 获取别名。
+   *
+   * @param sequence = number
+   */
+  static getAlias(sequence) {
+    printMy("getAlias");
+    _channel.invokeMethod("getAlias", [sequence]);
+  }
+
+  /**
+   * 清除别名。
+   *
+   * @param sequence = number
+   */
+  static clearAlias(sequence) {
+    printMy("clearAlias");
+    _channel.invokeMethod("clearAlias", [sequence]);
+  }
+
 
   /**
    * 检测通知权限授权情况

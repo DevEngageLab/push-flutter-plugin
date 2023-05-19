@@ -15,20 +15,24 @@ public class MTApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        String APP_TCP_SSL = getMetaData(getApplicationContext(), "APP_TCP_SSL");
-        String APP_DEBUG = getMetaData(getApplicationContext(), "APP_DEBUG");
-        Log.e(TAG,"APP_TCP_SSL:"+APP_TCP_SSL);
-        Log.e(TAG,"APP_DEBUG:"+APP_DEBUG);
-        MTCorePrivatesApi.setTcpSSl(isTrue(APP_TCP_SSL));
-        MTCorePrivatesApi.configDebugMode(getApplicationContext(), isTrue(APP_DEBUG));
+        setConfig(getApplicationContext());
 
     }
 
-    private boolean isTrue(String APP_TCP_SSL) {
+    public static void setConfig(Context context) {
+        String APP_TCP_SSL = getMetaData(context, "APP_TCP_SSL");
+        String APP_DEBUG = getMetaData(context, "APP_DEBUG");
+        Log.d(TAG,"APP_TCP_SSL:"+APP_TCP_SSL);
+        Log.d(TAG,"APP_DEBUG:"+APP_DEBUG);
+        MTCorePrivatesApi.setTcpSSl(isTrue(APP_TCP_SSL));
+        MTCorePrivatesApi.configDebugMode(context, isTrue(APP_DEBUG));
+    }
+
+    private static boolean isTrue(String APP_TCP_SSL) {
         return "true".equals(APP_TCP_SSL);
     }
 
-    public static String getMetaData(Context context, String metaDataName) {
+    private static String getMetaData(Context context, String metaDataName) {
         try {
             ApplicationInfo info = context.getPackageManager().getApplicationInfo(context.getPackageName(), PackageManager.GET_META_DATA);
             if (info != null && info.metaData != null) {

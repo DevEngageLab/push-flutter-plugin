@@ -3,9 +3,12 @@ package com.engagelab.privates.flutter_plugin_engagelab;
 import android.content.Context;
 
 import com.engagelab.privates.common.component.MTCommonReceiver;
+import com.engagelab.privates.push.api.AliasMessage;
 import com.engagelab.privates.push.api.CustomMessage;
 import com.engagelab.privates.push.api.NotificationMessage;
 import com.engagelab.privates.push.api.PlatformTokenMessage;
+import com.engagelab.privates.push.api.TagMessage;
+import com.engagelab.privates.push.utils.MsgToJson;
 
 /**
  * This class echoes a string called from JavaScript.
@@ -98,5 +101,18 @@ public class UserReceiver extends MTCommonReceiver {
         FlutterPluginEngagelabPlugin.onCommonReceiver("onPlatformToken", MsgToJson.platformTokenMessageToJson(platformTokenMessage));
     }
 
+    @Override
+    public void onAliasMessage(Context context, AliasMessage aliasMessage) {
+        FlutterPluginEngagelabPlugin.logD(TAG, "onAliasMessage:" + aliasMessage.toString());
+        FlutterPluginEngagelabPlugin.onCommonReceiver("onAliasMessage", MsgToJson.aliasMessageToJson(aliasMessage));
+
+    }
+
+    @Override
+    public void onTagMessage(Context context, TagMessage tagMessage) {
+        FlutterPluginEngagelabPlugin.logD(TAG, "onTagMessage:" + tagMessage.toString());
+        FlutterPluginEngagelabPlugin.onCommonReceiver("onTagMessage", MsgToJson.tagMessageToJson(tagMessage));
+
+    }
 }
 

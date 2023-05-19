@@ -71,6 +71,24 @@ NSData * _deviceToken;
           [self checkNotificationAuthorization];
       }else if ([name isEqualToString:(@"setTcpSSL")]){
           [self setTcpSSL:data];
+      }else if ([name isEqualToString:(@"addTags")]){
+          [self addTags:data];
+      }else if ([name isEqualToString:(@"deleteTags")]){
+          [self deleteTags:data];
+      }else if ([name isEqualToString:(@"deleteAllTag")]){
+          [self cleanTags:data];
+      }else if ([name isEqualToString:(@"queryAllTag")]){
+          [self getAllTags:data];
+      }else if ([name isEqualToString:(@"queryTag")]){
+          [self validTag:data];
+      }else if ([name isEqualToString:(@"setAlias")]){
+          [self setAlias:data];
+      }else if ([name isEqualToString:(@"getAlias")]){
+          [self getAlias:data];
+      }else if ([name isEqualToString:(@"clearAlias")]){
+          [self deleteAlias:data];
+      }else if ([name isEqualToString:(@"updateTags")]){
+          [self setTags:data];
       }else{
 
             result(FlutterMethodNotImplemented);
@@ -152,6 +170,108 @@ NSData * _deviceToken;
 -(void)setTcpSSL:(NSArray* )data {
     bool value = [data objectAtIndex:0];
     [MTPushService setTcpSSL:value];
+}
+
+
+
+-(void)setTags:(NSArray* )data {
+    NSDictionary* params = [data objectAtIndex:0];
+    NSNumber* sequence = params[@"sequence"];
+    NSArray* tags = params[@"tags"];
+
+    [MTPushService setTags:[NSSet setWithArray:tags] completion:^(NSInteger iResCode, NSSet *iTags, NSInteger seq) {
+            [self tagsCallBackChannel:(@"setTags") iResCode:(iResCode) iTags:(iTags) seq:(seq)];
+        } seq:([sequence intValue])];
+
+}
+
+
+-(void)addTags:(NSArray* )data {
+    NSDictionary* params = [data objectAtIndex:0];
+    NSNumber* sequence = params[@"sequence"];
+    NSArray* tags = params[@"tags"];
+
+    [MTPushService addTags:[NSSet setWithArray:tags] completion:^(NSInteger iResCode, NSSet *iTags, NSInteger seq) {
+            [self tagsCallBackChannel:(@"addTags") iResCode:(iResCode) iTags:(iTags) seq:(seq)];
+        } seq:([sequence intValue])];
+
+}
+
+
+-(void)deleteTags:(NSArray* )data {
+    NSDictionary* params = [data objectAtIndex:0];
+    NSNumber* sequence = params[@"sequence"];
+    NSArray* tags = params[@"tags"];
+
+    [MTPushService deleteTags:[NSSet setWithArray:tags] completion:^(NSInteger iResCode, NSSet *iTags, NSInteger seq) {
+            [self tagsCallBackChannel:(@"deleteTags") iResCode:(iResCode) iTags:(iTags) seq:(seq)];
+        } seq:([sequence intValue])];
+
+}
+
+
+-(void)cleanTags:(NSArray* )data {
+    NSDictionary* params = [data objectAtIndex:0];
+    NSNumber* sequence = params[@"sequence"];
+
+    [MTPushService cleanTags:^(NSInteger iResCode, NSSet *iTags, NSInteger seq) {
+            [self tagsCallBackChannel:(@"cleanTags") iResCode:(iResCode) iTags:(iTags) seq:(seq)];
+        } seq:([sequence intValue])];
+
+}
+
+
+-(void)getAllTags:(NSArray* )data {
+    NSDictionary* params = [data objectAtIndex:0];
+    NSNumber* sequence = params[@"sequence"];
+
+    [MTPushService getAllTags:^(NSInteger iResCode, NSSet *iTags, NSInteger seq) {
+            [self tagsCallBackChannel:(@"getAllTags") iResCode:(iResCode) iTags:(iTags) seq:(seq)];
+        } seq:([sequence intValue])];
+
+}
+
+
+
+-(void)validTag:(NSArray* )data {
+    NSDictionary* params = [data objectAtIndex:0];
+    NSNumber* sequence = params[@"sequence"];
+    NSString* tag = params[@"tag"];
+    [MTPushService validTag:tag completion:^(NSInteger iResCode, NSSet *iTags, NSInteger seq, BOOL isBind) {
+            NSMutableDictionary *data = @{}.mutableCopy;
+                    data[@"code"] = @(iResCode);//[NSNumber numberWithInteger:iResCode];
+                    data[@"sequence"] = @(seq);
+                    if (iResCode == 0 && nil != iTags) {
+                        data[@"tags"] = [iTags allObjects];
+                        [data setObject:[NSNumber numberWithBool:isBind] forKey:@"isBind"];
+                    }
+        [self callBackChannel:@"validTag" arguments:[data toJsonString]];
+    } seq:([sequence intValue])];
+}
+
+
+-(void)setAlias:(NSArray* )data {
+    NSNumber* sequence = [data objectAtIndex:0];
+    NSString* alias = [data objectAtIndex:1];
+    [MTPushService setAlias:alias completion:^(NSInteger iResCode, NSString *iAlias, NSInteger seq) {
+                    [self aliasCallBackChannel:(@"setAlias") iResCode:(iResCode) iAlias:(iAlias) seq:(seq)];
+    } seq:([sequence intValue])];
+}
+
+
+-(void)deleteAlias:(NSArray* )data {
+   NSNumber* sequence = [data objectAtIndex:0];
+    [MTPushService deleteAlias:^(NSInteger iResCode, NSString *iAlias, NSInteger seq) {
+                    [self aliasCallBackChannel:(@"deleteAlias") iResCode:(iResCode) iAlias:(iAlias) seq:(seq)];
+    } seq:([sequence intValue])];
+}
+
+
+-(void)getAlias:(NSArray* )data {
+    NSNumber* sequence = [data objectAtIndex:0];
+    [MTPushService getAlias:^(NSInteger iResCode, NSString *iAlias, NSInteger seq) {
+                    [self aliasCallBackChannel:(@"getAlias") iResCode:(iResCode) iAlias:(iAlias) seq:(seq)];
+    } seq:([sequence intValue])];
 }
 
 
@@ -383,6 +503,30 @@ NSData * _deviceToken;
   return formatDic;
 }
 
+
+
+-(void)tagsCallBackChannel:(NSString*)eventName iResCode:(NSInteger)iResCode iTags:(NSSet*)iTags seq:(NSInteger)seq{
+    NSMutableDictionary *data = @{}.mutableCopy;
+    data[@"code"] = @(iResCode);//[NSNumber numberWithInteger:iResCode];
+    data[@"sequence"] = @(seq);
+    if (iResCode == 0 && nil != iTags) {
+        data[@"tags"] = [iTags allObjects];
+    }
+    [self callBackChannel:eventName arguments:[data toJsonString]];
+};
+
+
+-(void)aliasCallBackChannel:(NSString*)eventName iResCode:(NSInteger)iResCode iAlias:(NSString*)iAlias seq:(NSInteger)seq {
+    NSMutableDictionary* dic = [[NSMutableDictionary alloc] init];
+            [dic setObject:[NSNumber numberWithInteger:seq] forKey:@"sequence"];
+            [dic setValue:[NSNumber numberWithUnsignedInteger:iResCode] forKey:@"code"];
+
+            if (iResCode == 0 && nil != iAlias) {
+                [dic setObject:iAlias forKey:@"alias"];
+            }
+        [self callBackChannel:eventName arguments:[dic toJsonString]];
+
+};
 
 -(void)callBackChannel:(NSString*)eventName arguments:(NSString*)arguments{
     NSMutableDictionary *data = @{}.mutableCopy;
