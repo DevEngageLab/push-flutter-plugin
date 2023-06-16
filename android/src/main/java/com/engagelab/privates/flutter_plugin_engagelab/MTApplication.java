@@ -4,8 +4,10 @@ import android.app.Application;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.text.TextUtils;
 import android.util.Log;
 
+import com.engagelab.privates.common.global.MTGlobal;
 import com.engagelab.privates.common.log.MTCommonLog;
 import com.engagelab.privates.core.api.MTCorePrivatesApi;
 
@@ -26,6 +28,11 @@ public class MTApplication extends Application {
         Log.d(TAG,"APP_DEBUG:"+APP_DEBUG);
         MTCorePrivatesApi.setTcpSSl(isTrue(APP_TCP_SSL));
         MTCorePrivatesApi.configDebugMode(context, isTrue(APP_DEBUG));
+
+        String COUNTRY_CODE = getMetaData(context, "COUNTRY_CODE");
+        if (TextUtils.isEmpty(COUNTRY_CODE)) {
+            MTGlobal.setCountryCode(COUNTRY_CODE);
+        }
     }
 
     private static boolean isTrue(String APP_TCP_SSL) {

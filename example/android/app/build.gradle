@@ -54,7 +54,8 @@ android {
                 VIVO_APPKEY            : "",
                 HONOR_APPID            : "",
                 APP_TCP_SSL            : "",
-                APP_DEBUG            : ""
+                APP_DEBUG            : "",
+                COUNTRY_CODE            : ""
 
         ]
     }
