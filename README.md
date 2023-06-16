@@ -15,7 +15,7 @@ dependencies:
       
 // pub 集成
 dependencies:
-  flutter_plugin_engagelab: 1.1.2
+  flutter_plugin_engagelab: 1.1.3
 ```
 
 ### 配置
