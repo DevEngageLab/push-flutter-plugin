@@ -5,6 +5,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.engagelab.privates.common.global.MTGlobal;
 import com.engagelab.privates.core.api.MTCorePrivatesApi;
 import com.engagelab.privates.push.api.MTPushPrivatesApi;
 
@@ -828,6 +829,15 @@ public class FlutterPluginEngagelabPlugin implements FlutterPlugin, MethodCallHa
         try {
             int sequence = data.getInt(0);
             MTPushPrivatesApi.clearAlias(getApplicationContext(), sequence);
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
+    }
+
+    void setCountryCode(JSONArray data, Result result) {
+        try {
+            String ccode = data.getString(0);
+            MTGlobal.setCountryCode(ccode);
         } catch (Throwable e) {
             e.printStackTrace();
         }

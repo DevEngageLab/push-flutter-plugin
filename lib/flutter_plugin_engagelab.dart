@@ -365,6 +365,11 @@ class FlutterPluginEngagelab {
     _channel.invokeMethod("uploadPlatformToken", [platform, token, region]);
   }
 
+  static setCountryCodeAndroid(country) {
+    printMy("setCountryCode");
+    _channel.invokeMethod("setCountryCode", [country]);
+  }
+
   /**
    * 新增标签。
    *
@@ -459,6 +464,7 @@ class FlutterPluginEngagelab {
     printMy("clearAlias");
     _channel.invokeMethod("clearAlias", [sequence]);
   }
+
 
 
   /**
