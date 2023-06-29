@@ -30,6 +30,9 @@
         <meta-data
             android:name="APP_DEBUG"
             android:value="${APP_DEBUG}" />
+        <meta-data
+            android:name="COUNTRY_CODE"
+            android:value="${COUNTRY_CODE}" />
 
     </application>
     <!-- 必须，网络权限 -->
