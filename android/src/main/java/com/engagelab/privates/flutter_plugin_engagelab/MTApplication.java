@@ -30,7 +30,8 @@ public class MTApplication extends Application {
         MTCorePrivatesApi.configDebugMode(context, isTrue(APP_DEBUG));
 
         String COUNTRY_CODE = getMetaData(context, "COUNTRY_CODE");
-        if (TextUtils.isEmpty(COUNTRY_CODE)) {
+        Log.d(TAG,"COUNTRY_CODE:"+COUNTRY_CODE);
+        if (!TextUtils.isEmpty(COUNTRY_CODE)) {
             MTGlobal.setCountryCode(COUNTRY_CODE);
         }
     }
