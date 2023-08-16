@@ -89,6 +89,10 @@ NSData * _deviceToken;
           [self deleteAlias:data];
       }else if ([name isEqualToString:(@"updateTags")]){
           [self setTags:data];
+      }else if ([name isEqualToString:(@"clearNotification")]){
+          [self removeLocalNotification:data];
+      }else if ([name isEqualToString:(@"clearNotificationAll")]){
+          [self clearLocalNotifications:data];
       }else{
 
             result(FlutterMethodNotImplemented);
@@ -274,6 +278,23 @@ NSData * _deviceToken;
     } seq:([sequence intValue])];
 }
 
+// 移除指定的本地通知
+- (void)removeLocalNotification:(NSArray *)data {
+    NSString *requestIdentifier = [data objectAtIndex:0];
+    if ([requestIdentifier isKindOfClass:[NSString class]]) {
+        MTPushNotificationIdentifier *identifier = [[MTPushNotificationIdentifier alloc] init];
+        identifier.identifiers = @[requestIdentifier];
+        if (@available(iOS 10.0, *)) {
+            identifier.delivered = YES;
+        }
+        [MTPushService removeNotification:identifier];
+    }
+}
+
+// 移除所有的本地通知
+- (void)clearLocalNotifications:(NSArray* )data {
+    [MTPushService removeNotification:nil];
+}
 
 
 
