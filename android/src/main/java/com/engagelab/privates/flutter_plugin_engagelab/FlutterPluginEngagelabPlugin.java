@@ -843,6 +843,23 @@ public class FlutterPluginEngagelabPlugin implements FlutterPlugin, MethodCallHa
         }
     }
 
+    void clearNotification(JSONArray data, Result result) {
+        try {
+            int notifyId = data.getInt(0);
+            MTPushPrivatesApi.clearNotification(getApplicationContext(),notifyId);
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
+    }
+
+    void clearNotificationAll(JSONArray data, Result result) {
+        try {
+            MTPushPrivatesApi.clearNotification(getApplicationContext());
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
+    }
+
 
 
     public static void logD(String tag, String msg) {

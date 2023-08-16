@@ -482,4 +482,14 @@ class FlutterPluginEngagelab {
     printMy("setTcpSSL:" + enable.toString());
     _channel.invokeMethod("setTcpSSL", [enable]);
   }
+
+  static clearNotification(notifyId) {
+    printMy("clearNotification");
+    _channel.invokeMethod("clearNotification", [notifyId]);
+  }
+
+  static clearNotificationAll() {
+    printMy("clearNotificationAll");
+    _channel.invokeMethod("clearNotificationAll", []);
+  }
 }
