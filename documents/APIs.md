@@ -19,6 +19,7 @@
       - "onPlatformToken":厂商token消息回调，内容为厂商token消息体
       - "onTagMessage":tag操作回调
       - "onAliasMessage":alias操作回调
+      - "onNotificationUnShow":在前台，通知消息不显示回调（后台下发的通知是前台信息时）
     - ios:
       - "willPresentNotification":通知消息到达回调，内容为通知消息体
       - "didReceiveNotificationResponse":通知消息点击回调，内容为通知消息体
@@ -69,6 +70,18 @@ if (Platform.isIOS) {
 }
 ```
 
+## 设置数据中心
+
+### setSiteName
+
+设置数据中心, 在初始化函数之前调用
+
+#### 接口定义
+
+```js
+  FlutterPluginEngagelab.setSiteName("Singapore");
+```
+
 ## 开启 Debug 模式
 
 ### configDebugMode （android/ios都支持）
@@ -114,4 +127,35 @@ FlutterPluginEngagelab.getRegistrationId()
 FlutterPluginEngagelab.getRegistrationId().then((rid){
   FlutterPluginEngagelab.printMy("flutter get registration id : $rid");
 });
+```
+
+## 发送一个本地通知
+
+### sendLocalNotification
+
+添加本地推送通知
+
+/** PRIORITY与IMPORTANCE 相互转换关系
+   * PRIORITY_MIN = -2 对应 IMPORTANCE_MIN = 1;
+   * PRIORITY_LOW = -1; 对应 IMPORTANCE_LOW = 2;
+   * PRIORITY_DEFAULT = 0; 对应 IMPORTANCE_DEFAULT = 3;
+   * PRIORITY_HIGH = 1; 对应 IMPORTANCE_HIGH = 4;
+   * PRIORITY_MAX = 2; 对应 IMPORTANCE_MAX = 5;
+*/
+
+#### 接口定义
+```js
+var fireDate = DateTime.fromMillisecondsSinceEpoch(
+DateTime.now().millisecondsSinceEpoch + 3000);
+var localNotification = LocalNotification(
+                          id: 234,
+                          title: 'fadsfa',
+                          content: 'fdas',
+                          fireTime: fireDate, // iOS only
+                          subtitle: 'fasf',  // iOS only
+                          category: 'local', // Android only
+                          priority: 2,  // Android only
+                          badge: 5,   // iOS only
+                          extra: {"fa": "0"});
+FlutterPluginEngagelab.sendLocalNotification(localNotification)
 ```

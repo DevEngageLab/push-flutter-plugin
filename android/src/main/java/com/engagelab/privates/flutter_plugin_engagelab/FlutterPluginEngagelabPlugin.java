@@ -1,6 +1,7 @@
 package com.engagelab.privates.flutter_plugin_engagelab;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -8,6 +9,7 @@ import androidx.annotation.NonNull;
 import com.engagelab.privates.common.global.MTGlobal;
 import com.engagelab.privates.core.api.MTCorePrivatesApi;
 import com.engagelab.privates.push.api.MTPushPrivatesApi;
+import com.engagelab.privates.push.api.NotificationMessage;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -18,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -294,6 +297,16 @@ public class FlutterPluginEngagelabPlugin implements FlutterPlugin, MethodCallHa
         }
     }
 
+    void setSiteName(JSONArray data, Result result) {
+        try {
+            Context context = getApplicationContext();
+            String siteName = data.getString(0);
+            MTCorePrivatesApi.configAppSiteName(context, siteName);
+        }catch (Throwable e) {
+            e.printStackTrace();
+        }
+    }
+
 //    // 继承MTCommonReceiver后，复写onNotificationStatus方法，获取通知开关状态，如果enable为true说明已经开启成功
 //    @Override
 //    public void onNotificationStatus(Context context, boolean enable) {
@@ -530,32 +543,59 @@ public class FlutterPluginEngagelabPlugin implements FlutterPlugin, MethodCallHa
         }
     }
 
-//    /**
-//     * 展示通知
-//     *
-//     * @param context             不为空
-//     * @param notificationMessage 构建的通知对象，不为空
-//     */
-//    public static void showNotification(Context context, NotificationMessage notificationMessage) {
-////        // 构建一个基础的通知，其中messageId和content是必须，否则通知无法展示
-////        NotificationMessage notificationMessage = new NotificationMessage()
-////                .setMessageId("12345")
-////                .setNotificationId(12345)
-////                .setTitle("custom_notification_title")
-////                .setContent("custom_notification_content");
-////        // 展示通知
-////        MTPushPrivatesApi.showNotification(context,notificationMessage);
-//    }
-//
-//    /**
-//     * 清除指定notifyId的通知
-//     *
-//     * @param context  不为空
-//     * @param notifyId 通知id
-//     */
-//    public static void clearNotification(Context context, int notifyId) {
-//
-//    }
+    /**
+     * 展示自定义通知
+     */
+    void sendLocalNotification(JSONArray data, Result result) {
+
+        try {
+            HashMap<String, Object> map = (HashMap<String, Object>)data.get(0);
+            HashMap<String, Object> extra = (HashMap<String, Object>) map.get("extra");
+            Context context = getApplicationContext();
+            Bundle bundle = hashMapToBundle(extra);
+            // 构建一个基础的通知，其中messageId和content是必须，否则通知无法展示
+            NotificationMessage notificationMessage = new NotificationMessage()
+                    .setNotificationId((int) map.get("id"))
+                    .setTitle((String) map.get("title"))
+                    .setContent((String) map.get("content"))
+                    .setCategory((String) map.get("category"))
+                    .setExtras(bundle);
+            if (map.get("priority") != null) {
+                notificationMessage.setPriority((int)map.get("priority"));
+            }
+            // 展示通知
+            MTPushPrivatesApi.showNotification(context,notificationMessage);
+        }catch (Throwable e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    Bundle hashMapToBundle(HashMap<String, Object> map) {
+        Bundle bundle = new Bundle();
+        if (map != null) {
+            Iterator iter = map.entrySet().iterator();
+            while (iter.hasNext()) {
+                Map.Entry entry = (Map.Entry) iter.next();
+                String key = (String) entry.getKey();
+                Object value = entry.getValue();
+                if (value instanceof String) {
+                    bundle.putString(key, (String) value);
+                } else if (value instanceof Integer) {
+                    bundle.putInt(key, (Integer) value);
+                } else if (value instanceof Boolean) {
+                    bundle.putBoolean(key, (Boolean) value);
+                } else if (value instanceof Long) {
+                    bundle.putLong(key, (Long) value);
+                } else if (value instanceof Double) {
+                    bundle.putDouble(key, (Double) value);
+                }
+            }
+        }
+        return bundle;
+    }
+
+
 
     /**
      * 上报厂商通道通知到达
