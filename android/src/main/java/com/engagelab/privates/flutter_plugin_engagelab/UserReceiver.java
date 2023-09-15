@@ -53,6 +53,13 @@ public class UserReceiver extends MTCommonReceiver {
         FlutterPluginEngagelabPlugin.onCommonReceiver("onNotificationArrived", MsgToJson.notificationMessageToJson(notificationMessage));
     }
 
+    @Override
+    public void onNotificationUnShow(Context context, NotificationMessage notificationMessage) {
+        FlutterPluginEngagelabPlugin.logD(TAG, "onNotificationUnShow:" + notificationMessage.toString());
+        FlutterPluginEngagelabPlugin.onCommonReceiver("onNotificationUnShow", MsgToJson.notificationMessageToJson(notificationMessage));
+
+    }
+
     /**
      * 通知消息点击回调
      *

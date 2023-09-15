@@ -55,7 +55,9 @@ android {
                 HONOR_APPID            : "",
                 APP_TCP_SSL            : "",
                 APP_DEBUG            : "",
-                COUNTRY_CODE            : ""
+                COUNTRY_CODE            : "",
+                //数据中心名称，填空""时，默认"Singapore"数据中心
+                ENGAGELAB_PRIVATES_SITE_NAME: "Singapore",
 
         ]
     }

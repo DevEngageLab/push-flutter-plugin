@@ -328,7 +328,7 @@ NSData * _deviceToken;
 - (void)sendLocalNotification:(FlutterMethodCall*)call result:(FlutterResult)result {
     JPLog(@"sendLocalNotification:%@",call.arguments);
     MTPushNotificationContent *content = [[MTPushNotificationContent alloc] init];
-    NSDictionary *params = call.arguments;
+    NSDictionary *params = [call.arguments firstObject];
     if (params[@"title"]) {
         content.title = params[@"title"];
     }

@@ -114,10 +114,11 @@ class _MyAppState extends State<MyApp> {
                         var localNotification = LocalNotification(
                           id: 234,
                           title: 'fadsfa',
-                          buildId: 1,
                           content: 'fdas',
                           fireTime: fireDate,
                           subtitle: 'fasf',
+                          category: 'local',
+                          priority: 2,
                           badge: 5,
                           extra: {"fa": "0"});
                         FlutterPluginEngagelab
