@@ -64,6 +64,19 @@ class FlutterPluginEngagelab {
   }
 
   /**
+   * 设置数据中心
+   * <p>
+   * 需要在Application.onCreate()方法中调用， 
+   * iOS 需要在initIos方法前调用
+   *
+   * @param siteName 数据中心的名字
+   */
+  static setSiteName(siteName) {
+    printMy("setSiteName");
+    _channel.invokeMethod('setSiteName', [siteName]);
+  }
+
+  /**
    * 设置心跳时间间隔
    * <p>
    * 需要在Application.onCreate()方法中调用
@@ -483,6 +496,18 @@ class FlutterPluginEngagelab {
     _channel.invokeMethod("setTcpSSL", [enable]);
   }
 
+ ///
+  /// 发送本地通知到调度器，指定时间出发该通知。
+  /// @param {Notification} notification
+  ///
+  static Future<String> sendLocalNotification(LocalNotification notification) async {
+    print(flutter_log + "sendLocalNotification:");
+
+    await _channel.invokeMethod('sendLocalNotification', notification.toMap());
+
+    return notification.toMap().toString();
+  }
+
   static clearNotification(notifyId) {
     printMy("clearNotification");
     _channel.invokeMethod("clearNotification", [notifyId]);
@@ -493,3 +518,58 @@ class FlutterPluginEngagelab {
     _channel.invokeMethod("clearNotificationAll", []);
   }
 }
+
+
+/// @property {number} [buildId] - 通知样式：1 为基础样式，2 为自定义样式（需先调用 `setStyleCustom` 设置自定义样式）
+/// @property {number} [id] - 通知 id, 可用于取消通知
+/// @property {string} [title] - 通知标题
+/// @property {string} [content] - 通知内容
+/// @property {object} [extra] - extra 字段
+/// @property {number} [fireTime] - 通知触发时间（毫秒）
+/// // iOS Only
+/// @property {number} [badge] - 本地推送触发后应用角标值
+/// // iOS Only
+/// @property {string} [soundName] - 指定推送的音频文件
+/// // iOS 10+ Only
+/// @property {string} [subtitle] - 子标题
+class LocalNotification {
+  final int? buildId; //?
+  final int? id;
+  final String? title;
+  final String? content;
+  final Map<String, String>? extra; //?
+  final DateTime? fireTime;
+  final int? badge; //?
+  final String? soundName; //?
+  final String? subtitle; //?
+
+  const LocalNotification(
+      {this.id,
+      this.title,
+      this.content,
+      this.fireTime,
+      this.buildId,
+      this.extra,
+      this.badge = 0,
+      this.soundName,
+      this.subtitle})
+      : assert(id != null),
+        assert(title != null),
+        assert(content != null),
+        assert(fireTime != null);
+
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'id': id,
+      'title': title,
+      'content': content,
+      'fireTime': fireTime?.millisecondsSinceEpoch,
+      'buildId': buildId,
+      'extra': extra,
+      'badge': badge,
+      'soundName': soundName,
+      'subtitle': subtitle
+    }..removeWhere((key, value) => value == null);
+  }
+}
+

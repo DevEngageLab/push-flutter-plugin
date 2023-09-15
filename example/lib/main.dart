@@ -53,9 +53,10 @@ class _MyAppState extends State<MyApp> {
       });
     });
     FlutterPluginEngagelab.configDebugMode(true);
+    FlutterPluginEngagelab.setSiteName("Singapore");
     if (Platform.isIOS) {
       FlutterPluginEngagelab.initIos(
-        appKey: "你的appkey",
+        appKey: "fcc545917674d6f06c141704",
         channel: "testChannel",
       );
       FlutterPluginEngagelab.checkNotificationAuthorizationIos();
@@ -89,11 +90,73 @@ class _MyAppState extends State<MyApp> {
         appBar: AppBar(
           title: const Text('Plugin example app'),
         ),
-        body: Center(
-          child: Text('RID: $_platformVersion\n'
-              'EVENT NAME: $_event_name\n'
-              'EVENT DATA: $_event_data\n'),
-        ),
+         body: new Center(
+            child: new Column(
+              children: [
+                Container(
+                  margin: EdgeInsets.fromLTRB(10, 10, 10, 10),
+                  color: Colors.brown,
+                  child: Text('RID: $_platformVersion\n'
+                              'EVENT NAME: $_event_name\n'
+                              'EVENT DATA: $_event_data\n'),
+                  width: 350,
+                  height: 100,
+                ),
+                new Row(
+                  children: <Widget> [
+                    new Text(" "),
+                    new CustomButton(
+                      title: "发送本地通知",
+                      onPressed: () {
+                        // 三秒后出发本地推送
+                        var fireDate = DateTime.fromMillisecondsSinceEpoch(
+                        DateTime.now().millisecondsSinceEpoch + 3000);
+                        var localNotification = LocalNotification(
+                          id: 234,
+                          title: 'fadsfa',
+                          buildId: 1,
+                          content: 'fdas',
+                          fireTime: fireDate,
+                          subtitle: 'fasf',
+                          badge: 5,
+                          extra: {"fa": "0"});
+                        FlutterPluginEngagelab
+                          .sendLocalNotification(localNotification)
+                          .then((res) {
+                        // setState(() {
+                        //   debugLable = res;
+                        // });
+                      });
+                      }
+                    ),
+                  ]
+                ),
+              ],
+            ),
+          ),
+      ),
+    );
+  }
+}
+
+
+/// 封装控件
+class CustomButton extends StatelessWidget {
+  final VoidCallback? onPressed;
+  final String? title;
+
+  const CustomButton({@required this.onPressed, @required this.title});
+
+  @override
+  Widget build(BuildContext context) {
+    return new TextButton(
+      onPressed: onPressed,
+      child: new Text("$title"),
+      style: new ButtonStyle(
+        foregroundColor: MaterialStateProperty.all(Colors.white),
+        overlayColor: MaterialStateProperty.all(Color(0xff888888)),
+        backgroundColor: MaterialStateProperty.all(Color(0xff585858)),
+        padding: MaterialStateProperty.all(EdgeInsets.fromLTRB(10, 5, 10, 5)),
       ),
     );
   }
