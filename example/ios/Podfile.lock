@@ -2,8 +2,8 @@ PODS:
   - Flutter (1.0.0)
   - flutter_plugin_engagelab (0.0.3):
     - Flutter
-    - MTPush (= 4.3.0)
-  - MTPush (4.3.0)
+    - MTPush (= 4.3.1)
+  - MTPush (4.3.1)
 
 DEPENDENCIES:
   - Flutter (from `Flutter`)
@@ -21,8 +21,8 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Flutter: 50d75fe2f02b26cc09d224853bb45737f8b3214a
-  flutter_plugin_engagelab: b2f357294678bed680ff8f349b077edd6106723a
-  MTPush: 4de9a8373c7d1a16a77c2da3499afc7eb601293e
+  flutter_plugin_engagelab: 7cbb424b33f38e1861d737cde2093bb0d2f168fe
+  MTPush: 4568a6625efe85a85e96bb061ca101faf3b55b0f
 
 PODFILE CHECKSUM: 8e679eca47255a8ca8067c4c67aab20e64cb974d
 
