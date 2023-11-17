@@ -43,7 +43,7 @@ dependencies {
     implementation 'com.engagelab.plugin:google:4.3.3' // 此处以3.5.1 版本为例。
     //可选，honor厂商
     implementation 'com.engagelab.plugin:honor:4.3.3' // 此处以3.5.1 版本为例。
-    implementation 'com.engagelab.plugin:honor_th_push:4.3.3.release' // 此处以3.5.1 版本为例。
+    implementation 'com.engagelab.plugin:honor_th_push:4.3.3' // 此处以3.5.1 版本为例。
     //可选，huawei厂商
     implementation 'com.engagelab.plugin:huawei:4.3.3' // 此处以3.5.1 版本为例。
     //可选，mi厂商，海外版
