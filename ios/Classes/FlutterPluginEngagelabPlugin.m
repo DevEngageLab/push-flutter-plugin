@@ -244,8 +244,7 @@ NSData * _deviceToken;
 
 
 -(void)cleanTags:(NSArray* )data {
-    NSDictionary* params = [data objectAtIndex:0];
-    NSNumber* sequence = params[@"sequence"];
+    NSNumber* sequence = [data objectAtIndex:0];
     
     [MTPushService cleanTags:^(NSInteger iResCode, NSSet *iTags, NSInteger seq) {
         [self tagsCallBackChannel:(@"cleanTags") iResCode:(iResCode) iTags:(iTags) seq:(seq)];
@@ -255,8 +254,7 @@ NSData * _deviceToken;
 
 
 -(void)getAllTags:(NSArray* )data {
-    NSDictionary* params = [data objectAtIndex:0];
-    NSNumber* sequence = params[@"sequence"];
+    NSNumber* sequence = [data objectAtIndex:0];
     
     [MTPushService getAllTags:^(NSInteger iResCode, NSSet *iTags, NSInteger seq) {
         [self tagsCallBackChannel:(@"getAllTags") iResCode:(iResCode) iTags:(iTags) seq:(seq)];
@@ -351,10 +349,10 @@ NSData * _deviceToken;
     
     if ([params[@"extra"] isKindOfClass:[NSDictionary class]]) {
         NSMutableDictionary *newDic = [NSMutableDictionary dictionaryWithDictionary:params[@"extra"]];
-        [newDic setValue:@"EngageLab" forKey:@"_j_private_cloud"];
+        [newDic setValue:@"EngageLab" forKey:@"_j_engagel_cloud"];
         content.userInfo = newDic;
     } else {
-        content.userInfo = @{@"_j_private_cloud":@"EngageLab"};
+        content.userInfo = @{@"_j_engagel_cloud":@"EngageLab"};
     }
     
     if (params[@"soundName"] && ![params[@"soundName"] isEqualToString:@"<null>"]) {
