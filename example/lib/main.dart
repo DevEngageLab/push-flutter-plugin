@@ -56,7 +56,6 @@ class _MyAppState extends State<MyApp> {
       });
     });
     FlutterPluginEngagelab.configDebugMode(true);
-    FlutterPluginEngagelab.setSiteName("Singapore");
     if (Platform.isIOS) {
       FlutterPluginEngagelab.initIos(
         appKey: "fcc545917674d6f06c141704",

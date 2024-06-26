@@ -15,7 +15,7 @@ dependencies:
       
 // pub 集成
 dependencies:
-  flutter_plugin_engagelab: 1.2.1
+  flutter_plugin_engagelab: 1.2.2
 ```
 
 ### 配置
@@ -34,8 +34,8 @@ android: {
                 ENGAGELAB_PRIVATES_APPKEY : "你的appkey",
                 ENGAGELAB_PRIVATES_CHANNEL: "developer",
                 ENGAGELAB_PRIVATES_PROCESS: ":remote",
-                XIAOMI_GLOBAL_APPID            : "",//小米厂商，有就填MI-自己的，没有就不用填，保留为""
-                XIAOMI_GLOBAL_APPKEY           : "",//小米厂商，有就填MI-自己的，没有就不用填，保留为""
+                XIAOMI_APPID            : "",//小米厂商，有就填MI-自己的，没有就不用填，保留为""
+                XIAOMI_APPKEY           : "",//小米厂商，有就填MI-自己的，没有就不用填，保留为""
                 MEIZU_APPID            : "",//魅族厂商，有就填MZ-自己的，没有就不用填，保留为""
                 MEIZU_APPKEY           : "",//魅族厂商，有就填MZ-自己的，没有就不用填，保留为""
                 OPPO_APPID             : "",//OPPO厂商，有就填OP-自己的，没有就不用填，保留为""
@@ -47,8 +47,6 @@ android: {
                 APP_TCP_SSL            : "",//android tcp连接是否加密，填true为加密，其他为不加密，可保留为""，这个数据要生效需在AndroidManifest.xml中的application添加android:name="com.engagelab.privates.flutter_plugin_engagelab.MTApplication"，或继承该对象
                 APP_DEBUG            : "",//android log debug模式，填true为debug模式，其他为非debug模式，可保留为""，这个数据要生效需在AndroidManifest.xml中的application添加android:name="com.engagelab.privates.flutter_plugin_engagelab.MTApplication"，或继承该对象
                 COUNTRY_CODE            : "",//测试用，可保留为""，这个数据要生效需在AndroidManifest.xml中的application添加android:name="com.engagelab.privates.flutter_plugin_engagelab.MTApplication"，或继承该对象
-                //数据中心名称，填空""时，默认"Singapore"数据中心
-                ENGAGELAB_PRIVATES_SITE_NAME: "Singapore",
         ]
   }    
 }
