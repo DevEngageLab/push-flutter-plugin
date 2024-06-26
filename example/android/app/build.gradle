@@ -25,7 +25,7 @@ apply plugin: 'com.android.application'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 31
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -35,7 +35,7 @@ android {
     defaultConfig {
         applicationId "你的包名"
         minSdkVersion 19
-        targetSdkVersion 30
+        targetSdkVersion 31
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
 
@@ -43,21 +43,19 @@ android {
                 ENGAGELAB_PRIVATES_APPKEY : "你的appkey",
                 ENGAGELAB_PRIVATES_CHANNEL: "developer",
                 ENGAGELAB_PRIVATES_PROCESS: ":remote",
-                XIAOMI_GLOBAL_APPID            : "",
-                XIAOMI_GLOBAL_APPKEY           : "",
+                XIAOMI_APPID            : "",
+                XIAOMI_APPKEY           : "",
                 MEIZU_APPID            : "",
                 MEIZU_APPKEY           : "",
                 OPPO_APPID             : "",
                 OPPO_APPKEY            : "",
                 OPPO_APPSECRET         : "",
-                VIVO_APPID             : "",
-                VIVO_APPKEY            : "",
+                VIVO_APPID             : "105481245",
+                VIVO_APPKEY            : "8ce86005c2bc8a4db5178210b51eeb8a",
                 HONOR_APPID            : "",
                 APP_TCP_SSL            : "",
                 APP_DEBUG            : "",
-                COUNTRY_CODE            : "",
-                //数据中心名称，填空""时，默认"Singapore"数据中心
-                ENGAGELAB_PRIVATES_SITE_NAME: "Singapore",
+                COUNTRY_CODE            : ""
 
         ]
     }

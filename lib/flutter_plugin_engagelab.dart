@@ -30,7 +30,8 @@ class FlutterPluginEngagelab {
     printMy("_handleMethod data: " + call.arguments.toString());
     switch (call.method) {
       case "onMTCommonReceiver":
-        printMy("_handleMethod _onMTCommonReceiver: " +_onMTCommonReceiver.toString());
+        printMy("_handleMethod _onMTCommonReceiver: " +
+            _onMTCommonReceiver.toString());
         return _onMTCommonReceiver!(call.arguments.cast<String, dynamic>());
       default:
         return call.arguments;
@@ -64,7 +65,7 @@ class FlutterPluginEngagelab {
   }
 
   /**
-   * 设置数据中心
+   * 设置数据中心 --- 该接口在1.2.1版本后失效，不需要调用
    * <p>
    * 需要在Application.onCreate()方法中调用， 
    * iOS 需要在initIos方法前调用
@@ -72,8 +73,8 @@ class FlutterPluginEngagelab {
    * @param siteName 数据中心的名字
    */
   static setSiteName(siteName) {
-    printMy("setSiteName");
-    _channel.invokeMethod('setSiteName', [siteName]);
+    // printMy("setSiteName");
+    // _channel.invokeMethod('setSiteName', [siteName]);
   }
 
   /**
@@ -112,8 +113,6 @@ class FlutterPluginEngagelab {
     printMy("configDebugMode:" + enable.toString());
     _channel.invokeMethod("configDebugMode", [enable]);
   }
-
-
 
   /**
    * 配置使用国密加密
@@ -413,7 +412,6 @@ class FlutterPluginEngagelab {
     _channel.invokeMethod("updateTags", [params]);
   }
 
-
   /**
    * 查询标签。 ios为校验validTag
    *
@@ -434,8 +432,6 @@ class FlutterPluginEngagelab {
     _channel.invokeMethod("deleteAllTag", [sequence]);
   }
 
-
-
   /**
    * 查询所有标签。
    *
@@ -446,16 +442,15 @@ class FlutterPluginEngagelab {
     _channel.invokeMethod("queryAllTag", [sequence]);
   }
 
-
   /**
    * 设置别名。
    *
    * @param sequence = number
    * @param alias = string
    */
-  static setAlias(sequence,alias) {
+  static setAlias(sequence, alias) {
     printMy("setAlias");
-    _channel.invokeMethod("setAlias", [sequence,alias]);
+    _channel.invokeMethod("setAlias", [sequence, alias]);
   }
 
   /**
@@ -478,12 +473,10 @@ class FlutterPluginEngagelab {
     _channel.invokeMethod("clearAlias", [sequence]);
   }
 
-
-
   /**
    * 检测通知权限授权情况
    */
-  static checkNotificationAuthorizationIos(){
+  static checkNotificationAuthorizationIos() {
     printMy("checkNotificationAuthorizationIos");
     _channel.invokeMethod("checkNotificationAuthorization", []);
   }
@@ -496,14 +489,16 @@ class FlutterPluginEngagelab {
     _channel.invokeMethod("setTcpSSL", [enable]);
   }
 
- ///
+  ///
   /// 发送本地通知到调度器，指定时间出发该通知。
   /// @param {Notification} notification
   ///
-  static Future<String> sendLocalNotification(LocalNotification notification) async {
+  static Future<String> sendLocalNotification(
+      LocalNotification notification) async {
     print(flutter_log + "sendLocalNotification:");
 
-    await _channel.invokeMethod('sendLocalNotification', [notification.toMap()]);
+    await _channel
+        .invokeMethod('sendLocalNotification', [notification.toMap()]);
 
     return notification.toMap().toString();
   }
@@ -518,7 +513,6 @@ class FlutterPluginEngagelab {
     _channel.invokeMethod("clearNotificationAll", []);
   }
 }
-
 
 /// @property {number} [id] - 通知 id, 可用于取消通知
 /// @property {string} [title] - 通知标题
@@ -537,7 +531,7 @@ class FlutterPluginEngagelab {
 /// // iOS 10+ Only
 /// @property {string} [subtitle] - 子标题
 
- /** PRIORITY与IMPORTANCE 相互转换关系
+/** PRIORITY与IMPORTANCE 相互转换关系
    * PRIORITY_MIN = -2 对应 IMPORTANCE_MIN = 1;
    * PRIORITY_LOW = -1; 对应 IMPORTANCE_LOW = 2;
    * PRIORITY_DEFAULT = 0; 对应 IMPORTANCE_DEFAULT = 3;
@@ -588,4 +582,3 @@ class LocalNotification {
     }..removeWhere((key, value) => value == null);
   }
 }
-
