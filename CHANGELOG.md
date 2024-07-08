@@ -1,3 +1,7 @@
+## 1.2.3
++ iOS SDK升级到4.4.0
++ android SDK升级到4.4.0
+
 ## 1.2.2
 + iOS SDK升级到4.3.5
 + android SDK升级到4.3.9
