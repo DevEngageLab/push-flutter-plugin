@@ -27,7 +27,8 @@
 @end
 
 @interface FlutterPluginEngagelabPlugin ()<MTPushRegisterDelegate>
-
+//在前台时是否展示通知
+@property(assign, nonatomic) BOOL unShow;
 @end
 
 @implementation FlutterPluginEngagelabPlugin
@@ -59,6 +60,8 @@ NSData * _deviceToken;
     
     if ([name isEqualToString:(@"init")]) {
         [self initSdk:data result:result];
+    }else if([@"setUnShowAtTheForeground" isEqualToString:call.method]) {
+        [self setUnShowAtTheForeground:data result: result];
     }else if ([name isEqualToString:@"setSiteName"]) {
         [self setSiteName:data];
     }else if ([name isEqualToString:(@"getRegistrationId")]){
@@ -167,6 +170,15 @@ NSData * _deviceToken;
                         object:nil];
 }
 
+//设置APP在前台时是否展示通知
+- (void)setUnShowAtTheForeground:(NSArray *)data result:(FlutterResult)result {
+    JPLog(@"setUnShowAtTheForeground: %@",data);
+    NSNumber *value = [data objectAtIndex:0];
+    if (value && [value isKindOfClass:[NSNumber class]]) {
+        self.unShow = [value boolValue];
+    }
+}
+
 
 -(void)registrationIDCompletionHandler:(NSArray*)data result:(FlutterResult)result {
     [MTPushService registrationIDCompletionHandler:^(int resCode, NSString *registrationID) {
@@ -194,8 +206,8 @@ NSData * _deviceToken;
 
 
 -(void)setDebugMode:(NSArray* )data {
-    bool value = [data objectAtIndex:0];
-    if (value) {
+    NSNumber *value = [data objectAtIndex:0];
+    if (value && [value isKindOfClass:[NSNumber class]] && [value boolValue]) {
         [MTPushService setDebugMode];
     }
 }
@@ -456,7 +468,11 @@ NSData * _deviceToken;
     }
     [self callBackChannel:@"willPresentNotification" arguments:[[self jpushFormatAPNSDic:userInfo] toJsonString]];
     
-    completionHandler(UNNotificationPresentationOptionBadge|UNNotificationPresentationOptionSound|UNNotificationPresentationOptionAlert); // 需要执行这个方法，选择是否提醒用户，有Badge、Sound、Alert三种类型可以设置
+    if (self.unShow) {
+        completionHandler(UNNotificationPresentationOptionNone);
+    }else {
+        completionHandler(UNNotificationPresentationOptionBadge|UNNotificationPresentationOptionSound|UNNotificationPresentationOptionAlert); // 需要执行这个方法，选择是否提醒用户，有Badge、Sound、Alert三种类型可以设置
+    }
 }
 
 //ok

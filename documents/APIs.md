@@ -129,6 +129,28 @@ FlutterPluginEngagelab.getRegistrationId().then((rid){
 });
 ```
 
+## 设置iOS通知前台是否展示
+
+### setUnShowAtTheForegroundIos （仅支持ios）
+
+设置iOS通知前台是否展示
+
+#### 接口定义
+
+```js
+FlutterPluginEngagelab.setUnShowAtTheForegroundIos(enable)
+```
+
+#### 参数说明
+
+- enable: ios通知前台是否展示，true为不展示，false展示
+
+#### 代码示例
+
+```js
+FlutterPluginEngagelab.setUnShowAtTheForegroundIos(true);
+```
+
 ## 发送一个本地通知
 
 ### sendLocalNotification

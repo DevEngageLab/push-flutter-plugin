@@ -77,6 +77,15 @@ class FlutterPluginEngagelab {
     // _channel.invokeMethod('setSiteName', [siteName]);
   }
 
+/**
+   * 设置iOS在前台是否展示通知
+   * @param enable  是否展示通知，true为调试模式，false不是
+   */
+  static setUnShowAtTheForegroundIos(enable) {
+    printMy("setUnShowAtTheForegroundIos:" + enable.toString());
+    _channel.invokeMethod("setUnShowAtTheForeground", [enable]);
+  }
+
   /**
    * 设置心跳时间间隔
    * <p>
