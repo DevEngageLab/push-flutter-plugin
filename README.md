@@ -1,52 +1,52 @@
 # flutter_plugin_engagelab
 
-### 安装
+### Setup
 
-在工程 pubspec.yaml 中加入 dependencies
+Add dependencies to project pubspec.yaml
 
 ```
   
-//github  集成
+// by github:
 dependencies:
   flutter_plugin_engagelab:
     git:
       url: git://github.com/DevEngageLab/push-flutter-plugin.git
       ref: main
       
-// pub 集成
+// by pub:
 dependencies:
   flutter_plugin_engagelab: 1.2.4
 ```
 
-### 配置
+### Configuration
 
 ##### Android:
 
-在 `/android/app/build.gradle` 中添加下列代码：
+Add the following code in `/android/app/build.gradle`:
 
 ```groovy
 android: {
   ....
   defaultConfig {
-    applicationId "替换成自己应用 ID"
+    applicationId "Replace with your own application ID"
     ....
     manifestPlaceholders = [
-                ENGAGELAB_PRIVATES_APPKEY : "你的appkey",
+                ENGAGELAB_PRIVATES_APPKEY : "your appkey",
                 ENGAGELAB_PRIVATES_CHANNEL: "developer",
                 ENGAGELAB_PRIVATES_PROCESS: ":remote",
-                XIAOMI_APPID            : "",//小米厂商，有就填MI-自己的，没有就不用填，保留为""
-                XIAOMI_APPKEY           : "",//小米厂商，有就填MI-自己的，没有就不用填，保留为""
-                MEIZU_APPID            : "",//魅族厂商，有就填MZ-自己的，没有就不用填，保留为""
-                MEIZU_APPKEY           : "",//魅族厂商，有就填MZ-自己的，没有就不用填，保留为""
-                OPPO_APPID             : "",//OPPO厂商，有就填OP-自己的，没有就不用填，保留为""
-                OPPO_APPKEY            : "",//OPPO厂商，有就填OP-自己的，没有就不用填，保留为""
-                OPPO_APPSECRET         : "",//OPPO厂商，有就填OP-自己的，没有就不用填，保留为""
-                VIVO_APPID             : "",//VIVO厂商，有就填自己的，没有就不用填，保留为""
-                VIVO_APPKEY            : "",//VIVO厂商，有就填自己的，没有就不用填，保留为""
-                HONOR_APPID            : "",//荣耀厂商，有就填自己的，没有就不用填，保留为""
-                APP_TCP_SSL            : "",//android tcp连接是否加密，填true为加密，其他为不加密，可保留为""，这个数据要生效需在AndroidManifest.xml中的application添加android:name="com.engagelab.privates.flutter_plugin_engagelab.MTApplication"，或继承该对象
-                APP_DEBUG            : "",//android log debug模式，填true为debug模式，其他为非debug模式，可保留为""，这个数据要生效需在AndroidManifest.xml中的application添加android:name="com.engagelab.privates.flutter_plugin_engagelab.MTApplication"，或继承该对象
-                COUNTRY_CODE            : "",//测试用，可保留为""，这个数据要生效需在AndroidManifest.xml中的application添加android:name="com.engagelab.privates.flutter_plugin_engagelab.MTApplication"，或继承该对象
+                XIAOMI_APPID            : "",//Xiaomi manufacturer, fill in the MI-appid if it exists. If not, don’t fill it in. Leave it as ""
+                XIAOMI_APPKEY           : "",//Xiaomi manufacturer, if available, fill in MI-appkey, if not, don’t fill it in, leave it as ""
+                MEIZU_APPID            : "",//Meizu manufacturer, if available, fill in MZ-appid, if not, do not fill in, leave it as ""
+                MEIZU_APPKEY           : "",//Meizu manufacturer, if available, fill in MZ-appkey, if not, do not fill in, leave it as ""
+                OPPO_APPID             : "",//OOPPO manufacturer, if yes, fill in OP-appid, if not, no need to fill in, leave it as ""
+                OPPO_APPKEY            : "",//OPPO manufacturer, if yes, fill in OP-appkey, if not, no need to fill in, leave it as ""
+                OPPO_APPSECRET         : "",//OPPO manufacturer, if yes, fill in OP-appsecret, if not, no need to fill in, leave it as ""
+                VIVO_APPID             : "",//VIVO manufacturer, if available, fill in vivo appid, if not, don’t fill in, leave it as ""
+                VIVO_APPKEY            : "",//VIVO manufacturer, if available, fill in vivo appkey, if not, don’t fill in, leave it as ""
+                HONOR_APPID            : "",//Honor manufacturer, if you have it, fill in honnor appid, if not, don’t fill it in, leave it as ""
+                APP_TCP_SSL            : "",//android - Whether the tcp connection is encrypted, fill in true to indicate encryption, otherwise it means not encrypted, and can be left as "". For this data to take effect, you need to add android:name="com.engagelab.privates.flutter_plugin_engagelab.MTApplication" to the application in AndroidManifest.xml. Or let your MainApplication inherit MTApplication.
+                APP_DEBUG            : "",//android - Fill in true to indicate debug mode, others indicate non-debug mode, and can be left as "". For this data to take effect, you need to add android:name="com.engagelab.privates.flutter_plugin_engagelab.MTApplication" to the application in AndroidManifest.xml, or inherit this object.
+                COUNTRY_CODE            : "",//For testing, can be left as "".For this data to take effect, you need to add android:name="com.engagelab.privates.flutter_plugin_engagelab.MTApplication" to the application in AndroidManifest.xml, or inherit this object.
         ]
   }    
 }
@@ -54,9 +54,9 @@ android: {
 
 ##### iOS:
 
-- 在 xcode8 之后需要点开推送选项： TARGETS -> Capabilities -> Push Notification 设为 on 状态
+- After xcode8, you need to click on the push option: TARGETS -> Capabilities -> Push Notification and set it to on.
 
-### 使用
+### Usage
 
 ```dart
 import 'package:flutter_plugin_engagelab/flutter_plugin_engagelab.dart';
@@ -64,7 +64,7 @@ import 'package:flutter_plugin_engagelab/flutter_plugin_engagelab.dart';
 
 ### APIs
 
-**注意** : 需要先调用 FlutterPluginEngagelab.init 来初始化插件，才能保证其他功能正常工作。
+**Note** : FlutterPluginEngagelab.init needs to be called first to initialize the plug-in to ensure that other functions work properly.工作。
 
- [参考](./documents/APIs.md)
+ [refer to](./documents/APIs.md)
 
