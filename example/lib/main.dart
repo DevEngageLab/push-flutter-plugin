@@ -58,7 +58,7 @@ class _MyAppState extends State<MyApp> {
     FlutterPluginEngagelab.configDebugMode(true);
     if (Platform.isIOS) {
       FlutterPluginEngagelab.initIos(
-        appKey: "fcc545917674d6f06c141704",
+        appKey: "fcc545917674d6f06c141704", // 5645a6e0c6ef00bb71facf21
         channel: "testChannel",
       );
       FlutterPluginEngagelab.checkNotificationAuthorizationIos();
@@ -75,6 +75,11 @@ class _MyAppState extends State<MyApp> {
         _platformVersion = "$rid";
       });
     });
+
+    // iOS要是使用应用内消息，请在页面进入离开的时候配置pageEnterTo 和  pageLeave 函数，参数为页面名。
+    FlutterPluginEngagelab.pageEnterTo(
+        "HomePage"); // 在离开页面的时候请调用 FlutterPluginEngagelab.pageLeave("HomePage");
+
     // If the widget was removed from the tree while the asynchronous platform
     // message was in flight, we want to discard the reply rather than calling
     // setState to update our non-existent appearance.

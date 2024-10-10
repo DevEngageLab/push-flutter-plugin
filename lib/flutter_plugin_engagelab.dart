@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/services.dart';
 
+import 'dart:io' show Platform;
+
 typedef Future<dynamic> EventHandler(Map<String, dynamic> event);
 
 class FlutterPluginEngagelab {
@@ -389,6 +391,26 @@ class FlutterPluginEngagelab {
   static setCountryCodeAndroid(country) {
     printMy("setCountryCode");
     _channel.invokeMethod("setCountryCode", [country]);
+  }
+
+  // iOS Only
+  // 进入页面， pageName：页面名  请与pageLeave配套使用
+  static pageEnterTo(String pageName) {
+    printMy("pageEnterTo:" + pageName);
+    if (!Platform.isIOS) {
+      return;
+    }
+    _channel.invokeMethod('pageEnterTo', pageName);
+  }
+
+  // iOS Only
+  // 离开页面，pageName：页面名， 请与pageEnterTo配套使用
+  static pageLeave(String pageName) {
+    printMy("pageLeave:" + pageName);
+    if (!Platform.isIOS) {
+      return;
+    }
+    _channel.invokeMethod('pageLeave', pageName);
   }
 
   /**

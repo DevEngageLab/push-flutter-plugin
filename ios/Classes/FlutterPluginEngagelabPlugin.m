@@ -26,7 +26,7 @@
 }
 @end
 
-@interface FlutterPluginEngagelabPlugin ()<MTPushRegisterDelegate>
+@interface FlutterPluginEngagelabPlugin ()<MTPushRegisterDelegate,MTPushInAppMessageDelegate>
 //在前台时是否展示通知
 @property(assign, nonatomic) BOOL unShow;
 @end
@@ -100,6 +100,10 @@ NSData * _deviceToken;
         [self clearLocalNotifications:data];
     }else if([@"sendLocalNotification"isEqualToString:call.method]) {
         [self sendLocalNotification:call result:result];
+    }else if ([@"pageEnterTo" isEqualToString:call.method]) {
+        [self pageEnterTo:call];
+    } else if ([@"pageLeave" isEqualToString:call.method]) {
+        [self pageLeave:call];
     }else{
         
         result(FlutterMethodNotImplemented);
@@ -145,6 +149,7 @@ NSData * _deviceToken;
         entity.types = MTPushAuthorizationOptionAlert|MTPushAuthorizationOptionBadge|MTPushAuthorizationOptionSound;
     }
     [MTPushService registerForRemoteNotificationConfig:entity delegate:self];
+    [MTPushService setInAppMessageDelegate:self];
     [MTPushService setupWithOption:launchOptions
                             appKey:appkey
                            channel:channel
@@ -410,6 +415,18 @@ NSData * _deviceToken;
     result(@[@[]]);
 }
 
+- (void)pageEnterTo:(FlutterMethodCall*)call {
+    JPLog(@"pageEnterTo:%@",call.arguments);
+    NSString *pageName = call.arguments;
+    [MTPushService pageEnterTo:pageName];
+}
+
+- (void)pageLeave:(FlutterMethodCall*)call {
+    JPLog(@"pageLeave:%@",call.arguments);
+    NSString *pageName = call.arguments;
+    [MTPushService pageLeave:pageName];
+}
+
 #pragma mark - AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
@@ -539,6 +556,27 @@ NSData * _deviceToken;
     NSMutableDictionary *data = @{}.mutableCopy;
     data[@"enable"] = @YES;
     [self callBackChannel:@"networkDidLogin" arguments:[data toJsonString]];
+}
+
+#pragma mark - 应用内消息回调
+- (void)mtPushInAppMessageDidShow:(MTPushInAppMessage *)inAppMessage {
+    [self callBackChannel:@"onInAppMessageShow" arguments: [[self convertInappMsg:inAppMessage] toJsonString]];
+}
+
+- (void)mtPushInAppMessageDidClick:(MTPushInAppMessage *)inAppMessage {
+    [self callBackChannel:@"onInAppMessageClick" arguments: [[self convertInappMsg:inAppMessage] toJsonString]];
+}
+
+- (NSDictionary *)convertInappMsg:(MTPushInAppMessage *)inAppMessage {
+    NSDictionary *result = @{
+        @"mesageId": inAppMessage.mesageId ?: @"",    // 消息id
+        @"title": inAppMessage.title ?:@"",       // 标题
+        @"content": inAppMessage.content ?: @"",    // 内容
+        @"target": inAppMessage.target ?: @[],      // 目标页面
+        @"clickAction": inAppMessage.clickAction ?: @"", // 跳转地址
+        @"extras": inAppMessage.extras ?: @{} // 附加字段
+    };
+    return result;
 }
 
 
