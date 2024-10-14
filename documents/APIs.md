@@ -20,6 +20,8 @@ Register the sdk callback event
       - "onTagMessage":callback for tag operation
       - "onAliasMessage":Callback for alias operation
       - "onNotificationUnShow":Callback for not displaying notification messages in the foreground (when the notification sent in the background is foreground information)
+      - "onInAppMessageShow": callback for inapp message arrival
+      - "onInAppMessageClick": callback for inapp message click
     - ios:
       - "willPresentNotification":Callback for notification arrival, the content is the notification message body
       - "didReceiveNotificationResponse":Notification click callback, the content is the notification message body
@@ -36,6 +38,10 @@ Register the sdk callback event
       - "deleteAlias":callback for deleteAlias event
       - "getAlias":callback for getAlias event
       - "deleteAlias":callback for deleteAlias event
+      - "onInAppMessageShow": callback for inapp message arrival
+      - "onInAppMessageClick": callback for inapp message click
+      - "onNotiInMessageShow": callback for noti inmessage arrival
+      - "onNotiInMessageClick": callback for noti inmessage click
   - message["event_data"]: content
 
 

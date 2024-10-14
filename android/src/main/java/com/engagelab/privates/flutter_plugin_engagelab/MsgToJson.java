@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import com.engagelab.privates.push.api.AliasMessage;
 import com.engagelab.privates.push.api.CustomMessage;
+import com.engagelab.privates.push.api.InAppMessage;
 import com.engagelab.privates.push.api.NotificationMessage;
 import com.engagelab.privates.push.api.PlatformTokenMessage;
 import com.engagelab.privates.push.api.TagMessage;
@@ -104,6 +105,22 @@ public class MsgToJson {
         }
         return jsonObject.toString();
     }
+
+    public static String inappMessageToJson(InAppMessage inappMessage) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("messageId", inappMessage.getMessageId());
+            jsonObject.put("target", inappMessage.getTarget());
+            jsonObject.put("content", inappMessage.getContent());
+            jsonObject.put("clickAction", inappMessage.getClick());
+            jsonObject.put("extras", inappMessage.getExtras());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return jsonObject.toString();
+    }
+
+
     public static String booleanToJson(boolean enable) {
         JSONObject jsonObject = new JSONObject();
         try {

@@ -393,24 +393,26 @@ class FlutterPluginEngagelab {
     _channel.invokeMethod("setCountryCode", [country]);
   }
 
-  // iOS Only
+  //
   // 进入页面， pageName：页面名  请与pageLeave配套使用
   static pageEnterTo(String pageName) {
     printMy("pageEnterTo:" + pageName);
     if (!Platform.isIOS) {
       return;
+    } else {
+      _channel.invokeMethod('pageEnterTo', [pageName]);
     }
-    _channel.invokeMethod('pageEnterTo', pageName);
   }
 
-  // iOS Only
+  //
   // 离开页面，pageName：页面名， 请与pageEnterTo配套使用
   static pageLeave(String pageName) {
     printMy("pageLeave:" + pageName);
     if (!Platform.isIOS) {
       return;
+    } else {
+      _channel.invokeMethod('pageLeave', [pageName]);
     }
-    _channel.invokeMethod('pageLeave', pageName);
   }
 
   /**

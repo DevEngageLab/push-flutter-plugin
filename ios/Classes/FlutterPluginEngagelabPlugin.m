@@ -98,12 +98,12 @@ NSData * _deviceToken;
         [self removeLocalNotification:data];
     }else if ([name isEqualToString:(@"clearNotificationAll")]){
         [self clearLocalNotifications:data];
-    }else if([@"sendLocalNotification"isEqualToString:call.method]) {
+    }else if([name isEqualToString:@"sendLocalNotification"]) {
         [self sendLocalNotification:call result:result];
-    }else if ([@"pageEnterTo" isEqualToString:call.method]) {
-        [self pageEnterTo:call];
-    } else if ([@"pageLeave" isEqualToString:call.method]) {
-        [self pageLeave:call];
+    }else if ([name isEqualToString:@"pageEnterTo"]) {
+        [self pageEnterTo:data];
+    } else if ([name isEqualToString:@"pageLeave"]) {
+        [self pageLeave:data];
     }else{
         
         result(FlutterMethodNotImplemented);
@@ -416,15 +416,13 @@ NSData * _deviceToken;
     result(@[@[]]);
 }
 
-- (void)pageEnterTo:(FlutterMethodCall*)call {
-    JPLog(@"pageEnterTo:%@",call.arguments);
-    NSString *pageName = call.arguments;
+- (void)pageEnterTo:(NSArray*)data {
+    NSString *pageName = [data objectAtIndex:0];
     [MTPushService pageEnterTo:pageName];
 }
 
-- (void)pageLeave:(FlutterMethodCall*)call {
-    JPLog(@"pageLeave:%@",call.arguments);
-    NSString *pageName = call.arguments;
+- (void)pageLeave:(NSArray* )data  {
+    NSString *pageName = [data objectAtIndex:0];
     [MTPushService pageLeave:pageName];
 }
 
