@@ -26,7 +26,7 @@
 }
 @end
 
-@interface FlutterPluginEngagelabPlugin ()<MTPushRegisterDelegate,MTPushInAppMessageDelegate>
+@interface FlutterPluginEngagelabPlugin ()<MTPushRegisterDelegate,MTPushInAppMessageDelegate,MTPushNotiInMessageDelegate>
 //在前台时是否展示通知
 @property(assign, nonatomic) BOOL unShow;
 @end
@@ -150,6 +150,7 @@ NSData * _deviceToken;
     }
     [MTPushService registerForRemoteNotificationConfig:entity delegate:self];
     [MTPushService setInAppMessageDelegate:self];
+    [MTPushService setNotiInMessageDelegate:self];
     [MTPushService setupWithOption:launchOptions
                             appKey:appkey
                            channel:channel
@@ -579,6 +580,28 @@ NSData * _deviceToken;
     return result;
 }
 
+#pragma mark - MTPushNotiInMessageDelegate
+- (void)mtPushNotiInMessageDidShowWithContent:(NSDictionary *)content {
+    [self callBackChannel:@"onNotiInMessageShow" arguments:[[self convertNotiInMsg:content] toJsonString]];
+}
+
+- (void)mtPushNotiInMessageDidClickWithContent:(NSDictionary *)content {
+    [self callBackChannel:@"onNotiInMessageClick" arguments:[[self convertNotiInMsg:content] toJsonString]];
+}
+
+- (NSDictionary *)convertNotiInMsg:(NSDictionary *)content {
+    if (!content || ![content isKindOfClass:[NSDictionary class]]) {
+        return @{};
+    }
+    NSMutableDictionary *result = [NSMutableDictionary dictionary];
+    for (NSString *key in [content allKeys]) {
+        if ([key isEqualToString:@"_j_private_cloud"] || [key isEqualToString:@"_j_business"] || [key isEqualToString:@"_j_uid"]) {
+            continue;
+        }
+        [result setValue:content[key] forKey:key];
+    }
+    return result;
+}
 
 #pragma mark - 通知权限引导
 
