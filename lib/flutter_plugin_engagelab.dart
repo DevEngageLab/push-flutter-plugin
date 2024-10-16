@@ -393,7 +393,7 @@ class FlutterPluginEngagelab {
     _channel.invokeMethod("setCountryCode", [country]);
   }
 
-  //
+  // iOS Only, 使用应用内消息功能的时候请配置该接口
   // 进入页面， pageName：页面名  请与pageLeave配套使用
   static pageEnterTo(String pageName) {
     printMy("pageEnterTo:" + pageName);
@@ -404,7 +404,7 @@ class FlutterPluginEngagelab {
     }
   }
 
-  //
+  // iOS Only, 使用应用内消息功能的时候请配置该接口
   // 离开页面，pageName：页面名， 请与pageEnterTo配套使用
   static pageLeave(String pageName) {
     printMy("pageLeave:" + pageName);
