@@ -26,7 +26,7 @@
 }
 @end
 
-@interface FlutterPluginEngagelabPlugin ()<MTPushRegisterDelegate>
+@interface FlutterPluginEngagelabPlugin ()<MTPushRegisterDelegate,MTPushInAppMessageDelegate,MTPushNotiInMessageDelegate>
 //在前台时是否展示通知
 @property(assign, nonatomic) BOOL unShow;
 @end
@@ -98,8 +98,12 @@ NSData * _deviceToken;
         [self removeLocalNotification:data];
     }else if ([name isEqualToString:(@"clearNotificationAll")]){
         [self clearLocalNotifications:data];
-    }else if([@"sendLocalNotification"isEqualToString:call.method]) {
+    }else if([name isEqualToString:@"sendLocalNotification"]) {
         [self sendLocalNotification:call result:result];
+    }else if ([name isEqualToString:@"pageEnterTo"]) {
+        [self pageEnterTo:data];
+    } else if ([name isEqualToString:@"pageLeave"]) {
+        [self pageLeave:data];
     }else{
         
         result(FlutterMethodNotImplemented);
@@ -145,6 +149,8 @@ NSData * _deviceToken;
         entity.types = MTPushAuthorizationOptionAlert|MTPushAuthorizationOptionBadge|MTPushAuthorizationOptionSound;
     }
     [MTPushService registerForRemoteNotificationConfig:entity delegate:self];
+    [MTPushService setInAppMessageDelegate:self];
+    [MTPushService setNotiInMessageDelegate:self];
     [MTPushService setupWithOption:launchOptions
                             appKey:appkey
                            channel:channel
@@ -410,6 +416,16 @@ NSData * _deviceToken;
     result(@[@[]]);
 }
 
+- (void)pageEnterTo:(NSArray*)data {
+    NSString *pageName = [data objectAtIndex:0];
+    [MTPushService pageEnterTo:pageName];
+}
+
+- (void)pageLeave:(NSArray* )data  {
+    NSString *pageName = [data objectAtIndex:0];
+    [MTPushService pageLeave:pageName];
+}
+
 #pragma mark - AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
@@ -541,6 +557,49 @@ NSData * _deviceToken;
     [self callBackChannel:@"networkDidLogin" arguments:[data toJsonString]];
 }
 
+#pragma mark - 应用内消息回调
+- (void)mtPushInAppMessageDidShow:(MTPushInAppMessage *)inAppMessage {
+    [self callBackChannel:@"onInAppMessageShow" arguments: [[self convertInappMsg:inAppMessage] toJsonString]];
+}
+
+- (void)mtPushInAppMessageDidClick:(MTPushInAppMessage *)inAppMessage {
+    [self callBackChannel:@"onInAppMessageClick" arguments: [[self convertInappMsg:inAppMessage] toJsonString]];
+}
+
+- (NSDictionary *)convertInappMsg:(MTPushInAppMessage *)inAppMessage {
+    NSDictionary *result = @{
+        @"mesageId": inAppMessage.mesageId ?: @"",    // 消息id
+        @"title": inAppMessage.title ?:@"",       // 标题
+        @"content": inAppMessage.content ?: @"",    // 内容
+        @"target": inAppMessage.target ?: @[],      // 目标页面
+        @"clickAction": inAppMessage.clickAction ?: @"", // 跳转地址
+        @"extras": inAppMessage.extras ?: @{} // 附加字段
+    };
+    return result;
+}
+
+#pragma mark - MTPushNotiInMessageDelegate
+- (void)mtPushNotiInMessageDidShowWithContent:(NSDictionary *)content {
+    [self callBackChannel:@"onNotiInMessageShow" arguments:[[self convertNotiInMsg:content] toJsonString]];
+}
+
+- (void)mtPushNotiInMessageDidClickWithContent:(NSDictionary *)content {
+    [self callBackChannel:@"onNotiInMessageClick" arguments:[[self convertNotiInMsg:content] toJsonString]];
+}
+
+- (NSDictionary *)convertNotiInMsg:(NSDictionary *)content {
+    if (!content || ![content isKindOfClass:[NSDictionary class]]) {
+        return @{};
+    }
+    NSMutableDictionary *result = [NSMutableDictionary dictionary];
+    for (NSString *key in [content allKeys]) {
+        if ([key isEqualToString:@"_j_private_cloud"] || [key isEqualToString:@"_j_business"] || [key isEqualToString:@"_j_uid"]) {
+            continue;
+        }
+        [result setValue:content[key] forKey:key];
+    }
+    return result;
+}
 
 #pragma mark - 通知权限引导
 

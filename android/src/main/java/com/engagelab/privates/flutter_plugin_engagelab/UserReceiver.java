@@ -5,10 +5,11 @@ import android.content.Context;
 import com.engagelab.privates.common.component.MTCommonReceiver;
 import com.engagelab.privates.push.api.AliasMessage;
 import com.engagelab.privates.push.api.CustomMessage;
+import com.engagelab.privates.push.api.InAppMessage;
 import com.engagelab.privates.push.api.NotificationMessage;
 import com.engagelab.privates.push.api.PlatformTokenMessage;
 import com.engagelab.privates.push.api.TagMessage;
-import com.engagelab.privates.push.utils.MsgToJson;
+import com.engagelab.privates.flutter_plugin_engagelab.MsgToJson;
 
 /**
  * This class echoes a string called from JavaScript.
@@ -120,6 +121,18 @@ public class UserReceiver extends MTCommonReceiver {
         FlutterPluginEngagelabPlugin.logD(TAG, "onTagMessage:" + tagMessage.toString());
         FlutterPluginEngagelabPlugin.onCommonReceiver("onTagMessage", MsgToJson.tagMessageToJson(tagMessage));
 
+    }
+
+    @Override
+    public void onInAppMessageShow(Context context, InAppMessage inAppMessage) {
+        FlutterPluginEngagelabPlugin.logD(TAG, "onInAppMessageShow:" + inAppMessage.toString());
+        FlutterPluginEngagelabPlugin.onCommonReceiver("onInAppMessageShow", MsgToJson.inappMessageToJson(inAppMessage));
+    }
+
+    @Override
+    public void onInAppMessageClick(Context context, InAppMessage inAppMessage) {
+        FlutterPluginEngagelabPlugin.logD(TAG, "onInAppMessageClick:" + inAppMessage.toString());
+        FlutterPluginEngagelabPlugin.onCommonReceiver("onInAppMessageClick", MsgToJson.inappMessageToJson(inAppMessage));
     }
 }
 

@@ -901,6 +901,25 @@ public class FlutterPluginEngagelabPlugin implements FlutterPlugin, MethodCallHa
     }
 
 
+    void onFragmentResume(JSONArray data, Result result) {
+        try {
+            Context context = getApplicationContext();
+            String className = data.getString(0);
+            MTPushPrivatesApi.onFragmentResume(getApplicationContext(),className);
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
+    }
+
+    void onFragmentPause(JSONArray data, Result result) {
+        try {
+            Context context = getApplicationContext();
+            String className = data.getString(0);
+            MTPushPrivatesApi.onFragmentPause(getApplicationContext(),className);
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
+    }
 
     public static void logD(String tag, String msg) {
         if (DEBUG) {
