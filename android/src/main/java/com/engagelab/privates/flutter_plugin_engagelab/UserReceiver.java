@@ -124,9 +124,15 @@ public class UserReceiver extends MTCommonReceiver {
     }
 
     @Override
-    public void onInAppMessageClick(Context context, InAppMessage inAppMessage) {
+    public void onInAppMessageShow(Context context, InAppMessage inAppMessage) {
         FlutterPluginEngagelabPlugin.logD(TAG, "onInAppMessageShow:" + inAppMessage.toString());
         FlutterPluginEngagelabPlugin.onCommonReceiver("onInAppMessageShow", MsgToJson.inappMessageToJson(inAppMessage));
+    }
+
+    @Override
+    public void onInAppMessageClick(Context context, InAppMessage inAppMessage) {
+        FlutterPluginEngagelabPlugin.logD(TAG, "onInAppMessageClick:" + inAppMessage.toString());
+        FlutterPluginEngagelabPlugin.onCommonReceiver("onInAppMessageClick", MsgToJson.inappMessageToJson(inAppMessage));
     }
 }
 
