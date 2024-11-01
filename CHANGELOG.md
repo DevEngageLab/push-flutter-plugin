@@ -1,3 +1,6 @@
+## 1.2.5
++ update 4.5.1。
+
 ## 1.2.4
 + 1.iOS新增setUnShowAtTheForegroundIos方法，可以控制通知在前台是否展示。
 + 2.iOS修改setDebugMode设置为no, 不生效的问题。
