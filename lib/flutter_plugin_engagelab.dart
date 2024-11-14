@@ -79,6 +79,11 @@ class FlutterPluginEngagelab {
     // _channel.invokeMethod('setSiteName', [siteName]);
   }
 
+  static configAppKeyAndroid(appKey) {
+    printMy("configAppKeyAndroid");
+    _channel.invokeMethod('configAppKey', [appKey]);
+  }
+
 /**
    * 设置iOS在前台是否展示通知
    * @param enable  是否展示通知，true为调试模式，false不是
