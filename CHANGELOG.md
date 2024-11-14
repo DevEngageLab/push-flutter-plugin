@@ -1,3 +1,6 @@
+## 1.2.6
++ Set the appKey
+
 ## 1.2.5
 + update 4.5.1。
 
