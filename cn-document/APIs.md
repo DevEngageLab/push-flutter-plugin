@@ -56,6 +56,19 @@ FlutterPluginEngagelab.addEventHandler(
 });
 ```
 
+
+## 设置AppKey - android
+
+### configAppKeyAndroid
+
+设置appKey, 在初始化函数之前调用
+
+#### 接口定义
+
+```js
+  FlutterPluginEngagelab.configAppKeyAndroid("appkey");
+```
+
 ## 初始化
 
 ### initAndroid （android）

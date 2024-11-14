@@ -56,6 +56,19 @@ FlutterPluginEngagelab.addEventHandler(
 });
 ```
 
+
+## Set the AppKey - android
+
+### configAppKeyAndroid
+
+Set the appKey, called before initializing the function
+
+#### 接口定义
+
+```js
+  FlutterPluginEngagelab.configAppKeyAndroid("appkey");
+```
+
 ## Setup
 
 ### initAndroid （android）
