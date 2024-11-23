@@ -316,7 +316,15 @@ public class FlutterPluginEngagelabPlugin implements FlutterPlugin, MethodCallHa
         }
     }
 
-
+    void setUserLanguage(JSONArray data, Result result) {
+        try {
+            Context context = getApplicationContext();
+            String language = data.getString(0);
+            MTPushPrivatesApi.configUserLanguage(context,language);
+        }catch (Throwable e) {
+            e.printStackTrace();
+        }
+    }
 
 //    // 继承MTCommonReceiver后，复写onNotificationStatus方法，获取通知开关状态，如果enable为true说明已经开启成功
 //    @Override

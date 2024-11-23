@@ -42,6 +42,7 @@
       - "onInAppMessageClick": 应用内消息点击
       - "onNotiInMessageShow": 增强提醒展示
       - "onNotiInMessageClick": 增强提醒点击
+      - "onSetUserLanguage": 设置用户语言
   - message["event_data"]: 为对应内容
 
 
@@ -99,6 +100,18 @@ if (Platform.isIOS) {
 
 ```js
   FlutterPluginEngagelab.setSiteName("Singapore");
+```
+
+## 设置用户语言
+
+### setUserLanguage
+
+设置用户语言
+
+#### 接口定义
+
+```js
+  FlutterPluginEngagelab.setUserLanguage("zh-Hans-CN");
 ```
 
 ## 开启 Debug 模式

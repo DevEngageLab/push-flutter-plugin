@@ -76,6 +76,8 @@ NSData * _deviceToken;
         [self checkNotificationAuthorization];
     }else if ([name isEqualToString:(@"setTcpSSL")]){
         [self setTcpSSL:data];
+    }else if ([name isEqualToString:(@"setUserLanguage")]){
+        [self setUserLanguage:data];
     }else if ([name isEqualToString:(@"addTags")]){
         [self addTags:data];
     }else if ([name isEqualToString:(@"deleteTags")]){
@@ -223,7 +225,16 @@ NSData * _deviceToken;
     [MTPushService setTcpSSL:value];
 }
 
-
+-(void)setUserLanguage:(NSArray* )data {
+    NSString *language = [data objectAtIndex:0];
+    [MTPushService setUserLanguage:language completionHandler:^(int resCode, NSError *error) {
+        NSDictionary *result = @{
+            @"code":@(resCode),
+            @"error":error.description ?: @""
+        };
+        [self callBackChannel:@"onSetUserLanguage" arguments:[result toJsonString]];
+    }];
+}
 
 -(void)setTags:(NSArray* )data {
     NSDictionary* params = [data objectAtIndex:0];

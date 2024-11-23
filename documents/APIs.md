@@ -42,6 +42,7 @@ Register the sdk callback event
       - "onInAppMessageClick": callback for inapp message click
       - "onNotiInMessageShow": callback for noti inmessage arrival
       - "onNotiInMessageClick": callback for noti inmessage click
+      - "onSetUserLanguage": callback for set user language
   - message["event_data"]: content
 
 
@@ -100,6 +101,18 @@ Set up the data center, called before the initialization function
 
 ```js
   FlutterPluginEngagelab.setSiteName("Singapore");
+```
+
+## setUserLanguage
+
+### setUserLanguage
+
+Set User Language
+
+#### 接口定义
+
+```js
+  FlutterPluginEngagelab.setUserLanguage("zh-Hans-CN");
 ```
 
 ## Turn on Debug mode

@@ -79,6 +79,14 @@ class FlutterPluginEngagelab {
     // _channel.invokeMethod('setSiteName', [siteName]);
   }
 
+  /**
+   * 设置用户语言
+   */
+  static setUserLanguage(language) {
+    printMy("setUserLanguage");
+    _channel.invokeMethod('setUserLanguage', [language]);
+  }
+
   static configAppKeyAndroid(appKey) {
     printMy("configAppKeyAndroid");
     _channel.invokeMethod('configAppKey', [appKey]);
