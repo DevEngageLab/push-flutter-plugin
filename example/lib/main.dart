@@ -51,6 +51,8 @@ class _MyAppState extends State<MyApp> {
             setState(() {
               _platformVersion = "$rid";
             });
+            // // 设置用户语言
+            // FlutterPluginEngagelab.setUserLanguage("zh-Hans-CN");
           });
         }
       });
