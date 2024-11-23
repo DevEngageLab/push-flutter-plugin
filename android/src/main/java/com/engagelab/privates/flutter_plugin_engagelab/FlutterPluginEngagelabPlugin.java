@@ -764,6 +764,18 @@ public class FlutterPluginEngagelabPlugin implements FlutterPlugin, MethodCallHa
     }
 
 
+    /**
+     * 清除厂商token，成功后通过onPlatformToken回调，数据platform为-128，表示清除成功
+     */
+    void clearPlatformToken(JSONArray data, Result result) {
+        try {
+            Context context = getApplicationContext();
+            MTPushPrivatesApi.clearPlatformToken(context);
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
+    }
+
     void addTags(JSONArray data, Result result) {
         int sequence = -1;
         Set<String> tags = new HashSet<String>();

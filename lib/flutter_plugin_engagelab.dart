@@ -401,6 +401,14 @@ class FlutterPluginEngagelab {
     _channel.invokeMethod("uploadPlatformToken", [platform, token, region]);
   }
 
+  /**
+   * 清除厂商token，成功后通过onPlatformToken回调，数据platform为-128，表示清除成功
+   */
+  static clearPlatformTokenAndriod(){
+    printMy("clearPlatformToken");
+    _channel.invokeMethod("clearPlatformToken", []);
+  }
+
   static setCountryCodeAndroid(country) {
     printMy("setCountryCode");
     _channel.invokeMethod("setCountryCode", [country]);
