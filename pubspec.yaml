@@ -1,6 +1,7 @@
 name: flutter_plugin_engagelab
 description: A new Flutter plugin.
-version: 1.2.7
+version: 1.2.8+454454
+#version:x.x.x+android版本号ios版本号（+后成的版本号对应原生无.版本号）
 homepage: https://www.engagelab.com/
 
 environment:
