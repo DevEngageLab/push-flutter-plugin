@@ -43,6 +43,7 @@
       - "onNotiInMessageShow": 增强提醒展示
       - "onNotiInMessageClick": 增强提醒点击
       - "onSetUserLanguage": 设置用户语言
+      - "onReceiveDeviceToken": 收到deviceToken
   - message["event_data"]: 为对应内容
 
 
