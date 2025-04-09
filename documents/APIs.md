@@ -43,6 +43,7 @@ Register the sdk callback event
       - "onNotiInMessageShow": callback for noti inmessage arrival
       - "onNotiInMessageClick": callback for noti inmessage click
       - "onSetUserLanguage": callback for set user language
+      - "onReceiveDeviceToken": callback for deviceToken 
   - message["event_data"]: content
 
 

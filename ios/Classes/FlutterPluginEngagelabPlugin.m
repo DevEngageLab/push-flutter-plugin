@@ -463,6 +463,12 @@ NSData * _deviceToken;
     JPLog(@"Device Token: %@", tokenString);
     _deviceToken = deviceToken;
     [MTPushService registerDeviceToken:deviceToken];
+    
+    // 调用 Dart 层的回调方法
+    NSDictionary *dic = @{
+        @"deviceToken": tokenString?:@""
+    };
+    [self callBackChannel:@"onReceiveDeviceToken" arguments:[dic toJsonString]];
 }
 
 - (BOOL)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
