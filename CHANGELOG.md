@@ -1,3 +1,6 @@
+## 1.2.9+500500
++ update android 5.0.0 ios 5.0.0
+  
 ## 1.2.8+454454
 + update android 4.5.4 ios 4.5.4
 
