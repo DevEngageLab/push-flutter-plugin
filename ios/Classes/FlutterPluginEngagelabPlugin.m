@@ -29,6 +29,11 @@
 @interface FlutterPluginEngagelabPlugin ()<MTPushRegisterDelegate,MTPushInAppMessageDelegate,MTPushNotiInMessageDelegate>
 //在前台时是否展示通知
 @property(assign, nonatomic) BOOL unShow;
+// flutte端调用了addEventHandler方法
+@property (nonatomic, assign) BOOL hasAddEventHandlerMethod;
+// 保存 在 flutte端调用了addEventHandler方法 之前 需要回调的消息
+@property (nonatomic, strong) NSMutableArray *cachedMessageQueue;
+
 @end
 
 @implementation FlutterPluginEngagelabPlugin
@@ -106,10 +111,27 @@ NSData * _deviceToken;
         [self pageEnterTo:data];
     } else if ([name isEqualToString:@"pageLeave"]) {
         [self pageLeave:data];
-    }else{
+    }else if ([name isEqualToString:@"addEventHandlerMethod"]) {
+        [self addEventHandlerMethod];
+    } else{
         
         result(FlutterMethodNotImplemented);
     }
+}
+
+- (void)addEventHandlerMethod {
+    if (self.hasAddEventHandlerMethod) {
+        return;
+    }
+    
+    self.hasAddEventHandlerMethod = YES;
+    JPLog(@"addEventHandlerMethod：call back cached messages");
+    for (NSDictionary *data in self.cachedMessageQueue) {
+        NSString *eventName = data[@"event_name"];
+        NSString *arguments = data[@"event_data"];
+        [self callBackChannel:eventName arguments:arguments];
+    }
+    [self.cachedMessageQueue removeAllObjects];
 }
 
 - (void)setSiteName:(NSArray *)data {
@@ -214,6 +236,7 @@ NSData * _deviceToken;
 
 
 -(void)setDebugMode:(NSArray* )data {
+    JPLog(@"setDebugMode");
     NSNumber *value = [data objectAtIndex:0];
     if (value && [value isKindOfClass:[NSNumber class]] && [value boolValue]) {
         [MTPushService setDebugMode];
@@ -715,7 +738,22 @@ NSData * _deviceToken;
     
     //    NSString *toC = [data toJsonString];
     JPLog(@"toC：%@",data);
+    
+    if (!self.hasAddEventHandlerMethod) {
+        JPLog(@"cacheCallMessage：%@",data);
+        [self.cachedMessageQueue addObject:data];
+        return;
+    }
+    
     [_channel invokeMethod:@"onMTCommonReceiver" arguments:data];
+}
+
+#pragma mark - other
+- (NSMutableArray *)cachedMessageQueue {
+    if (!_cachedMessageQueue) {
+        _cachedMessageQueue = [NSMutableArray array];
+    }
+    return _cachedMessageQueue;
 }
 
 @end

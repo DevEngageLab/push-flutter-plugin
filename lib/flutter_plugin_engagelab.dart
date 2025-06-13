@@ -24,6 +24,7 @@ class FlutterPluginEngagelab {
   static void addEventHandler({EventHandler? onMTCommonReceiver}) {
     _onMTCommonReceiver = onMTCommonReceiver;
     _channel.setMethodCallHandler(_handleMethod);
+    _channel.invokeMethod("addEventHandlerMethod");
   }
 
   static Future<dynamic> _handleMethod(MethodCall call) {
@@ -404,7 +405,7 @@ class FlutterPluginEngagelab {
   /**
    * 清除厂商token，成功后通过onPlatformToken回调，数据platform为-128，表示清除成功
    */
-  static clearPlatformTokenAndriod(){
+  static clearPlatformTokenAndriod() {
     printMy("clearPlatformToken");
     _channel.invokeMethod("clearPlatformToken", []);
   }
