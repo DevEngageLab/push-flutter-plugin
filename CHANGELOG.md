@@ -1,3 +1,6 @@
+## 1.3.0+500500
++ fix ios code launch from notification click not call back
+
 ## 1.2.9+500500
 + update android 5.0.0 ios 5.0.0
   
