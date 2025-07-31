@@ -58,6 +58,10 @@ class _MyAppState extends State<MyApp> {
       });
     });
     FlutterPluginEngagelab.configDebugMode(true);
+
+    // 设置设备更换时是否重置RegistrationID
+    FlutterPluginEngagelab.setEnableResetOnDeviceChange(true);
+
     if (Platform.isIOS) {
       FlutterPluginEngagelab.initIos(
         appKey: "fcc545917674d6f06c141704", // 5645a6e0c6ef00bb71facf21

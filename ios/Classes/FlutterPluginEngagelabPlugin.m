@@ -113,6 +113,8 @@ NSData * _deviceToken;
         [self pageLeave:data];
     }else if ([name isEqualToString:@"addEventHandlerMethod"]) {
         [self addEventHandlerMethod];
+    }else if ([name isEqualToString:@"setEnableResetOnDeviceChange"]) {
+        [self setEnableResetOnDeviceChange:data];
     } else{
         
         result(FlutterMethodNotImplemented);
@@ -458,6 +460,13 @@ NSData * _deviceToken;
 - (void)pageLeave:(NSArray* )data  {
     NSString *pageName = [data objectAtIndex:0];
     [MTPushService pageLeave:pageName];
+}
+
+- (void)setEnableResetOnDeviceChange:(NSArray* )data {
+    NSNumber *enable = [data objectAtIndex:0];
+    if (enable && [enable isKindOfClass:[NSNumber class]]) {
+        [MTPushService enableResetOnDeviceChange:[enable boolValue]];
+    }
 }
 
 #pragma mark - AppDelegate

@@ -567,6 +567,18 @@ class FlutterPluginEngagelab {
     printMy("clearNotificationAll");
     _channel.invokeMethod("clearNotificationAll", []);
   }
+
+  /**
+   * 设置设备更换时是否重置RegistrationID
+   * 
+   * 开启或者关闭设备更换时重置RegistrationID的功能。若开启时，当检测到设备发生变化时（只有当设备型号发生变化时），会自动清除注册信息，重新注册。
+   * 
+   * @param enable true:打开，false:关闭，默认为false
+   */
+  static setEnableResetOnDeviceChange(enable) {
+    printMy("setEnableResetOnDeviceChange:" + enable.toString());
+    _channel.invokeMethod("setEnableResetOnDeviceChange", [enable]);
+  }
 }
 
 /// @property {number} [id] - 通知 id, 可用于取消通知

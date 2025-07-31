@@ -215,3 +215,34 @@ var localNotification = LocalNotification(
                           extra: {"fa": "0"});
 FlutterPluginEngagelab.sendLocalNotification(localNotification)
 ```
+
+## Set device migration feature
+
+### setEnableResetOnDeviceChange
+
+Enable or disable the device migration feature. When enabled, if a device model change is detected, the registration information will be automatically cleared and re-registered.
+
+#### Interface definition
+
+```js
+FlutterPluginEngagelab.setEnableResetOnDeviceChange(enable)
+```
+
+#### Parameter Description
+
+- enable: true to enable, false to disable, default is false
+
+#### code example
+
+```js
+// Enable device migration feature
+FlutterPluginEngagelab.setEnableResetOnDeviceChange(true);
+
+// Disable device migration feature (default state)
+FlutterPluginEngagelab.setEnableResetOnDeviceChange(false);
+```
+
+#### Note
+
+- This method should be called before initialization
+- When device model changes (such as flashing, device replacement, etc.), local cached registration information will be automatically cleared
