@@ -6,3 +6,5 @@
 
 build/
 .idea
+
+example/android/app/google-services.json
