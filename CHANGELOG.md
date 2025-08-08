@@ -1,3 +1,7 @@
+## 1.3.1+510510
++ update android 5.1.0 ios 5.1.0
++ add setEnableResetOnDeviceChange method for device migration feature
+
 ## 1.3.0+500500
 + fix ios code launch from notification click not call back
 

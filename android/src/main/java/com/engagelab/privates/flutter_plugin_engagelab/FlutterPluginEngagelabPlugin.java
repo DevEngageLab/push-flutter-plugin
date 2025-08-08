@@ -931,6 +931,24 @@ public class FlutterPluginEngagelabPlugin implements FlutterPlugin, MethodCallHa
         }
     }
 
+    /**
+     * 设置设备更换时是否重置RegistrationID
+     * 
+     * 开启或者关闭设备更换时重置RegistrationID的功能。若开启时，当检测到设备发生变化时（只有当设备型号发生变化时），会自动清除注册信息，重新注册。
+     * 
+     * @param data 包含enable参数的JSONArray
+     * @param result 结果回调
+     */
+    void setEnableResetOnDeviceChange(JSONArray data, Result result) {
+        try {
+            Context context = getApplicationContext();
+            boolean enable = data.getBoolean(0);
+            MTCorePrivatesApi.setEnableResetOnDeviceChange(context, enable);
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
+    }
+
 
     void onFragmentResume(JSONArray data, Result result) {
         try {

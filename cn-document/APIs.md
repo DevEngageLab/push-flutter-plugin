@@ -214,3 +214,34 @@ var localNotification = LocalNotification(
                           extra: {"fa": "0"});
 FlutterPluginEngagelab.sendLocalNotification(localNotification)
 ```
+
+## 设置设备迁移功能
+
+### setEnableResetOnDeviceChange
+
+开启或者关闭设备更换时重置RegistrationID的功能。若开启时，当检测到设备发生变化时（只有当设备型号发生变化时），会自动清除注册信息，重新注册。
+
+#### 接口定义
+
+```js
+FlutterPluginEngagelab.setEnableResetOnDeviceChange(enable)
+```
+
+#### 参数说明
+
+- enable: true为启用，false为禁用，默认为false
+
+#### 代码示例
+
+```js
+// 启用设备迁移功能
+FlutterPluginEngagelab.setEnableResetOnDeviceChange(true);
+
+// 禁用设备迁移功能（默认状态）
+FlutterPluginEngagelab.setEnableResetOnDeviceChange(false);
+```
+
+#### 注意事项
+
+- 请在初始化接口前调用
+- 当设备型号发生变化时（如刷机、换设备等），会自动清除本地缓存的注册信息

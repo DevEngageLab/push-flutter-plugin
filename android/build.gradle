@@ -41,23 +41,23 @@ android {
 dependencies {
 //    implementation fileTree(include: ['*.jar', '*.aar'], dir: 'libs')
     //必须 主包
-    implementation 'com.engagelab:engagelab:5.0.0' // 此处以5.0.0 版本为例。
+    implementation 'com.engagelab:engagelab:5.1.0' // 此处以5.1.0 版本为例。
     //可选，google厂商
-    implementation 'com.engagelab.plugin:google:5.0.0' // 此处以5.0.0 版本为例。
+    implementation 'com.engagelab.plugin:google:5.1.0' // 此处以5.1.0 版本为例。
     //可选，honor厂商
-    implementation 'com.engagelab.plugin:honor:5.0.0' // 此处以5.0.0 版本为例。
-    implementation 'com.engagelab.plugin:honor_th_push:5.0.0' // 此处以5.0.0 版本为例。
+    implementation 'com.engagelab.plugin:honor:5.1.0' // 此处以5.1.0 版本为例。
+    implementation 'com.engagelab.plugin:honor_th_push:5.1.0' // 此处以5.1.0 版本为例。
     //可选，huawei厂商
-    implementation 'com.engagelab.plugin:huawei:5.0.0' // 此处以5.0.0 版本为例。
+    implementation 'com.engagelab.plugin:huawei:5.1.0' // 此处以5.1.0 版本为例。
     //可选，mi厂商，海外版
-    implementation 'com.engagelab.plugin:mi:5.0.0' // 此处以5.0.0 版本为例。
+    implementation 'com.engagelab.plugin:mi:5.1.0' // 此处以5.1.0 版本为例。
     //可选，meizu厂商
-    implementation 'com.engagelab.plugin:meizu:5.0.0' // 此处以5.0.0 版本为例。
+    implementation 'com.engagelab.plugin:meizu:5.1.0' // 此处以5.1.0 版本为例。
     //可选，oppo厂商
-    implementation 'com.engagelab.plugin:oppo:5.0.0' // 此处以5.0.0 版本为例。
-    implementation 'com.engagelab.plugin:oppo_th_push:5.0.0' // 此处以5.0.0 版本为例。
+    implementation 'com.engagelab.plugin:oppo:5.1.0' // 此处以5.1.0 版本为例。
+    implementation 'com.engagelab.plugin:oppo_th_push:5.1.0' // 此处以5.1.0 版本为例。
     //可选，vivo厂商
-    implementation 'com.engagelab.plugin:vivo:5.0.0' // 此处以5.0.0 版本为例。
+    implementation 'com.engagelab.plugin:vivo:5.1.0' // 此处以5.1.0 版本为例。
 
     // google push need，不需要 google 通道，则删除
     implementation 'com.google.firebase:firebase-messaging:23.2.0'
