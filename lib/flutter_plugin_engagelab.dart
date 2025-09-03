@@ -24,7 +24,9 @@ class FlutterPluginEngagelab {
   static void addEventHandler({EventHandler? onMTCommonReceiver}) {
     _onMTCommonReceiver = onMTCommonReceiver;
     _channel.setMethodCallHandler(_handleMethod);
-    _channel.invokeMethod("addEventHandlerMethod");
+    if (Platform.isIOS) {
+      _channel.invokeMethod("addEventHandlerMethod");
+    }
   }
 
   static Future<dynamic> _handleMethod(MethodCall call) {

@@ -1,3 +1,5 @@
+## 1.3.2+510510
++ fix android cannot find addEventHandlerMethod error
 ## 1.3.1+510510
 + update android 5.1.0 ios 5.1.0
 + add setEnableResetOnDeviceChange method for device migration feature
