@@ -16,7 +16,7 @@ A new Flutter plugin.
   s.source_files = 'Classes/**/*'
   s.public_header_files = 'Classes/**/*.h'
   s.dependency 'Flutter'
-  s.dependency 'MTPush','5.1.0'
+  s.dependency 'MTPush','5.2.0'
 
   s.platform = :ios, '8.0'
 

@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import com.engagelab.privates.common.global.MTGlobal;
 import com.engagelab.privates.core.api.MTCorePrivatesApi;
 import com.engagelab.privates.push.api.MTPushPrivatesApi;
+import com.engagelab.privates.push.api.MTPushCollectControl;
 import com.engagelab.privates.push.api.NotificationMessage;
 
 import org.json.JSONArray;
@@ -944,6 +945,57 @@ public class FlutterPluginEngagelabPlugin implements FlutterPlugin, MethodCallHa
             Context context = getApplicationContext();
             boolean enable = data.getBoolean(0);
             MTCorePrivatesApi.setEnableResetOnDeviceChange(context, enable);
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 设置数据采集控制
+     * 
+     * @param data 包含采集控制参数的JSONArray
+     * @param result 结果回调
+     */
+    void setCollectControl(JSONArray data, Result result) {
+        try {
+            Context context = getApplicationContext();
+            
+            // 安全地获取第一个参数
+            Object firstParam = data.get(0);
+            HashMap<String, Object> map = new HashMap<>();
+            
+            if (firstParam instanceof JSONObject) {
+                // 如果是JSONObject，转换为HashMap
+                JSONObject jsonObject = (JSONObject) firstParam;
+                Iterator<String> keys = jsonObject.keys();
+                while (keys.hasNext()) {
+                    String key = keys.next();
+                    map.put(key, jsonObject.get(key));
+                }
+            } else if (firstParam instanceof HashMap) {
+                // 如果已经是HashMap，直接使用
+                map = (HashMap<String, Object>) firstParam;
+            } else {
+                // 其他情况，尝试解析
+                logE(TAG, "Unexpected parameter type: " + firstParam.getClass().getName());
+                return;
+            }
+
+            // 创建MTPushCollectControl对象
+            MTPushCollectControl collectControl = new MTPushCollectControl();
+
+            boolean hadValue = false;
+            if(map.containsKey("gaid")){
+                Boolean gaid = (Boolean) map.get("gaid");
+                collectControl.setGaid(gaid);
+                hadValue=true;
+            }
+            
+            if(hadValue){
+                // 调用原生SDK方法
+                MTPushPrivatesApi.setCollectControl(collectControl);
+            }
+            
         } catch (Throwable e) {
             e.printStackTrace();
         }

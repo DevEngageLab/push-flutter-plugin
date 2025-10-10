@@ -245,3 +245,62 @@ FlutterPluginEngagelab.setEnableResetOnDeviceChange(false);
 
 - 请在初始化接口前调用
 - 当设备型号发生变化时（如刷机、换设备等），会自动清除本地缓存的注册信息
+
+## 设置应用角标（iOS 5.2.0+）
+
+### setBadge
+
+设置应用角标数量，带完成回调（iOS 5.2.0+）
+
+#### 接口定义
+
+```js
+FlutterPluginEngagelab.setBadge(badge)
+```
+
+#### 参数说明
+
+- badge: 要设置的角标数量
+
+#### 返回值
+
+返回一个Map，包含：
+- success: boolean - 操作是否成功
+- error: string - 操作失败时的错误信息
+
+#### 代码示例
+
+```js
+FlutterPluginEngagelab.setBadge(5).then((result) {
+  if (result['success']) {
+    FlutterPluginEngagelab.printMy("角标设置成功");
+  } else {
+    FlutterPluginEngagelab.printMy("角标设置失败: ${result['error']}");
+  }
+});
+```
+
+## 设置数据采集控制（Android 5.2.0+）
+
+### setCollectControl
+
+设置数据采集控制（Android 5.2.0+）
+
+#### 接口定义
+
+```js
+FlutterPluginEngagelab.setCollectControl(params)
+```
+
+#### 参数说明
+
+- params: Map<String, dynamic> - 采集控制参数字典
+  - gaid: boolean - 是否启用GAID采集
+
+#### 代码示例
+
+```js
+FlutterPluginEngagelab.setCollectControl(
+  gaid: true
+);
+```

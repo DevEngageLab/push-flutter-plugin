@@ -1,3 +1,9 @@
+## 1.3.3+520520
++ update android 5.2.0 ios 5.2.0
++ add setBadge method for iOS (with completion callback)
++ add setCollectControl method for Android (data collection control)
++ Set the minimum supported version to Android 6.
+
 ## 1.3.2+510510
 + fix android cannot find addEventHandlerMethod error
 ## 1.3.1+510510

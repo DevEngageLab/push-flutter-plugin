@@ -115,6 +115,8 @@ NSData * _deviceToken;
         [self addEventHandlerMethod];
     }else if ([name isEqualToString:@"setEnableResetOnDeviceChange"]) {
         [self setEnableResetOnDeviceChange:data];
+    }else if ([name isEqualToString:@"setBadge"]) {
+        [self setBadgeWithCompletion:data result:result];
     } else{
         
         result(FlutterMethodNotImplemented);
@@ -226,7 +228,7 @@ NSData * _deviceToken;
 
 -(void)setBadge:(NSArray* )data {
     int value = [[data objectAtIndex:0] intValue];
-    NSLog(@"setBadge value: %d",value);
+    JPLog(@"setBadge value: %d",value);
     [UIApplication sharedApplication].applicationIconBadgeNumber = value;
     [MTPushService setBadge:value];
 }
@@ -466,6 +468,35 @@ NSData * _deviceToken;
     NSNumber *enable = [data objectAtIndex:0];
     if (enable && [enable isKindOfClass:[NSNumber class]]) {
         [MTPushService enableResetOnDeviceChange:[enable boolValue]];
+    }
+}
+
+- (void)setBadgeWithCompletion:(NSArray* )data result:(FlutterResult)result {
+    NSNumber *value = [data objectAtIndex:0];
+    if (value && [value isKindOfClass:[NSNumber class]]) {
+        JPLog(@"setBadge value: %@",value);
+        [UIApplication sharedApplication].applicationIconBadgeNumber = [value integerValue];
+        [MTPushService setBadge:[value integerValue] completion:^(NSError *error) {
+            if (error) {
+                NSDictionary *errorResult = @{
+                    @"code": @(-1),
+                    @"error": error.localizedDescription ?: @"Unknown error"
+                };
+                result(errorResult);
+            } else {
+                NSDictionary *successResult = @{
+                    @"code": @(0),
+                    @"error": @""
+                };
+                result(successResult);
+            }
+        }];
+    } else {
+        NSDictionary *errorResult = @{
+            @"code": @(-1),
+            @"error": @"Invalid badge value"
+        };
+        result(errorResult);
     }
 }
 

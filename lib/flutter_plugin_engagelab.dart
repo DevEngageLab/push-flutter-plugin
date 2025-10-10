@@ -581,6 +581,37 @@ class FlutterPluginEngagelab {
     printMy("setEnableResetOnDeviceChange:" + enable.toString());
     _channel.invokeMethod("setEnableResetOnDeviceChange", [enable]);
   }
+
+  /**
+   * 设置应用角标数量（iOS 5.2.0新增方法）
+   * 
+   * @param badge 角标数量
+   * @return Future<Map> 返回操作结果，包含success和error字段
+   */
+  static Future<Map> setBadge(int badge) async {
+    if (!Platform.isIOS) {
+      return Map();
+    }
+    printMy("setBadge:" + badge.toString());
+    final Map result = await _channel.invokeMethod("setBadge", [badge]);
+    return result;
+  }
+
+  /**
+   * 设置数据采集控制（Android 5.2.0新增方法）
+   * 
+   * @param params 采集控制参数字典，包含gaid等配置项
+   * {"gaid": true}
+   */
+  static setCollectControl({bool gaid = true}) {
+    if (Platform.isIOS) {
+      return;
+    }
+    printMy("setCollectControl:");
+    _channel.invokeMethod("setCollectControl", [
+      {"gaid": gaid}
+    ]);
+  }
 }
 
 /// @property {number} [id] - 通知 id, 可用于取消通知

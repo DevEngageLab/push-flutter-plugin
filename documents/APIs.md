@@ -246,3 +246,62 @@ FlutterPluginEngagelab.setEnableResetOnDeviceChange(false);
 
 - This method should be called before initialization
 - When device model changes (such as flashing, device replacement, etc.), local cached registration information will be automatically cleared
+
+## Set Badge (iOS 5.2.0+)
+
+### setBadge
+
+Set the application badge number with completion callback (iOS 5.2.0+)
+
+#### Interface definition
+
+```js
+FlutterPluginEngagelab.setBadge(badge)
+```
+
+#### Parameter Description
+
+- badge: The badge number to set
+
+#### Return value
+
+Returns a Map containing:
+- success: boolean - Whether the operation was successful
+- error: string - Error message if operation failed
+
+#### code example
+
+```js
+FlutterPluginEngagelab.setBadge(5).then((result) {
+  if (result['success']) {
+    FlutterPluginEngagelab.printMy("Badge set successfully");
+  } else {
+    FlutterPluginEngagelab.printMy("Failed to set badge: ${result['error']}");
+  }
+});
+```
+
+## Set Data Collection Control (Android 5.2.0+)
+
+### setCollectControl
+
+Set data collection control settings (Android 5.2.0+)
+
+#### Interface definition
+
+```js
+FlutterPluginEngagelab.setCollectControl(params)
+```
+
+#### Parameter Description
+
+- params: Map<String, dynamic> - Collection control parameters dictionary
+  - gaid: boolean - Whether to enable GAID collection
+
+#### code example
+
+```js
+FlutterPluginEngagelab.setCollectControl(
+  gaid: true
+);
+```
