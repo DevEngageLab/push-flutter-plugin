@@ -37,9 +37,28 @@ android {
     defaultConfig {
         minSdkVersion 23
     }
+
+    repositories {
+        flatDir {
+            dirs 'libs'
+        }
+    }
 }
 dependencies {
-   implementation fileTree(include: ['*.jar', '*.aar'], dir: 'libs')
+//    implementation fileTree(include: ['*.jar', '*.aar'], dir: 'libs')
+
+    implementation(name: 'mt-sdk-5.2.2-engagelab', ext: 'aar')
+    implementation(name: 'mt-sdk-google-5.2.2', ext: 'aar')
+    implementation(name: 'mt-sdk-honor-5.2.2', ext: 'aar')
+    implementation(name: 'mt-sdk-huawei-5.2.2', ext: 'aar')
+    implementation(name: 'mt-sdk-mi-5.2.2', ext: 'aar')
+    implementation(name: 'mt-sdk-mz-5.2.2', ext: 'aar')
+    implementation(name: 'mt-sdk-oppo-5.2.2', ext: 'aar')
+    implementation(name: 'mt-sdk-vivo-5.2.2', ext: 'aar')
+    implementation(name: 'th-honor-8.0.12.307', ext: 'aar')
+    implementation(name: 'th-mz-5.0.5', ext: 'aar')
+    implementation(name: 'th-oppo-3.5.3', ext: 'aar')
+
     // //必须 主包
     // implementation 'com.engagelab:engagelab:5.2.0' // 此处以5.2.0 版本为例。
     // //可选，google厂商
