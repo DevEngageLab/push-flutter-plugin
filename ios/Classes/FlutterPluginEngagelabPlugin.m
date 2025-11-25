@@ -117,6 +117,10 @@ NSData * _deviceToken;
         [self setEnableResetOnDeviceChange:data];
     }else if ([name isEqualToString:@"setBadge"]) {
         [self setBadgeWithCompletion:data result:result];
+    }else if ([name isEqualToString:@"setEnablePushTextToSpeech"]) {
+        [self setEnablePushTextToSpeech:data];
+    }else if ([name isEqualToString:@"setAppGroupId"]) {
+        [self setAppGroupId:data];
     } else{
         
         result(FlutterMethodNotImplemented);
@@ -497,6 +501,22 @@ NSData * _deviceToken;
             @"error": @"Invalid badge value"
         };
         result(errorResult);
+    }
+}
+
+- (void)setEnablePushTextToSpeech:(NSArray* )data {
+    NSNumber *enable = [data objectAtIndex:0];
+    if (enable && [enable isKindOfClass:[NSNumber class]]) {
+        JPLog(@"setEnablePushTextToSpeech: %@", enable);
+        [MTPushService enablePushTextToSpeech:[enable boolValue]];
+    }
+}
+
+- (void)setAppGroupId:(NSArray* )data {
+    NSString *appGroupId = [data objectAtIndex:0];
+    if (appGroupId && [appGroupId isKindOfClass:[NSString class]]) {
+        JPLog(@"setAppGroupId: %@", appGroupId);
+        [MTPushService setAppGroupId:appGroupId];
     }
 }
 

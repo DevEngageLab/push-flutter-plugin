@@ -62,6 +62,14 @@ class _MyAppState extends State<MyApp> {
     // 设置设备更换时是否重置RegistrationID
     FlutterPluginEngagelab.setEnableResetOnDeviceChange(true);
 
+    // // 设置语音播报功能（请在初始化前调用）
+    // FlutterPluginEngagelab.setEnablePushTextToSpeech(true);
+
+    // // 设置appGroupId（iOS only，请在初始化前调用）
+    // if (Platform.isIOS) {
+    //   FlutterPluginEngagelab.setAppGroupId("group.com.engagelab.push");
+    // }
+
     if (Platform.isIOS) {
       FlutterPluginEngagelab.initIos(
         appKey: "fcc545917674d6f06c141704", // 5645a6e0c6ef00bb71facf21

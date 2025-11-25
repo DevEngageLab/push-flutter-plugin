@@ -305,3 +305,121 @@ FlutterPluginEngagelab.setCollectControl(
   gaid: true
 );
 ```
+
+## Push Text To Speech Feature
+
+## Enable Push Text To Speech
+
+### setEnablePushTextToSpeech
+
+Enable or disable push text to speech feature (Both iOS and Android)
+
+#### Interface definition
+
+```js
+FlutterPluginEngagelab.setEnablePushTextToSpeech(enable)
+```
+
+#### Parameter Description
+
+- enable: boolean - true to enable, false to disable, default is false
+
+#### Note
+
+- This method should be called before initialization
+- Default is disabled
+
+#### code example
+
+```js
+// Enable text to speech
+FlutterPluginEngagelab.setEnablePushTextToSpeech(true);
+
+// Disable text to speech
+FlutterPluginEngagelab.setEnablePushTextToSpeech(false);
+```
+
+## Set App Group ID (iOS Only)
+
+### setAppGroupId
+
+Set appGroupId for sharing storage space between main app and notification service extension (iOS Only)
+
+#### Interface definition
+
+```js
+FlutterPluginEngagelab.setAppGroupId(appGroupId)
+```
+
+#### Parameter Description
+
+- appGroupId: string - The appGroupId you configured for your bundle ID
+
+#### Note
+
+- iOS only
+- This method should be called before initialization
+- The appGroupId must match the one set in notification service extension using mtpushSetAppGroupId: method
+- Used to define shared storage space between main app and notification service extension for storing text to speech related resources
+
+#### code example
+
+```js
+if (Platform.isIOS) {
+  FlutterPluginEngagelab.setAppGroupId("group.com.engagelab.push");
+}
+```
+
+### iOS Text To Speech Feature Usage Instructions
+
+To use this feature, you need to enable appGroups capability for your bundle ID. For steps to enable appGroups capability, please refer to [iOS Certificate Setting Guide](https://www.engagelab.com/docs/app-push/developer-guide/client-sdk-reference/ios-sdk/ios-certificate-setting-guide).
+
+This feature supports iOS 14 and above.
+
+Due to system limitations, the duration of text-to-speech playback is roughly consistent with the notification display time (approximately 10 seconds, with slight variations across different systems). When the notification disappears, the text-to-speech playback will also stop. Please control the duration of the speech accordingly.
+
+You need to add a Notification Service Extension to your project and integrate Engagelab's Notification Service Extension SDK natively (please refer to [iOS Integration Guide](https://www.engagelab.com/docs/app-push/developer-guide/client-sdk-reference/ios-sdk/ios-sdk-integration-guide#notification-delivery-statistics)).
+
+Then process the voice file in the Notification Service Extension according to the following sample code:
+
+```objc
+- (void)didReceiveNotificationRequest:(UNNotificationRequest *)request withContentHandler:(void (^)(UNNotificationContent * _Nonnull))contentHandler {
+
+  UNMutableNotificationContent *bestAttemptContent = [request.content mutableCopy];
+
+  // The appGroupId set by this method must match the appGroupId set in the project.
+  [MTNotificationExtensionService mtpushSetAppGroupId:@"xxx"]; 
+  // Set appkey
+  [MTNotificationExtensionService mtpushSetAppkey:@"Your appkey"];
+  
+  // Process voice file
+  [MTNotificationExtensionService handleVoice:request with:^(NSString *soundName) {
+      if (soundName && soundName.length >= 0 ) {
+        // After the voice file is processed successfully, set the notification's sound to the processed voice file name
+        bestAttemptContent.sound = [UNNotificationSound soundNamed:soundName];
+      }
+      // Continue to call the push statistics reporting API
+    [MTNotificationExtensionService mtpushReceiveNotificationRequest:request with:^ {
+      NSLog(@"apns upload success");
+      self.contentHandler(bestAttemptContent);
+    }];
+    
+  }];
+
+}
+```
+
+At the same time, you need to call the following two interfaces in Flutter to enable the text-to-speech feature.
+
+```js
+FlutterPluginEngagelab.setEnablePushTextToSpeech(true);
+FlutterPluginEngagelab.setAppGroupId("your appGroupId");
+```
+
+### Android Text To Speech Feature Usage Instructions
+
+You only need to call the following interface in Flutter to enable the text-to-speech feature.
+
+```js
+FlutterPluginEngagelab.setEnablePushTextToSpeech(true);
+```

@@ -1,3 +1,8 @@
+## 1.3.5+523523
++ enabel push text to speech
++ add setEnablePushTextToSpeech method for iOS and Android (enable/disable text to speech)
++ add setAppGroupId method for iOS (you need also call set mtpushSetAppGroupId: in notification service extension)
+
 ## 1.3.4+523523
 + update android 5.2.3 ios 5.2.3
 

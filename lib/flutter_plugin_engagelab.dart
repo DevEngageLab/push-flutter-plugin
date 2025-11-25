@@ -612,6 +612,34 @@ class FlutterPluginEngagelab {
       {"gaid": gaid}
     ]);
   }
+
+  /**
+   * 开启或者关闭语音播报功能
+   * 
+   * @param enable true为打开，false为关闭，默认为false
+   * 请在初始化接口前调用
+   */
+  static setEnablePushTextToSpeech(bool enable) {
+    printMy("setEnablePushTextToSpeech:" + enable.toString());
+    _channel.invokeMethod("setEnablePushTextToSpeech", [enable]);
+  }
+
+  /**
+   * 设置appGroupId（iOS only）
+   * 
+   * 用来设置appGroupId，需要与notification service extension 中通过 mtpushSetAppGroupId: 方法设置的appGroupId 一致，
+   * 用以定义主工程和notification service extension 共享存储空间，该空间用来存储语音播报相关资源。
+   * 
+   * @param appGroupId 您为bundleid开通appGroupId能力时填写的appGroupId
+   * 请在初始化接口前调用
+   */
+  static setAppGroupId(String appGroupId) {
+    if (!Platform.isIOS) {
+      return;
+    }
+    printMy("setAppGroupId:" + appGroupId);
+    _channel.invokeMethod("setAppGroupId", [appGroupId]);
+  }
 }
 
 /// @property {number} [id] - 通知 id, 可用于取消通知

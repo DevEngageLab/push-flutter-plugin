@@ -304,3 +304,122 @@ FlutterPluginEngagelab.setCollectControl(
   gaid: true
 );
 ```
+
+## 语言播报功能
+
+## 开启或关闭语音播报功能
+
+### setEnablePushTextToSpeech
+
+开启或者关闭语音播报功能（iOS和Android都支持）
+
+#### 接口定义
+
+```js
+FlutterPluginEngagelab.setEnablePushTextToSpeech(enable)
+```
+
+#### 参数说明
+
+- enable: boolean - true为打开，false为关闭，默认为false
+
+#### 注意事项
+
+- 请在初始化接口前调用
+- 默认为关闭
+
+#### 代码示例
+
+```js
+// 开启语音播报
+FlutterPluginEngagelab.setEnablePushTextToSpeech(true);
+
+// 关闭语音播报
+FlutterPluginEngagelab.setEnablePushTextToSpeech(false);
+```
+
+## 设置appGroupId（仅iOS）
+
+### setAppGroupId
+
+设置appGroupId，用于主工程和notification service extension共享存储空间（仅iOS）
+
+#### 接口定义
+
+```js
+FlutterPluginEngagelab.setAppGroupId(appGroupId)
+```
+
+#### 参数说明
+
+- appGroupId: string - 您为bundleid开通appGroupId能力时填写的appGroupId
+
+#### 注意事项
+
+- 仅iOS支持
+- 请在初始化接口前调用
+- appGroupId需要与notification service extension 中通过 mtpushSetAppGroupId: 方法设置的appGroupId 一致
+- 用来定义主工程和notification service extension 共享存储空间，该空间用来存储语音播报相关资源
+
+#### 代码示例
+
+```js
+if (Platform.isIOS) {
+  FlutterPluginEngagelab.setAppGroupId("group.com.engagelab.push");
+}
+```
+
+### iOS语言播报功能使用说明
+
+使用该功能需要为您的bundleid开启appGroups功能。开启appGroups功能的步骤请参考 [iOS 证书设置指南](https://www.engagelab.com/zh_CN/docs/app-push/developer-guide/client-sdk-reference/ios-sdk/ios-certificate-setting-guide)。
+
+该功能支持iOS14及以上的系统。
+
+受系统限制，语音播报的时长和手机通知弹出展示的时间大致保持一致（大概10秒左右，不同系统可能会有稍许差异），通知弹出消失时语音播报也会停止，请注意控制播报的语音时长。
+
+您需要在您的工程中添加一个Notification Service Extension。并用原生的方式集成 Engagelab的 Notification Service Extension SDK （请参考 [iOS 集成指南](https://www.engagelab.com/zh_CN/docs/app-push/developer-guide/client-sdk-reference/ios-sdk/ios-sdk-integration-guide#%E9%80%9A%E7%9F%A5%E9%80%81%E8%BE%BE%E7%BB%9F%E8%AE%A1)）。
+
+```
+
+然后按照以下的示例代码在Notification Service Extension中处理语音文件。
+
+- (void)didReceiveNotificationRequest:(UNNotificationRequest *)request withContentHandler:(void (^)(UNNotificationContent * _Nonnull))contentHandler {
+
+  UNMutableNotificationContent *bestAttemptContent = [request.content mutableCopy];
+
+  // 这个方法设置的appgroudid需要和工程中设置的appgroudid保持一致。
+  [MTNotificationExtensionService mtpushSetAppGroupId:@"xxx"]; 
+  // 设置appkey
+  [MTNotificationExtensionService mtpushSetAppkey:@"您的appkey"];
+  
+  // 处理语音文件
+  [MTNotificationExtensionService handleVoice:request with:^(NSString *soundName) {
+      if (soundName && soundName.length >= 0 ) {
+        // 语音文件处理成功后将通知的sound设置为处理好的语音文件名
+        bestAttemptContent.sound = [UNNotificationSound soundNamed:soundName];
+      }
+      // 继续调用推送统计上报功能api
+    [MTNotificationExtensionService mtpushReceiveNotificationRequest:request with:^ {
+      NSLog(@"apns upload success");
+      self.contentHandler(bestAttemptContent);
+    }];
+    
+  }];
+
+}
+
+```
+
+同时在flutter中，需要调用以下两个接口开启语音播报功能。
+
+```
+FlutterPluginEngagelab.setEnablePushTextToSpeech(true);
+FlutterPluginEngagelab.setAppGroupId("your appGroupId");
+```
+
+### Android语言播报功能使用说明
+
+只需要在flutter中调用以下接口开启语音播报功能。
+```
+FlutterPluginEngagelab.setEnablePushTextToSpeech(true);
+```

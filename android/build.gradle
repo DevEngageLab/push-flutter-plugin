@@ -58,6 +58,8 @@ dependencies {
     implementation 'com.engagelab.plugin:oppo_th_push:5.2.3' // 此处以5.2.3 版本为例。
     //可选，vivo厂商
     implementation 'com.engagelab.plugin:vivo:5.2.3' // 此处以5.2.3 版本为例。
+    //可选，sound语音播报功能
+    implementation("com.engagelab.plugin:oth_sound:5.2.3") // 此处以5.2.3 版本为例。
 
     // google push need，不需要 google 通道，则删除
     implementation 'com.google.firebase:firebase-messaging:25.0.0'

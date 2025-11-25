@@ -1001,6 +1001,22 @@ public class FlutterPluginEngagelabPlugin implements FlutterPlugin, MethodCallHa
         }
     }
 
+    /**
+     * 设置语音播报功能
+     * 
+     * @param data 包含enable参数的JSONArray
+     * @param result 结果回调
+     */
+    void setEnablePushTextToSpeech(JSONArray data, Result result) {
+        try {
+            Context context = getApplicationContext();
+            boolean enable = data.getBoolean(0);
+            MTPushPrivatesApi.setEnablePushTextToSpeech(context, enable);
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
+    }
+
 
     void onFragmentResume(JSONArray data, Result result) {
         try {
