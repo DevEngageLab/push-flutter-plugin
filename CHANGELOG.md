@@ -1,3 +1,6 @@
+## 1.3.6+523523
++ add setEnableUdp method for iOS and Android (allow/disallow SDK to use UDP, must be called before SDK initialization)
+
 ## 1.3.5+523523
 + enabel push text to speech
 + add setEnablePushTextToSpeech method for iOS and Android (enable/disable text to speech)

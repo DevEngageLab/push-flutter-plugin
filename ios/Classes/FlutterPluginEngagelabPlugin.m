@@ -121,6 +121,8 @@ NSData * _deviceToken;
         [self setEnablePushTextToSpeech:data];
     }else if ([name isEqualToString:@"setAppGroupId"]) {
         [self setAppGroupId:data];
+    }else if ([name isEqualToString:@"setEnableUdp"]) {
+        [self setEnableUdp:data];
     } else{
         
         result(FlutterMethodNotImplemented);
@@ -517,6 +519,14 @@ NSData * _deviceToken;
     if (appGroupId && [appGroupId isKindOfClass:[NSString class]]) {
         JPLog(@"setAppGroupId: %@", appGroupId);
         [MTPushService setAppGroupId:appGroupId];
+    }
+}
+
+- (void)setEnableUdp:(NSArray* )data {
+    NSNumber *enable = [data objectAtIndex:0];
+    if (enable && [enable isKindOfClass:[NSNumber class]]) {
+        JPLog(@"setEnableUdp: %@", enable);
+        [MTPushService setEnableUdp:[enable boolValue]];
     }
 }
 

@@ -305,6 +305,37 @@ FlutterPluginEngagelab.setCollectControl(
 );
 ```
 
+## 设置是否启用UDP
+
+### setEnableUdp
+
+设置是否允许SDK使用UDP，默认是允许（iOS和Android都支持）
+
+#### 接口定义
+
+```js
+FlutterPluginEngagelab.setEnableUdp(enable)
+```
+
+#### 参数说明
+
+- enable: boolean - true为允许使用UDP，false为不允许使用UDP
+
+#### 注意事项
+
+- 此接口必须要在SDK启动前进行设置
+- 默认为允许（true）
+
+#### 代码示例
+
+```js
+// 允许使用UDP
+FlutterPluginEngagelab.setEnableUdp(true);
+
+// 不允许使用UDP
+FlutterPluginEngagelab.setEnableUdp(false);
+```
+
 ## 语言播报功能
 
 ## 开启或关闭语音播报功能

@@ -306,6 +306,37 @@ FlutterPluginEngagelab.setCollectControl(
 );
 ```
 
+## Set Enable UDP
+
+### setEnableUdp
+
+Set whether SDK is allowed to use UDP, UDP is allowed by default (Both iOS and Android)
+
+#### Interface definition
+
+```js
+FlutterPluginEngagelab.setEnableUdp(enable)
+```
+
+#### Parameter Description
+
+- enable: boolean - true to allow UDP, false to disallow UDP
+
+#### Note
+
+- This method must be called before SDK initialization
+- Default is allowed (true)
+
+#### code example
+
+```js
+// Allow UDP usage
+FlutterPluginEngagelab.setEnableUdp(true);
+
+// Disallow UDP usage
+FlutterPluginEngagelab.setEnableUdp(false);
+```
+
 ## Push Text To Speech Feature
 
 ## Enable Push Text To Speech

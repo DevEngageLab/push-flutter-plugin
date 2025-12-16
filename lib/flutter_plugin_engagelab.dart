@@ -640,6 +640,19 @@ class FlutterPluginEngagelab {
     printMy("setAppGroupId:" + appGroupId);
     _channel.invokeMethod("setAppGroupId", [appGroupId]);
   }
+
+  /**
+   * 设置是否启用UDP
+   * 
+   * 允许SDK是否使用UDP，默认是允许
+   * 此接口必须要在SDK启动前进行设置
+   * 
+   * @param enable true为允许使用UDP, false为不允许使用UDP
+   */
+  static setEnableUdp(bool enable) {
+    printMy("setEnableUdp:" + enable.toString());
+    _channel.invokeMethod("setEnableUdp", [enable]);
+  }
 }
 
 /// @property {number} [id] - 通知 id, 可用于取消通知

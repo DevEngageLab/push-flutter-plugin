@@ -62,6 +62,9 @@ class _MyAppState extends State<MyApp> {
     // 设置设备更换时是否重置RegistrationID
     FlutterPluginEngagelab.setEnableResetOnDeviceChange(true);
 
+    // // 设置是否启用UDP（请在初始化前调用）
+    // FlutterPluginEngagelab.setEnableUdp(true);
+
     // // 设置语音播报功能（请在初始化前调用）
     // FlutterPluginEngagelab.setEnablePushTextToSpeech(true);
 

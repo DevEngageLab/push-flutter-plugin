@@ -1017,6 +1017,22 @@ public class FlutterPluginEngagelabPlugin implements FlutterPlugin, MethodCallHa
         }
     }
 
+    /**
+     * 设置是否启用UDP
+     * 
+     * @param data 包含enable参数的JSONArray
+     * @param result 结果回调
+     */
+    void setEnableUdp(JSONArray data, Result result) {
+        try {
+            Context context = getApplicationContext();
+            boolean enable = data.getBoolean(0);
+            MTCorePrivatesApi.setEnableUdp(context, enable);
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
+    }
+
 
     void onFragmentResume(JSONArray data, Result result) {
         try {
