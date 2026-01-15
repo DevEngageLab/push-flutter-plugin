@@ -208,6 +208,10 @@ NSData * _deviceToken;
                       selector:@selector(networkDidLogin:)
                           name:kMTCNetworkDidLoginNotification
                         object:nil];
+    [defaultCenter addObserver:self
+                      selector:@selector(networkDidClose:)
+                          name:kMTCNetworkDidCloseNotification
+                        object:nil];
 }
 
 //设置APP在前台时是否展示通知
@@ -276,6 +280,7 @@ NSData * _deviceToken;
     
     [MTPushService setTags:[NSSet setWithArray:tags] completion:^(NSInteger iResCode, NSSet *iTags, NSInteger seq) {
         [self tagsCallBackChannel:(@"setTags") iResCode:(iResCode) iTags:(iTags) seq:(seq)];
+        [self tagsCallBackChannel:(@"onTagMessage") iResCode:(iResCode) iTags:(iTags) seq:(seq)];
     } seq:([sequence intValue])];
     
 }
@@ -288,6 +293,7 @@ NSData * _deviceToken;
     
     [MTPushService addTags:[NSSet setWithArray:tags] completion:^(NSInteger iResCode, NSSet *iTags, NSInteger seq) {
         [self tagsCallBackChannel:(@"addTags") iResCode:(iResCode) iTags:(iTags) seq:(seq)];
+        [self tagsCallBackChannel:(@"onTagMessage") iResCode:(iResCode) iTags:(iTags) seq:(seq)];
     } seq:([sequence intValue])];
     
 }
@@ -300,6 +306,7 @@ NSData * _deviceToken;
     
     [MTPushService deleteTags:[NSSet setWithArray:tags] completion:^(NSInteger iResCode, NSSet *iTags, NSInteger seq) {
         [self tagsCallBackChannel:(@"deleteTags") iResCode:(iResCode) iTags:(iTags) seq:(seq)];
+        [self tagsCallBackChannel:(@"onTagMessage") iResCode:(iResCode) iTags:(iTags) seq:(seq)];
     } seq:([sequence intValue])];
     
 }
@@ -310,6 +317,7 @@ NSData * _deviceToken;
     
     [MTPushService cleanTags:^(NSInteger iResCode, NSSet *iTags, NSInteger seq) {
         [self tagsCallBackChannel:(@"cleanTags") iResCode:(iResCode) iTags:(iTags) seq:(seq)];
+        [self tagsCallBackChannel:(@"onTagMessage") iResCode:(iResCode) iTags:(iTags) seq:(seq)];
     } seq:([sequence intValue])];
     
 }
@@ -320,6 +328,7 @@ NSData * _deviceToken;
     
     [MTPushService getAllTags:^(NSInteger iResCode, NSSet *iTags, NSInteger seq) {
         [self tagsCallBackChannel:(@"getAllTags") iResCode:(iResCode) iTags:(iTags) seq:(seq)];
+        [self tagsCallBackChannel:(@"onTagMessage") iResCode:(iResCode) iTags:(iTags) seq:(seq)];
     } seq:([sequence intValue])];
     
 }
@@ -334,11 +343,13 @@ NSData * _deviceToken;
         NSMutableDictionary *data = @{}.mutableCopy;
         data[@"code"] = @(iResCode);//[NSNumber numberWithInteger:iResCode];
         data[@"sequence"] = @(seq);
+        data[@"queryTag"] = tag ?: @""; // validTag 操作中，queryTag 为查询的 tag
         if (iResCode == 0 && nil != iTags) {
             data[@"tags"] = [iTags allObjects];
             [data setObject:[NSNumber numberWithBool:isBind] forKey:@"isBind"];
         }
         [self callBackChannel:@"validTag" arguments:[data toJsonString]];
+        [self callBackChannel:@"onTagMessage" arguments:[data toJsonString]];
     } seq:([sequence intValue])];
 }
 
@@ -348,6 +359,7 @@ NSData * _deviceToken;
     NSString* alias = [data objectAtIndex:1];
     [MTPushService setAlias:alias completion:^(NSInteger iResCode, NSString *iAlias, NSInteger seq) {
         [self aliasCallBackChannel:(@"setAlias") iResCode:(iResCode) iAlias:(iAlias) seq:(seq)];
+        [self aliasCallBackChannel:(@"onAliasMessage") iResCode:(iResCode) iAlias:(iAlias) seq:(seq)];
     } seq:([sequence intValue])];
 }
 
@@ -356,6 +368,7 @@ NSData * _deviceToken;
     NSNumber* sequence = [data objectAtIndex:0];
     [MTPushService deleteAlias:^(NSInteger iResCode, NSString *iAlias, NSInteger seq) {
         [self aliasCallBackChannel:(@"deleteAlias") iResCode:(iResCode) iAlias:(iAlias) seq:(seq)];
+        [self aliasCallBackChannel:(@"onAliasMessage") iResCode:(iResCode) iAlias:(iAlias) seq:(seq)];
     } seq:([sequence intValue])];
 }
 
@@ -364,6 +377,7 @@ NSData * _deviceToken;
     NSNumber* sequence = [data objectAtIndex:0];
     [MTPushService getAlias:^(NSInteger iResCode, NSString *iAlias, NSInteger seq) {
         [self aliasCallBackChannel:(@"getAlias") iResCode:(iResCode) iAlias:(iAlias) seq:(seq)];
+        [self aliasCallBackChannel:(@"onAliasMessage") iResCode:(iResCode) iAlias:(iAlias) seq:(seq)];
     } seq:([sequence intValue])];
 }
 
@@ -593,6 +607,7 @@ NSData * _deviceToken;
         JPLog(@"iOS10 前台收到本地通知:{\nbody:%@，\ntitle:%@,\nsubtitle:%@,\nbadge：%@，\nsound：%@，\nuserInfo：%@\n}",body,title,subtitle,badge,sound,userInfo);
     }
     [self callBackChannel:@"willPresentNotification" arguments:[[self jpushFormatAPNSDic:userInfo] toJsonString]];
+    [self callBackChannel:@"onNotificationArrived" arguments:[[self getCallBackDicFromAPNSDic:userInfo] toJsonString]];
     
     if (self.unShow) {
         completionHandler(UNNotificationPresentationOptionNone);
@@ -623,6 +638,7 @@ NSData * _deviceToken;
     }
     
     [self callBackChannel:@"didReceiveNotificationResponse" arguments:[[self jpushFormatAPNSDic:userInfo] toJsonString]];
+    [self callBackChannel:@"onNotificationClicked" arguments:[[self getCallBackDicFromAPNSDic:userInfo] toJsonString]];
     
     completionHandler();  // 系统要求执行这个方法
 }
@@ -658,6 +674,15 @@ NSData * _deviceToken;
     
     [self callBackChannel:@"networkDidReceiveMessage" arguments:[[self jpushFormatAPNSDic:userInfo] toJsonString]];
     
+    NSDictionary *callback = @{
+        @"content": content ?: @"",
+        @"title": title ?: @"",
+        @"extra": extra ?: @{},
+        @"messageId": [NSString stringWithFormat:@"%lu", (unsigned long)messageID]
+    };
+    
+    [self callBackChannel:@"onCustomMessage" arguments:[callback toJsonString]];
+    
 }
 
 - (void)networkDidLogin:(NSNotification *)notification {
@@ -665,6 +690,15 @@ NSData * _deviceToken;
     NSMutableDictionary *data = @{}.mutableCopy;
     data[@"enable"] = @YES;
     [self callBackChannel:@"networkDidLogin" arguments:[data toJsonString]];
+    [self callBackChannel:@"onConnectStatus" arguments:[data toJsonString]];
+}
+
+- (void)networkDidClose:(NSNotification *)notification {
+    NSLog(@"networkDidClose 断开连接%@ \n", notification.userInfo.description);
+    NSMutableDictionary *data = @{}.mutableCopy;
+    data[@"enable"] = @(NO);
+    [self callBackChannel:@"networkDidLogin" arguments:[data toJsonString]];
+    [self callBackChannel:@"onConnectStatus" arguments:[data toJsonString]];
 }
 
 #pragma mark - 应用内消息回调
@@ -690,11 +724,21 @@ NSData * _deviceToken;
 
 #pragma mark - MTPushNotiInMessageDelegate
 - (void)mtPushNotiInMessageDidShowWithContent:(NSDictionary *)content {
-    [self callBackChannel:@"onNotiInMessageShow" arguments:[[self convertNotiInMsg:content] toJsonString]];
+    NSMutableDictionary *dic = [NSMutableDictionary dictionaryWithDictionary:[self convertNotiInMsg:content]];
+    NSDictionary *newCallBack = [self getCallBackDicFromAPNSDic:content];
+    for (NSString *key in newCallBack) {
+        [dic setValue:newCallBack[key] forKey:key];
+    }
+    [self callBackChannel:@"onNotiInMessageShow" arguments:[dic toJsonString]];
 }
 
 - (void)mtPushNotiInMessageDidClickWithContent:(NSDictionary *)content {
-    [self callBackChannel:@"onNotiInMessageClick" arguments:[[self convertNotiInMsg:content] toJsonString]];
+    NSMutableDictionary *dic = [NSMutableDictionary dictionaryWithDictionary:[self convertNotiInMsg:content]];
+    NSDictionary *newCallBack = [self getCallBackDicFromAPNSDic:content];
+    for (NSString *key in newCallBack) {
+        [dic setValue:newCallBack[key] forKey:key];
+    }
+    [self callBackChannel:@"onNotiInMessageClick" arguments:[dic toJsonString]];
 }
 
 - (NSDictionary *)convertNotiInMsg:(NSDictionary *)content {
@@ -703,7 +747,7 @@ NSData * _deviceToken;
     }
     NSMutableDictionary *result = [NSMutableDictionary dictionary];
     for (NSString *key in [content allKeys]) {
-        if ([key isEqualToString:@"_j_private_cloud"] || [key isEqualToString:@"_j_business"] || [key isEqualToString:@"_j_uid"]) {
+        if ([key isEqualToString:@"_j_private_cloud"] || [key isEqualToString:@"_j_business"] || [key isEqualToString:@"_j_uid"] || [key isEqualToString:@"_j_engagel_cloud"]) {
             continue;
         }
         [result setValue:content[key] forKey:key];
@@ -774,6 +818,41 @@ NSData * _deviceToken;
     NSMutableDictionary *formatDic = dic.mutableCopy;
     formatDic[@"extras"] = extras;
     return formatDic;
+}
+
+- (NSDictionary *)getCallBackDicFromAPNSDic:(NSDictionary *)dic {
+    NSDictionary *aps = dic[@"aps"];
+    NSString *title = @"";
+//    NSString *subTitle = @"";
+    NSString *content = @"";
+    NSString *messageId = [NSString stringWithFormat:@"%@",dic[@"_j_msgid"]];
+    if (aps && [aps isKindOfClass:[NSDictionary class]]) {
+        title = aps[@"alert"][@"title"] ?: @"";
+        content = aps[@"alert"][@"body"] ?: @"";
+    }
+    
+    NSMutableDictionary *extras = @{}.mutableCopy;
+    for (NSString *key in dic) {
+        if([key isEqualToString:@"_j_business"]      ||
+           [key isEqualToString:@"_j_msgid"]         ||
+           [key isEqualToString:@"_j_uid"]           ||
+           [key isEqualToString:@"actionIdentifier"] ||
+           [key isEqualToString:@"aps"]              ||
+           [key isEqualToString:@"_j_engagel_cloud"] ||
+           [key isEqualToString:@"_j_private_cloud"] ||
+           [key isEqualToString:@"_j_appkey"]) {
+            continue;
+        }
+        extras[key] = dic[key];
+    }
+    
+    NSDictionary *callback = @{
+        @"title": title,
+        @"content": content,
+        @"messageId": messageId,
+        @"extras": extras
+    };
+    return callback;
 }
 
 

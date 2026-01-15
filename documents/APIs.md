@@ -9,43 +9,146 @@ Register the sdk callback event
 #### Parameter Description
 - message:Returned event data
   - message["event_name"]: event type
-    - android:
-      - "onNotificationStatus":callback for application notification switch status , the content type is boolean, true means open, false means closed
-      - "onConnectStatus":callback for tcp connection status , content type is boolean, true means connected
-      - "onNotificationArrived": Notification delivery callback, the content is the notification message body
-      - "onNotificationClicked":Notification click callback, the content is the notification message body
-      - "onNotificationDeleted":Notification deletion callback, the content is the notification message body
-      - "onCustomMessage":Custom message callback, the content is the custom message body
-      - "onPlatformToken":Manufacturer token message callback, the content is the manufacturer token message body
+    - iOS/android:
+      - "onConnectStatus":callback for tcp connection status
+      - "onNotificationArrived": Notification delivery callback (iOS only triggers this event when notification is received in foreground)
+      - "onNotificationClicked":Notification click callback
+      - "onCustomMessage":Custom message callback
       - "onTagMessage":callback for tag operation
       - "onAliasMessage":Callback for alias operation
+      - "onInAppMessageShow": callback for inapp message arrival
+      - "onInAppMessageClick": callback for inapp message click
+  
+    - android Only:
+      - "onNotificationStatus":callback for application notification switch status, content type is boolean, true means open, false means closed
+      - "onNotificationDeleted":Notification deletion callback, the content is the notification message body
+      - "onPlatformToken":Manufacturer token message callback, the content is the manufacturer token message body
       - "onNotificationUnShow":Callback for not displaying notification messages in the foreground (when the notification sent in the background is foreground information)
-      - "onInAppMessageShow": callback for inapp message arrival
-      - "onInAppMessageClick": callback for inapp message click
-    - ios:
-      - "willPresentNotification":Callback for notification arrival, the content is the notification message body
-      - "didReceiveNotificationResponse":Notification click callback, the content is the notification message body
-      - "networkDidReceiveMessage":The callback of the custom message, the content is the message body of the custom message
-      - "networkDidLogin":login successful
-      - "checkNotificationAuthorization":Callback events to notify permission authorization status
-      - "addTags": callback for addTags event
-      - "setTags":callback for setTags event
-      - "deleteTags":callback for deleteTags event
-      - "cleanTags":callback for cleanTags event
-      - "getAllTags":callback for getAllTags event
-      - "validTag":callback for validTag event
-      - "setAlias":callback for setAlias event
-      - "deleteAlias":callback for deleteAlias event
-      - "getAlias":callback for getAlias event
-      - "deleteAlias":callback for deleteAlias event
-      - "onInAppMessageShow": callback for inapp message arrival
-      - "onInAppMessageClick": callback for inapp message click
+     
+    - iOS Only:
+      - "checkNotificationAuthorization":Callback events to notify permission authorization status, callback event returned when iOS calls checkNotificationAuthorization method
       - "onNotiInMessageShow": callback for noti inmessage arrival
       - "onNotiInMessageClick": callback for noti inmessage click
-      - "onSetUserLanguage": callback for set user language
+      - "onSetUserLanguage": callback for set user language, callback event returned when iOS calls setUserLanguage: method
       - "onReceiveDeviceToken": callback for deviceToken 
-  - message["event_data"]: content
+      - "willPresentNotification":Callback for notification arrival, the content is the notification message body, recommend using onNotificationArrived instead
+      - "didReceiveNotificationResponse":Notification click callback, the content is the notification message body, recommend using onNotificationClicked instead, note that return fields need to be re-adapted
+      - "networkDidLogin":login successful, can use onConnectStatus instead, note that return fields need to be re-adapted
+      - "addTags": callback for addTags event, can use onTagMessage instead, note that return fields need to be re-adapted
+      - "setTags":callback for setTags event, can use onTagMessage instead, note that return fields need to be re-adapted
+      - "deleteTags":callback for deleteTags event, can use onTagMessage instead, note that return fields need to be re-adapted
+      - "cleanTags":callback for cleanTags event, can use onTagMessage instead, note that return fields need to be re-adapted
+      - "getAllTags":callback for getAllTags event, can use onTagMessage instead, note that return fields need to be re-adapted
+      - "validTag":callback for validTag event, can use onTagMessage instead, note that return fields need to be re-adapted
+      - "setAlias":callback for setAlias event, can use onAliasMessage instead, note that return fields need to be re-adapted
+      - "deleteAlias":callback for deleteAlias event, can use onAliasMessage instead, note that return fields need to be re-adapted
+      - "getAlias":callback for getAlias event, can use onAliasMessage instead, note that return fields need to be re-adapted
+      - "networkDidReceiveMessage":The callback of the custom message, the content is the message body of the custom message, can use onCustomMessage instead, note that return fields need to be re-adapted
+  - message["event_data"]: content, return value descriptions for each event are as follows:
 
+#### Event Return Value Description
+
+##### iOS/android Common Events
+
+- **onConnectStatus** - Callback for tcp connection status
+  - Return value type: JSON object, containing the following fields:
+    - "enable": boolean - Connection status, true means connected, false means disconnected
+
+- **onNotificationArrived** - Notification delivery callback
+  - Return value type: JSON object, containing the following fields:
+    - "messageId": string - Message ID
+    - "content": string - Notification content
+    - "title": string - Notification title
+    - "extras": object - Extended fields (key-value pairs)
+
+- **onNotificationClicked** - Notification click callback
+  - Return value type: Same as onNotificationArrived, JSON object structure is the same
+
+- **onCustomMessage** - Custom message callback
+  - Return value type: JSON object, containing the following fields:
+    - "messageId": string - Message ID
+    - "content": string - Message content
+    - "title": string - Message title
+    - "extras": object - Extended fields (key-value pairs)
+
+- **onTagMessage** - Callback for tag operation
+  - Return value type: JSON object, containing the following fields:
+    - "code": number - Operation result code, 0 means success
+    - "sequence": number - Request sequence number
+    - "tags": array - Tag array
+    - "queryTag": string - Query tag (only valid for query tag operation)
+    - "isBind": boolean - Whether the query tag is bound (only valid for query tag operation, true means bound, false means not bound)
+
+- **onAliasMessage** - Callback for alias operation
+  - Return value type: JSON object, containing the following fields:
+    - "alias": string - Alias
+    - "code": number - Operation result code, 0 means success
+    - "sequence": number - Request sequence number
+
+- **onInAppMessageShow** - Callback for inapp message arrival
+  - Return value type: JSON object, containing the following fields:
+    - "messageId": string - Message ID
+    - "target": string - Target identifier
+    - "content": string - Message content
+    - "clickAction": string - Click action
+    - "extras": object - Extended fields (key-value pairs)
+
+- **onInAppMessageClick** - Callback for inapp message click
+  - Return value type: Same as onInAppMessageShow, JSON object structure is the same
+
+##### Android Only Events
+
+- **onNotificationStatus** - Callback for application notification switch status
+  - Return value type: JSON object, containing the following fields:
+    - "enable": boolean - Notification switch status, true means open, false means closed
+
+- **onNotificationDeleted** - Notification deletion callback
+  - Return value type: JSON object, containing the following fields:
+    - "messageId": string - Message ID
+    - "content": string - Notification content
+    - "title": string - Notification title
+    - "extras": object - Extended fields (key-value pairs)
+
+- **onPlatformToken** - Manufacturer token message callback
+  - Return value type: JSON object, containing the following fields:
+    - "platform": string - Platform identifier
+    - "token": string - Manufacturer token
+
+- **onNotificationUnShow** - Callback for not displaying notification messages in the foreground
+  - Return value type: JSON object, containing the following fields:
+    - "messageId": string - Message ID
+    - "content": string - Notification content
+    - "title": string - Notification title
+    - "extras": object - Extended fields (key-value pairs)
+
+##### iOS Only Events
+
+- **checkNotificationAuthorization** - Callback events to notify permission authorization status
+  - Return value type: JSON object, containing the following fields:
+    - "enable": boolean - Authorization status, true means authorized, false means not authorized
+
+- **onNotiInMessageShow** - Callback for noti inmessage arrival
+  - Return value type: JSON object, containing the following fields:
+    - "messageId": string - Message ID
+    - "content": string - Notification content
+    - "title": string - Notification title
+    - "extras": object - Extended fields (key-value pairs)
+
+- **onNotiInMessageClick** - Callback for noti inmessage click
+  - Return value type: JSON object, containing the following fields:
+    - "messageId": string - Message ID
+    - "content": string - Notification content
+    - "title": string - Notification title
+    - "extras": object - Extended fields (key-value pairs)
+
+- **onSetUserLanguage** - Callback for set user language
+  - Return value type: JSON object, containing the following fields:
+    - "code": number - Operation result code, 0 means success
+    - "error": string - Error message (exists when failed)
+
+- **onReceiveDeviceToken** - Callback for deviceToken
+  - Return value type: JSON object, containing the following fields:
+    - "deviceToken": string - Device token string
 
 #### code example
 

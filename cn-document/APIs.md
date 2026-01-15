@@ -7,45 +7,148 @@
 集成了 sdk 回调的事件
 
 #### 参数说明
-- message:反回的事件数据
+- message:返回的事件数据
   - message["event_name"]: 为事件类型
-    - android:
-      - "onNotificationStatus":应用通知开关状态回调,内容类型为boolean，true为打开，false为关闭
-      - "onConnectStatus":长连接状态回调,内容类型为boolean，true为连接
-      - "onNotificationArrived":通知消息到达回调，内容为通知消息体
-      - "onNotificationClicked":通知消息点击回调，内容为通知消息体
-      - "onNotificationDeleted":通知消息删除回调，内容为通知消息体
-      - "onCustomMessage":自定义消息回调，内容为通知消息体
-      - "onPlatformToken":厂商token消息回调，内容为厂商token消息体
+    - iOS/android:
+      - "onConnectStatus":长连接状态回调
+      - "onNotificationArrived":通知消息到达回调 (iOS只有前台收到通知会回调该事件)
+      - "onNotificationClicked":通知消息点击回调
+      - "onCustomMessage":自定义消息回调
       - "onTagMessage":tag操作回调
       - "onAliasMessage":alias操作回调
+      - "onInAppMessageShow": 应用内消息展示
+      - "onInAppMessageClick": 应用内消息点击
+  
+    - android Only:
+      - "onNotificationStatus":应用通知开关状态回调,内容类型为boolean，true为打开，false为关闭
+      - "onNotificationDeleted":通知消息删除回调，内容为通知消息体
+      - "onPlatformToken":厂商token消息回调，内容为厂商token消息体
       - "onNotificationUnShow":在前台，通知消息不显示回调（后台下发的通知是前台信息时）
-      - "onInAppMessageShow": 应用内消息展示
-      - "onInAppMessageClick": 应用内消息点击
-    - ios:
-      - "willPresentNotification":通知消息到达回调，内容为通知消息体
-      - "didReceiveNotificationResponse":通知消息点击回调，内容为通知消息体
-      - "networkDidReceiveMessage":自定义消息回调，内容为通知消息体
-      - "networkDidLogin":登陆成功
-      - "checkNotificationAuthorization":检测通知权限授权情况
-      - "addTags":添加tag回调
-      - "setTags":设置tag回调
-      - "deleteTags":删除tag回调
-      - "cleanTags":清除tag回调
-      - "getAllTags":获取tag回调
-      - "validTag":校验tag回调
-      - "setAlias":设置Alias回调
-      - "deleteAlias":删除Alias回调
-      - "getAlias":获取Alias回调
-      - "deleteAlias":删除Alias回调
-      - "onInAppMessageShow": 应用内消息展示
-      - "onInAppMessageClick": 应用内消息点击
+     
+    - iOS Only:
+      - "checkNotificationAuthorization":检测通知权限授权情况，iOS调用checkNotificationAuthorization方法的返回回调事件。
       - "onNotiInMessageShow": 增强提醒展示
       - "onNotiInMessageClick": 增强提醒点击
-      - "onSetUserLanguage": 设置用户语言
+      - "onSetUserLanguage": 设置用户语言，iOS调用setUserLanguage:方法的返回回调事件。
       - "onReceiveDeviceToken": 收到deviceToken
-  - message["event_data"]: 为对应内容
+      - "willPresentNotification":通知消息到达回调，内容为通知消息体, 建议使用onNotificationArrived替代
+      - "didReceiveNotificationResponse":通知消息点击回调，内容为通知消息体, 建议使用onNotificationClicked替代,注意返回字段需要重新适配
+      - "networkDidLogin":登陆成功, 可以使用onConnectStatus代替,注意返回字段需要重新适配
+      - "addTags":添加tag回调，可以使用onTagMessage替代,注意返回字段需要重新适配
+      - "setTags":设置tag回调， 可以使用onTagMessage替代,注意返回字段需要重新适配
+      - "deleteTags":删除tag回调，可以使用onTagMessage替代,注意返回字段需要重新适配
+      - "cleanTags":清除tag回调，可以使用onTagMessage替代,注意返回字段需要重新适配
+      - "getAllTags":获取tag回调，可以使用onTagMessage替代,注意返回字段需要重新适配
+      - "validTag":校验tag回调，可以使用onTagMessage替代,注意返回字段需要重新适配
+      - "setAlias":设置Alias回调，可以使用onAliasMessage替代,注意返回字段需要重新适配
+      - "deleteAlias":删除Alias回调，可以使用onAliasMessage替代,注意返回字段需要重新适配
+      - "getAlias":获取Alias回调，可以使用onAliasMessage替代,注意返回字段需要重新适配
+      - "networkDidReceiveMessage":自定义消息回调，内容为通知消息体, 可以使用onCustomMessage替代,注意返回字段需要重新适配
+  - message["event_data"]: 为对应内容，各事件的返回值说明如下：
 
+#### 事件返回值说明
+
+##### iOS/android 通用事件
+
+- **onConnectStatus** - 长连接状态回调
+  - 返回值类型：JSON对象，包含以下字段：
+    - "enable": boolean - 连接状态，true为连接，false为断开
+
+- **onNotificationArrived** - 通知消息到达回调
+  - 返回值类型：JSON对象，包含以下字段：
+    - "messageId": string - 消息ID
+    - "content": string - 通知内容
+    - "title": string - 通知标题
+    - "extras": object - 扩展字段（键值对）
+
+- **onNotificationClicked** - 通知消息点击回调
+  - 返回值类型：同 onNotificationArrived，JSON对象结构相同
+
+- **onCustomMessage** - 自定义消息回调
+  - 返回值类型：JSON对象，包含以下字段：
+    - "messageId": string - 消息ID
+    - "content": string - 消息内容
+    - "title": string - 消息标题
+    - "extras": object - 扩展字段（键值对）
+
+- **onTagMessage** - tag操作回调
+  - 返回值类型：JSON对象，包含以下字段：
+    - "code": number - 操作结果码，0表示成功
+    - "sequence": number - 请求序列号
+    - "tags": array - 标签数组
+    - "queryTag": string - 查询的标签（仅查询标签操作时有效）
+    - "isBind": boolean - 查询标签是否绑定（仅查询标签操作时有效，true表示已绑定，false表示未绑定）
+
+- **onAliasMessage** - alias操作回调
+  - 返回值类型：JSON对象，包含以下字段：
+    - "alias": string - 别名
+    - "code": number - 操作结果码，0表示成功
+    - "sequence": number - 请求序列号
+
+- **onInAppMessageShow** - 应用内消息展示
+  - 返回值类型：JSON对象，包含以下字段：
+    - "messageId": string - 消息ID
+    - "target": string - 目标标识
+    - "content": string - 消息内容
+    - "clickAction": string - 点击动作
+    - "extras": object - 扩展字段（键值对）
+
+- **onInAppMessageClick** - 应用内消息点击
+  - 返回值类型：同 onInAppMessageShow，JSON对象结构相同
+
+##### Android Only 事件
+
+- **onNotificationStatus** - 应用通知开关状态回调
+  - 返回值类型：JSON对象，包含以下字段：
+    - "enable": boolean - 通知开关状态，true为打开，false为关闭
+
+- **onNotificationDeleted** - 通知消息删除回调
+  - 返回值类型：JSON对象，包含以下字段：
+    - "messageId": string - 消息ID
+    - "content": string - 通知内容
+    - "title": string - 通知标题
+    - "extras": object - 扩展字段（键值对）
+
+- **onPlatformToken** - 厂商token消息回调
+  - 返回值类型：JSON对象，包含以下字段：
+    - "platform": string - 平台标识
+    - "token": string - 厂商token
+
+- **onNotificationUnShow** - 前台通知消息不显示回调
+  - 返回值类型：JSON对象，包含以下字段：
+    - "messageId": string - 消息ID
+    - "content": string - 通知内容
+    - "title": string - 通知标题
+    - "extras": object - 扩展字段（键值对）
+
+##### iOS Only 事件
+
+- **checkNotificationAuthorization** - 检测通知权限授权情况
+  - 返回值类型：JSON对象，包含以下字段：
+    - "enable": boolean - 授权状态，true为已授权，false为未授权
+
+- **onNotiInMessageShow** - 增强提醒展示
+  - 返回值类型：JSON对象，包含以下字段：
+    - "messageId": string - 消息ID
+    - "content": string - 通知内容
+    - "title": string - 通知标题
+    - "extras": object - 扩展字段（键值对）
+
+- **onNotiInMessageClick** - 增强提醒点击
+  - 返回值类型：JSON对象，包含以下字段：
+    - "messageId": string - 消息ID
+    - "content": string - 通知内容
+    - "title": string - 通知标题
+    - "extras": object - 扩展字段（键值对）
+
+- **onSetUserLanguage** - 设置用户语言回调
+  - 返回值类型：JSON对象，包含以下字段：
+    - "code": number - 操作结果码，0表示成功
+    - "error": string - 错误信息（失败时存在）
+
+- **onReceiveDeviceToken** - 收到deviceToken回调
+  - 返回值类型：JSON对象，包含以下字段：
+    - "deviceToken": string - 设备token字符串
 
 #### 代码示例
 

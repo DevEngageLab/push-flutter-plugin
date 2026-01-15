@@ -37,6 +37,8 @@ public class MsgToJson {
             String[] tags = tagMessage.getTags();
             JSONArray jsonArray = arrayToJson(tags);
             jsonObject.put("tags", jsonArray);
+            jsonObject.put("isBind", tagMessage.isQueryTagValid());
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
