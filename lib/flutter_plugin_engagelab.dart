@@ -598,19 +598,24 @@ class FlutterPluginEngagelab {
   }
 
   /**
-   * 设置数据采集控制（Android 5.2.0新增方法）
+   * 设置数据采集控制（Android 5.2.0新增方法，5.3.0新增aid参数）
    * 
-   * @param params 采集控制参数字典，包含gaid等配置项
-   * {"gaid": true}
+   * @param params 采集控制参数字典，包含gaid、aid等配置项
+   * {"gaid": true, "aid": true}
    */
-  static setCollectControl({bool gaid = true}) {
+  static setCollectControl({bool? gaid, bool? aid}) {
     if (Platform.isIOS) {
       return;
     }
     printMy("setCollectControl:");
-    _channel.invokeMethod("setCollectControl", [
-      {"gaid": gaid}
-    ]);
+    Map<String, dynamic> params = {};
+    if (gaid != null) {
+      params["gaid"] = gaid;
+    }
+    if (aid != null) {
+      params["aid"] = aid;
+    }
+    _channel.invokeMethod("setCollectControl", [params]);
   }
 
   /**

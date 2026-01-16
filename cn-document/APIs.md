@@ -387,25 +387,30 @@ FlutterPluginEngagelab.setBadge(5).then((result) {
 
 ### setCollectControl
 
-设置数据采集控制（Android 5.2.0+）
+设置数据采集控制（Android 5.2.0+，5.3.0版本新增aid参数）
 
 #### 接口定义
 
 ```js
-FlutterPluginEngagelab.setCollectControl(params)
+FlutterPluginEngagelab.setCollectControl({gaid: bool?, aid: bool?})
 ```
 
 #### 参数说明
 
-- params: Map<String, dynamic> - 采集控制参数字典
-  - gaid: boolean - 是否启用GAID采集
+- gaid: boolean? - 是否启用GAID采集（可选）
+- aid: boolean? - 是否启用AndroidId采集（可选，5.3.0版本新增）
 
 #### 代码示例
 
 ```js
-FlutterPluginEngagelab.setCollectControl(
-  gaid: true
-);
+// 设置GAID采集
+FlutterPluginEngagelab.setCollectControl(gaid: true);
+
+// 设置AndroidId采集（5.3.0+）
+FlutterPluginEngagelab.setCollectControl(aid: false);
+
+// 同时设置两者
+FlutterPluginEngagelab.setCollectControl(gaid: true, aid: false);
 ```
 
 ## 设置是否启用UDP

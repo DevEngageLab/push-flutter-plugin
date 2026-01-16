@@ -991,6 +991,12 @@ public class FlutterPluginEngagelabPlugin implements FlutterPlugin, MethodCallHa
                 hadValue=true;
             }
             
+            if(map.containsKey("aid")){
+                Boolean aid = (Boolean) map.get("aid");
+                collectControl.setAid(aid);
+                hadValue=true;
+            }
+            
             if(hadValue){
                 // 调用原生SDK方法
                 MTPushPrivatesApi.setCollectControl(collectControl);

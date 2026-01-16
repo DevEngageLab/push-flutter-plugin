@@ -388,25 +388,30 @@ FlutterPluginEngagelab.setBadge(5).then((result) {
 
 ### setCollectControl
 
-Set data collection control settings (Android 5.2.0+)
+Set data collection control settings (Android 5.2.0+, aid parameter added in 5.3.0)
 
 #### Interface definition
 
 ```js
-FlutterPluginEngagelab.setCollectControl(params)
+FlutterPluginEngagelab.setCollectControl({gaid: bool?, aid: bool?})
 ```
 
 #### Parameter Description
 
-- params: Map<String, dynamic> - Collection control parameters dictionary
-  - gaid: boolean - Whether to enable GAID collection
+- gaid: boolean? - Whether to enable GAID collection (optional)
+- aid: boolean? - Whether to enable AndroidId collection (optional, added in 5.3.0)
 
 #### code example
 
 ```js
-FlutterPluginEngagelab.setCollectControl(
-  gaid: true
-);
+// Set GAID collection
+FlutterPluginEngagelab.setCollectControl(gaid: true);
+
+// Set AndroidId collection (5.3.0+)
+FlutterPluginEngagelab.setCollectControl(aid: true);
+
+// Set both
+FlutterPluginEngagelab.setCollectControl(gaid: true, aid: true);
 ```
 
 ## Set Enable UDP

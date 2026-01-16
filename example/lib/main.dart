@@ -75,7 +75,7 @@ class _MyAppState extends State<MyApp> {
 
     if (Platform.isIOS) {
       FlutterPluginEngagelab.initIos(
-        appKey: "fcc545917674d6f06c141704", // 5645a6e0c6ef00bb71facf21
+        appKey: "8344af5668f374579426ce6d", // 5645a6e0c6ef00bb71facf21
         channel: "testChannel",
       );
       FlutterPluginEngagelab.checkNotificationAuthorizationIos();

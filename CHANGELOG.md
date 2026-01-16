@@ -1,3 +1,7 @@
+## 1.3.7+530530
++ update android 5.3.0 ios 5.3.0
++ Android: 更新setCollectControl方法，新增aid参数支持（AndroidId数据采集控制）
+
 ## 1.3.6+523523
 + add setEnableUdp method for iOS and Android (allow/disallow SDK to use UDP, must be called before SDK initialization)
 
