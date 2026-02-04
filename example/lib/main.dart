@@ -81,6 +81,11 @@ class _MyAppState extends State<MyApp> {
       FlutterPluginEngagelab.checkNotificationAuthorizationIos();
     } else if (Platform.isAndroid) {
       FlutterPluginEngagelab.initAndroid();
+    } else {
+      FlutterPluginEngagelab.configDebugMode(true);
+      FlutterPluginEngagelab.setAppKey("0cd10cb91d2ee8a7b0700789");
+      FlutterPluginEngagelab.setChannel("testChannel");
+      FlutterPluginEngagelab.initOhos();
     }
 
     String platformVersion = "";

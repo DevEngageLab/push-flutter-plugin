@@ -2,20 +2,20 @@
 
 ## 注册监听
 
-### FlutterPluginEngagelab.addEventHandler （android/ios都支持）
-
-集成了 sdk 回调的事件
+### FlutterPluginEngagelab.addEventHandler （android/ios/鸿蒙都支持）
 
 #### 参数说明
 - message:返回的事件数据
   - message["event_name"]: 为事件类型
-    - iOS/android:
+    - iOS/android/鸿蒙 通用:
       - "onConnectStatus":长连接状态回调
       - "onNotificationArrived":通知消息到达回调 (iOS只有前台收到通知会回调该事件)
       - "onNotificationClicked":通知消息点击回调
       - "onCustomMessage":自定义消息回调
       - "onTagMessage":tag操作回调
       - "onAliasMessage":alias操作回调
+  
+    - iOS/android 通用:
       - "onInAppMessageShow": 应用内消息展示
       - "onInAppMessageClick": 应用内消息点击
   
@@ -44,11 +44,14 @@
       - "deleteAlias":删除Alias回调，可以使用onAliasMessage替代,注意返回字段需要重新适配
       - "getAlias":获取Alias回调，可以使用onAliasMessage替代,注意返回字段需要重新适配
       - "networkDidReceiveMessage":自定义消息回调，内容为通知消息体, 可以使用onCustomMessage替代,注意返回字段需要重新适配
-  - message["event_data"]: 为对应内容，各事件的返回值说明如下：
+  
+    - 鸿蒙 Only
+      - "onNotificationUnShow": 在前台，通知消息不显示回调（鸿蒙会回调，后台下发的通知是前台信息时）
+  - message["event_data"]: 为对应内容，各事件的返回值说明如下。
 
 #### 事件返回值说明
 
-##### iOS/android 通用事件
+##### iOS/android/鸿蒙 通用事件
 
 - **onConnectStatus** - 长连接状态回调
   - 返回值类型：JSON对象，包含以下字段：
@@ -84,6 +87,8 @@
     - "alias": string - 别名
     - "code": number - 操作结果码，0表示成功
     - "sequence": number - 请求序列号
+  
+##### iOS/android 通用事件
 
 - **onInAppMessageShow** - 应用内消息展示
   - 返回值类型：JSON对象，包含以下字段：
@@ -178,8 +183,9 @@ FlutterPluginEngagelab.addEventHandler(
 
 ### initAndroid （android）
 ### initIos （ios）
+### initOhos （鸿蒙）
 
-初始化sdk
+初始化 sdk。鸿蒙需在 initOhos 之前先调用 setAppKey、setChannel；回调通过 addEventHandler 的 onMTCommonReceiver 接收，插件内部已注册 CallBackMsg。
 
 #### 接口定义
 
@@ -188,11 +194,74 @@ if (Platform.isIOS) {
   FlutterPluginEngagelab.initIos(
           appKey: "你的appkey",
           channel: "testChannel",
-);
+  );
 } else if (Platform.isAndroid) {
   FlutterPluginEngagelab.initAndroid();
+} else {
+  // 鸿蒙
+  FlutterPluginEngagelab.setAppKey("你的appKey");
+  FlutterPluginEngagelab.setChannel("testChannel");
+  FlutterPluginEngagelab.initOhos();
 }
 ```
+
+
+### setAppKey（鸿蒙）
+
+在 **initOhos 之前** 设置 EngageLab 控制台应用的 appKey。
+
+#### 接口定义
+
+```js
+FlutterPluginEngagelab.setAppKey("你的appKey");
+```
+
+### setChannel（鸿蒙）
+
+在 **initOhos 之前** 设置渠道名，与 EngageLab 控制台一致即可。
+
+#### 接口定义
+
+```js
+FlutterPluginEngagelab.setChannel("testChannel");
+```
+
+### 标签与别名（鸿蒙）
+
+鸿蒙端支持与 Android 一致的标签、别名接口，结果通过 **addEventHandler** 的 **onTagMessage**、**onAliasMessage** 回调。Dart 侧调用方式与 Android/iOS 一致，传参为字典；鸿蒙原生会按 `[sequence, jsonEncode(tags)]` 等格式传参，无需业务侧区分。
+
+| 方法 | 说明 | Dart 传参 |
+|------|------|-----------|
+| addTags | 新增标签（累加） | params = { "sequence": number, "tags": ["tag1", "tag2"] } |
+| deleteTags | 删除指定标签 | 同上 |
+| updateTags | 更新标签（覆盖，对应 SDK setTags） | 同上 |
+| queryTag | 查询指定标签是否绑定（checkTagBindState） | params = { "sequence": number, "tag": "tag1" } |
+| deleteAllTag | 删除所有标签（cleanTags） | sequence: number |
+| queryAllTag | 查询所有标签（getTags，第 1 页） | sequence: number |
+| setAlias | 设置别名 | sequence: number, alias: string |
+| getAlias | 获取别名 | sequence: number |
+| clearAlias | 清除别名（deleteAlias） | sequence: number |
+
+#### 接口定义示例
+
+```js
+FlutterPluginEngagelab.addTags({ "sequence": 1, "tags": ["tag1", "tag2"] });
+FlutterPluginEngagelab.deleteTags({ "sequence": 2, "tags": ["tag1"] });
+FlutterPluginEngagelab.updateTags({ "sequence": 3, "tags": ["a", "b"] });
+FlutterPluginEngagelab.queryTag({ "sequence": 4, "tag": "tag1" });
+FlutterPluginEngagelab.deleteAllTag(5);
+FlutterPluginEngagelab.queryAllTag(6);
+FlutterPluginEngagelab.setAlias(7, "myAlias");
+FlutterPluginEngagelab.getAlias(8);
+FlutterPluginEngagelab.clearAlias(9);
+```
+
+#### 鸿蒙注意事项
+
+- 请先 **initOhos** 后再调用标签/别名接口，否则无效。
+- sequence 建议每次操作使用不同数字，便于在 onTagMessage/onAliasMessage 中区分。
+- 标签长度限制 40 字节，单设备最多约 1000 个；别名长度限制 40 字节。详见 [EngageLab HarmonyOS SDK API](https://www.engagelab.com/zh_CN/docs/app-push/developer-guide/client-sdk-reference/harmonyOS-sdk/sdk-api-guide)。
+
 
 ## 设置数据中心 - 该方法在v1.2.2版本中已失效，不需要调用
 
@@ -220,9 +289,9 @@ if (Platform.isIOS) {
 
 ## 开启 Debug 模式
 
-### configDebugMode （android/ios都支持）
+### configDebugMode （android/ios/鸿蒙都支持）
 
-设置是否debug模式，debug模式会打印更对详细日志
+设置是否 debug 模式，debug 模式会打印更多详细日志。鸿蒙对应 EngageLab SDK 的 setDebug，需在 init 之前调用。
 
 #### 接口定义
 
@@ -240,7 +309,7 @@ FlutterPluginEngagelab.configDebugMode(enable)
 FlutterPluginEngagelab.configDebugMode(true);//发布前要删除掉
 ```
 
-## 获取 RegistrationID （android/ios都支持）
+## 获取 RegistrationID （android/ios/鸿蒙都支持）
 
 ### getRegistrationId
 
@@ -255,7 +324,7 @@ FlutterPluginEngagelab.getRegistrationId()
 
 #### 返回值
 
-调用此 API 来取得应用程序对应的 RegistrationID。 只有当应用程序成功注册到 JPush 的服务器时才返回对应的值，否则返回空字符串。
+调用此 API 来取得应用程序对应的 RegistrationID。只有当应用程序成功注册到 EngageLab 的服务器时才返回对应的值，否则返回空字符串。Android、iOS、鸿蒙均支持。
 
 #### 代码示例
 
@@ -561,4 +630,50 @@ FlutterPluginEngagelab.setAppGroupId("your appGroupId");
 只需要在flutter中调用以下接口开启语音播报功能。
 ```
 FlutterPluginEngagelab.setEnablePushTextToSpeech(true);
+```
+
+
+### 鸿蒙其余 API
+
+鸿蒙端已对接 EPushInterface 文档中的以下能力，对应 Dart 方法如下（均在 **initOhos 之后** 按需调用）。
+
+| 能力 | Dart 方法 | 说明 |
+|------|-----------|------|
+| 开启推送 | `turnOnPush()` | 对应 resumePush，当前仅鸿蒙实现 |
+| 关闭推送 | `turnOffPush()` | 对应 stopPush，当前仅鸿蒙实现 |
+| 查询推送是否停止 | `isPushStopped()` → Future&lt;bool&gt; | 对应 isPushStopped，当前仅鸿蒙实现 |
+| 设置心跳周期 | `configHeartbeatInterval(int intervalMs)` | 单位毫秒，对应 setHeartbeatTime，当前仅鸿蒙实现 |
+| 设置 TCP SSL | `setTcpSSL(bool enable)` | 对应 setTcpSSl，当前仅鸿蒙实现 |
+| 设置角标 | `setBadge(int badge)` | iOS/鸿蒙均支持，见上文 setBadge |
+| 按通知 ID 清除 | `clearNotification(notifyId)` | 通用，鸿蒙已实现 |
+| 按消息 ID 清除 | `clearNotificationByMsgId(String msgId)` | 通用，鸿蒙已实现 |
+| 清除所有通知 | `clearNotificationAll()` | 通用，鸿蒙已实现 |
+| 自定义消息缓存条数 | `setCustomMessageMaxCacheCount(int count)` | 对应 setCustomMessageMaxCacheCount，当前仅鸿蒙实现 |
+| 通知权限申请方式 | `setUserRequestNotificationPermission(bool enable)` | 对应 setUserRequestNotificationPermission，当前仅鸿蒙实现 |
+| 清除 Token | `clearToken()` | 对应 clearToken，当前仅鸿蒙实现 |
+| 上报通知点击 | `reportNotificationClick(int channel, String msgId)` | channel: 0 厂商 1 EngageLab，当前仅鸿蒙实现 |
+| 上报通知展示 | `reportNotificationDisplay(int channel, String msgId)` | 同上 |
+| 上报自定义消息展示 | `reportCustomDisplay(int channel, String msgId)` | channel: 0 厂商 1 EngageLab，当前仅鸿蒙实现 |
+| 上报自定义消息点击 | `reportCustomClick(int channel, String msgId)` | 同上，当前仅鸿蒙实现 |
+
+#### 代码示例（鸿蒙）
+
+```dart
+// 开启/关闭推送
+FlutterPluginEngagelab.turnOnPush();
+FlutterPluginEngagelab.turnOffPush();
+
+// 查询是否已停止
+bool stopped = await FlutterPluginEngagelab.isPushStopped();
+
+// 角标（iOS/鸿蒙）
+await FlutterPluginEngagelab.setBadge(5);
+
+// 清除通知
+FlutterPluginEngagelab.clearNotification(123);
+FlutterPluginEngagelab.clearNotificationByMsgId("msgId");
+FlutterPluginEngagelab.clearNotificationAll();
+
+// 上报点击（鸿蒙：channel 0 厂商 1 EngageLab）
+FlutterPluginEngagelab.reportNotificationClick(1, "msgId");
 ```

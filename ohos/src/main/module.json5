@@ -1,0 +1,10 @@
+{
+  "module": {
+    "name": "flutter_plugin_engagelab",
+    "type": "har",
+    "deviceTypes": [
+      "default",
+      "tablet"
+    ]
+  }
+}

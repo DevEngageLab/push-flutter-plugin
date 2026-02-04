@@ -1,0 +1,66 @@
+{
+  "module": {
+    "name": "entry",
+    "type": "entry",
+    "description": "$string:module_desc",
+    "mainElement": "EntryAbility",
+    "deviceTypes": [
+      "phone"
+    ],
+    "deliveryWithInstall": true,
+    "installationFree": false,
+    "pages": "$profile:main_pages",
+    "abilities": [
+      {
+        "name": "EntryAbility",
+        "srcEntry": "./ets/entryability/EntryAbility.ets",
+        "description": "$string:EntryAbility_desc",
+        "icon": "$media:icon",
+        "label": "$string:EntryAbility_label",
+        "startWindowIcon": "$media:icon",
+        "startWindowBackground": "$color:start_window_background",
+        "exported": true,
+        "skills": [
+          {
+            "entities": [
+              "entity.system.home"
+            ],
+            "actions": [
+              "action.system.home"
+            ]
+          }
+        ]
+      },
+      {
+        "name": "PushMessageAbility",
+        "srcEntry": "./ets/entryability/PushMessageAbility.ets",
+        "launchType": "singleton",
+        "startWindowIcon": "$media:icon",
+        "startWindowBackground": "$color:start_window_background",
+        "skills": [
+          {
+            "actions": [
+              "action.ohos.push.listener"
+            ]
+          }
+        ]
+      }
+    ],
+
+    "requestPermissions": [
+      {
+        "name": "ohos.permission.INTERNET"
+      },
+    ],
+    "proxyData": [
+      {
+        "uri": "datashareproxy://cn.allpublic.test.hmos/PushMessage",
+        "requiredWritePermission": "ohos.permission.WRITE_PRIVACY_PUSH_DATA",
+        "metadata": {
+          "name": "dataProperties",
+          "resource": "$profile:PushMessage"
+        }
+      }
+    ]
+  }
+}

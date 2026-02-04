@@ -1,0 +1,46 @@
+{
+  "app": {
+    "signingConfigs": [
+      {
+        "name": "default",
+        "type": "HarmonyOS",
+        "material": {
+          "storeFile": "./tttt/cn_allpublic_test_hmos.p12",
+          "storePassword": "0000001D49836C89D0540D77323B0989BE1C22D9281EEBB8CBFC8ADD1E42A18FFD6F293F77709AD31A990B2B7F",
+          "keyAlias": "cn_allpublic_test_hmos",
+          "keyPassword": "0000001DAEB28388C9C6B95B57F889A98D0596C0C3760F4446C61034262275DB12AEEB2BCE68ECA807B9D608B0",
+          "signAlg": "SHA256withECDSA",
+          "profile": "./tttt/cn.allpublic.test.hmosDebug.p7b",
+          "certpath": "./tttt/cnAllPublicTestHmos.cer"
+        }
+      }
+    ],
+    "products": [
+      {
+        "buildOption": {
+          "strictMode": {
+            "useNormalizedOHMUrl": true
+          }
+        },
+        "name": "default",
+        "signingConfig": "default",
+        "compatibleSdkVersion": "5.0.0(12)",
+        "runtimeOS": "HarmonyOS"
+      }
+    ]
+  },
+  "modules": [
+    {
+      "name": "entry",
+      "srcPath": "./entry",
+      "targets": [
+        {
+          "name": "default",
+          "applyToProducts": [
+            "default"
+          ]
+        }
+      ]
+    }
+  ]
+}

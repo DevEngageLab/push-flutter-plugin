@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'dart:convert' show jsonEncode;
 
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/services.dart';
 
 import 'dart:io' show Platform;
@@ -18,6 +20,18 @@ class FlutterPluginEngagelab {
   static void printMy(msg) {
     if (debug) {
       print(flutter_log + "::" + msg);
+    }
+  }
+
+  /// 是否为鸿蒙平台（非 Android/iOS/Web 时按鸿蒙处理，供鸿蒙专用 API 判断）
+  static bool get _isOhos {
+    if (kIsWeb) return false;
+    try {
+      final os = Platform.operatingSystem;
+      if (os == 'ohos' || os == 'openharmony') return true;
+      return !Platform.isAndroid && !Platform.isIOS;
+    } catch (_) {
+      return false;
     }
   }
 
@@ -67,6 +81,26 @@ class FlutterPluginEngagelab {
   static initAndroid() {
     printMy(" init");
     _channel.invokeMethod('init');
+  }
+
+  static initOhos() {
+    printMy(" initOhos");
+    _channel.invokeMethod('init', []);
+  }
+
+  static setAppKey(appKey) {
+    printMy(" setAppKey");
+    _channel.invokeMethod('setAppKey', [appKey]);
+  }
+
+  static setChannel(channel) {
+    printMy(" setChannel");
+    _channel.invokeMethod('setChannel', [channel]);
+  }
+
+  /// 获取平台版本（鸿蒙端返回 "OpenHarmony ^ ^ "，其他平台由原生实现决定）
+  static Future<String?> getPlatformVersion() async {
+    return await _channel.invokeMethod<String>('getPlatformVersion');
   }
 
   /**
@@ -446,7 +480,12 @@ class FlutterPluginEngagelab {
    */
   static addTags(params) {
     printMy("addTags");
-    _channel.invokeMethod("addTags", [params]);
+    if (Platform.isAndroid || Platform.isIOS) {
+      _channel.invokeMethod("addTags", [params]);
+    } else {
+      _channel.invokeMethod(
+          "addTags", [params['sequence'], jsonEncode(params['tags'] ?? [])]);
+    }
   }
 
   /**
@@ -456,7 +495,12 @@ class FlutterPluginEngagelab {
    */
   static deleteTags(params) {
     printMy("deleteTags");
-    _channel.invokeMethod("deleteTags", [params]);
+    if (Platform.isAndroid || Platform.isIOS) {
+      _channel.invokeMethod("deleteTags", [params]);
+    } else {
+      _channel.invokeMethod(
+          "deleteTags", [params['sequence'], jsonEncode(params['tags'] ?? [])]);
+    }
   }
 
   /**
@@ -466,7 +510,12 @@ class FlutterPluginEngagelab {
    */
   static updateTags(params) {
     printMy("updateTags");
-    _channel.invokeMethod("updateTags", [params]);
+    if (Platform.isAndroid || Platform.isIOS) {
+      _channel.invokeMethod("updateTags", [params]);
+    } else {
+      _channel.invokeMethod(
+          "updateTags", [params['sequence'], jsonEncode(params['tags'] ?? [])]);
+    }
   }
 
   /**
@@ -476,7 +525,12 @@ class FlutterPluginEngagelab {
    */
   static queryTag(params) {
     printMy("queryTag");
-    _channel.invokeMethod("queryTag", [params]);
+    if (Platform.isAndroid || Platform.isIOS) {
+      _channel.invokeMethod("queryTag", [params]);
+    } else {
+      _channel
+          .invokeMethod("queryTag", [params['sequence'], params['tag'] ?? '']);
+    }
   }
 
   /**
@@ -589,12 +643,13 @@ class FlutterPluginEngagelab {
    * @return Future<Map> 返回操作结果，包含success和error字段
    */
   static Future<Map> setBadge(int badge) async {
-    if (!Platform.isIOS) {
-      return Map();
+    // iOS 与鸿蒙支持角标；Android 不调用
+    if (Platform.isAndroid) {
+      return {};
     }
     printMy("setBadge:" + badge.toString());
-    final Map result = await _channel.invokeMethod("setBadge", [badge]);
-    return result;
+    final Map? result = await _channel.invokeMethod("setBadge", [badge]);
+    return Map<String, dynamic>.from(result ?? {});
   }
 
   /**
@@ -657,6 +712,120 @@ class FlutterPluginEngagelab {
   static setEnableUdp(bool enable) {
     printMy("setEnableUdp:" + enable.toString());
     _channel.invokeMethod("setEnableUdp", [enable]);
+  }
+
+  /**
+   * 按消息 ID 清除通知（鸿蒙/Android 等支持时可用）
+   */
+  static clearNotificationByMsgId(String msgId) {
+    printMy("clearNotificationByMsgId");
+    _channel.invokeMethod("clearNotificationByMsgId", [msgId]);
+  }
+
+  // ---------- 推送控制与上报等（当前鸿蒙已支持，后续 Android/iOS 可能支持） ----------
+
+  /**
+   * 开启推送。对应 EPushInterface.resumePush()。当前仅鸿蒙实现，非支持平台调用时直接返回。
+   */
+  static turnOnPush() {
+    if (!_isOhos) return;
+    printMy("turnOnPush");
+    _channel.invokeMethod("turnOnPush", []);
+  }
+
+  /**
+   * 关闭推送。对应 EPushInterface.stopPush()。当前仅鸿蒙实现，非支持平台调用时直接返回。
+   */
+  static turnOffPush() {
+    if (!_isOhos) return;
+    printMy("turnOffPush");
+    _channel.invokeMethod("turnOffPush", []);
+  }
+
+  /**
+   * 查询推送是否已停止。对应 EPushInterface.isPushStopped()。当前仅鸿蒙实现，非支持平台返回 false。
+   */
+  static Future<bool> isPushStopped() async {
+    if (!_isOhos) return false;
+    final bool? result = await _channel.invokeMethod("isPushStopped", []);
+    return result == true;
+  }
+
+  /**
+   * 设置心跳周期。单位毫秒。对应 EPushInterface.setHeartbeatTime(time)。当前仅鸿蒙实现。
+   */
+  static configHeartbeatInterval(int intervalMs) {
+    if (!_isOhos) return;
+    printMy("configHeartbeatInterval");
+    _channel.invokeMethod("configHeartbeatInterval", [intervalMs]);
+  }
+
+  /**
+   * 设置 TCP SSL。对应 EPushInterface.setTcpSSl(enable)。当前仅鸿蒙实现。
+   */
+  static setTcpSSL(bool enable) {
+    if (!_isOhos) return;
+    printMy("setTcpSSL");
+    _channel.invokeMethod("setTcpSSL", [enable]);
+  }
+
+  /**
+   * 设置自定义消息最大缓存条数。对应 EPushInterface.setCustomMessageMaxCacheCount(count)。当前仅鸿蒙实现。
+   */
+  static setCustomMessageMaxCacheCount(int count) {
+    if (!_isOhos) return;
+    printMy("setCustomMessageMaxCacheCount");
+    _channel.invokeMethod("setCustomMessageMaxCacheCount", [count]);
+  }
+
+  /**
+   * 控制通知权限申请方式。对应 EPushInterface.setUserRequestNotificationPermission(enable)。当前仅鸿蒙实现。
+   */
+  static setUserRequestNotificationPermission(bool enable) {
+    if (!_isOhos) return;
+    printMy("setUserRequestNotificationPermission");
+    _channel.invokeMethod("setUserRequestNotificationPermission", [enable]);
+  }
+
+  /**
+   * 清除 Token。对应 EPushInterface.clearToken()。当前仅鸿蒙实现。
+   */
+  static clearToken() {
+    if (!_isOhos) return;
+    printMy("clearToken");
+    _channel.invokeMethod("clearToken", []);
+  }
+
+  /**
+   * 上报通知点击。channel: 0 厂商通道 1 EngageLab 通道；msgId 消息 ID。当前仅鸿蒙实现。
+   */
+  static reportNotificationClick(int channel, String msgId) {
+    if (!_isOhos) return;
+    _channel.invokeMethod("reportNotificationClick", [channel, msgId]);
+  }
+
+  /**
+   * 上报通知展示。当前仅鸿蒙实现。
+   */
+  static reportNotificationDisplay(int channel, String msgId) {
+    if (!_isOhos) return;
+    _channel.invokeMethod("reportNotificationDisplay", [channel, msgId]);
+  }
+
+  /**
+   * 上报自定义消息展示。channel: 0 厂商通道 1 EngageLab 通道；msgId 消息 ID。当前仅鸿蒙实现。
+   */
+  static reportCustomDisplay(int channel, String msgId) {
+    if (!_isOhos) return;
+    _channel.invokeMethod("reportCustomDisplay", [channel, msgId]);
+  }
+
+  /**
+   * 上报自定义消息点击。channel: 0 厂商通道 1 EngageLab 通道；msgId 消息 ID。当前仅鸿蒙实现。
+   */
+  static reportCustomClick(int channel, String msgId) {
+    if (!_isOhos) return;
+    _channel.invokeMethod("reportCustomClick", [channel, msgId]);
   }
 }
 
