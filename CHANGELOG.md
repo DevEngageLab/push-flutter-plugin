@@ -1,3 +1,6 @@
+## 1.3.8+530530
++ 支持鸿蒙（HarmonyOS）：新增 HarmonyOS 平台支持。
+
 ## 1.3.7+530530
 + update android 5.3.0 ios 5.3.0
 + Android: 更新setCollectControl方法，新增aid参数支持（AndroidId数据采集控制）
