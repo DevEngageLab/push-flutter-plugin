@@ -823,12 +823,19 @@ NSData * _deviceToken;
 - (NSDictionary *)getCallBackDicFromAPNSDic:(NSDictionary *)dic {
     NSDictionary *aps = dic[@"aps"];
     NSString *title = @"";
-//    NSString *subTitle = @"";
+    NSString *subTitle = @"";
     NSString *content = @"";
     NSString *messageId = [NSString stringWithFormat:@"%@",dic[@"_j_msgid"]];
     if (aps && [aps isKindOfClass:[NSDictionary class]]) {
-        title = aps[@"alert"][@"title"] ?: @"";
-        content = aps[@"alert"][@"body"] ?: @"";
+        id alert = aps[@"alert"];
+        if ([alert isKindOfClass:[NSDictionary class]]) {
+                title = alert[@"title"] ?: @"";
+                content = alert[@"body"] ?: @"";
+                subTitle = alert[@"subtitle"] ?: @"";
+        } else if ([alert isKindOfClass:[NSString class]]) {
+            content = (NSString *)alert;
+            title = @"";
+        }
     }
     
     NSMutableDictionary *extras = @{}.mutableCopy;
@@ -849,6 +856,7 @@ NSData * _deviceToken;
     NSDictionary *callback = @{
         @"title": title,
         @"content": content,
+        @"subTitle": subTitle,
         @"messageId": messageId,
         @"extras": extras
     };

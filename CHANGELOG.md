@@ -1,3 +1,6 @@
+## 1.3.9+530530
++ iOS: 修复 APNS 推送中 `aps.alert` 字段兼容性。
+
 ## 1.3.8+530530
 + 支持鸿蒙（HarmonyOS）：新增 HarmonyOS 平台支持。
 
