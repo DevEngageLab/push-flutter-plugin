@@ -1,3 +1,9 @@
+## 1.4.0+540540
++ update Android SDK 5.3.0 → 5.4.0，iOS SDK 5.3.0 → 5.4.0
++ Android: 小米厂商 SDK 升级（6.0.1 → 7.9.2），合规优化：AndroidId 采集默认关闭
++ Android: `setCollectControl` 的 `aid` 参数自 Android SDK 5.4.0 起废弃，AndroidId 采集默认关闭，无需再传入 aid
++ iOS: 已知 Bug 修复
+
 ## 1.3.9+530530
 + iOS: 修复 APNS 推送中 `aps.alert` 字段兼容性。
 

@@ -654,9 +654,11 @@ class FlutterPluginEngagelab {
 
   /**
    * 设置数据采集控制（Android 5.2.0新增方法，5.3.0新增aid参数）
-   * 
-   * @param params 采集控制参数字典，包含gaid、aid等配置项
-   * {"gaid": true, "aid": true}
+   *
+   * @param gaid 是否采集 Google Advertising ID
+   * @param aid  是否采集 AndroidId。
+   *             [已废弃] aid 参数自 Android SDK 5.4.0 起废弃（MTPushCollectControl.setAid() 不再生效），
+   *             AndroidId 默认关闭采集，传入此参数不会产生效果，保留仅为兼容旧版本调用。
    */
   static setCollectControl({bool? gaid, bool? aid}) {
     if (Platform.isIOS) {
@@ -667,6 +669,7 @@ class FlutterPluginEngagelab {
     if (gaid != null) {
       params["gaid"] = gaid;
     }
+    // aid 参数自 Android SDK 5.4.0 起已废弃，AndroidId 采集默认关闭，此参数保留仅供兼容旧版本调用
     if (aid != null) {
       params["aid"] = aid;
     }
