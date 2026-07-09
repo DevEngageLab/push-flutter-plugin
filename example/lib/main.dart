@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'dart:async';
 
-import 'package:flutter/services.dart';
 import 'package:flutter_plugin_engagelab/flutter_plugin_engagelab.dart';
 
 void main() {
@@ -19,8 +18,8 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   String _platformVersion = 'Unknown';
-  String _event_name = 'Unknown';
-  String _event_data = 'Unknown';
+  String _eventName = 'Unknown';
+  String _eventData = 'Unknown';
 
   @override
   void initState() {
@@ -33,23 +32,23 @@ class _MyAppState extends State<MyApp> {
     FlutterPluginEngagelab.addEventHandler(
         onMTCommonReceiver: (Map<String, dynamic> message) async {
       FlutterPluginEngagelab.printMy("flutter onMTCommonReceiver: $message");
-      String event_name = message["event_name"];
-      String event_data = message["event_data"];
+      String eventName = message["event_name"];
+      String eventData = message["event_data"];
       FlutterPluginEngagelab.printMy(
-          "flutter onMTCommonReceiver event_name: " + event_name);
+          "flutter onMTCommonReceiver event_name: " + eventName);
       FlutterPluginEngagelab.printMy(
-          "flutter onMTCommonReceiver event_data: " + event_data);
+          "flutter onMTCommonReceiver event_data: " + eventData);
       setState(() {
-        _event_name = "$event_name";
-        _event_data = "$event_data";
+        _eventName = eventName;
+        _eventData = eventData;
         // debugLable = "flutter onMTCommonReceiver: $message";
-        if (Comparable.compare(event_name, "onConnectStatus") == 0 ||
-            Comparable.compare(event_name, "networkDidLogin") == 0) {
+        if (Comparable.compare(eventName, "onConnectStatus") == 0 ||
+            Comparable.compare(eventName, "networkDidLogin") == 0) {
           FlutterPluginEngagelab.getRegistrationId().then((rid) {
             FlutterPluginEngagelab.printMy(
                 "flutter get registration id : $rid");
             setState(() {
-              _platformVersion = "$rid";
+              _platformVersion = rid;
             });
             // // 设置用户语言
             // FlutterPluginEngagelab.setUserLanguage("zh-Hans-CN");
@@ -94,7 +93,7 @@ class _MyAppState extends State<MyApp> {
     FlutterPluginEngagelab.getRegistrationId().then((rid) {
       FlutterPluginEngagelab.printMy("flutter get registration id : $rid");
       setState(() {
-        _platformVersion = "$rid";
+        _platformVersion = rid;
       });
     });
 
@@ -126,8 +125,8 @@ class _MyAppState extends State<MyApp> {
                 margin: const EdgeInsets.fromLTRB(10, 10, 10, 10),
                 color: Colors.brown,
                 child: Text('RID: $_platformVersion\n'
-                    'EVENT NAME: $_event_name\n'
-                    'EVENT DATA: $_event_data\n'),
+                    'EVENT NAME: $_eventName\n'
+                    'EVENT DATA: $_eventData\n'),
                 width: 350,
                 height: 100,
               ),
@@ -247,7 +246,7 @@ class CustomButton extends StatelessWidget {
   final VoidCallback? onPressed;
   final String? title;
 
-  const CustomButton({@required this.onPressed, @required this.title});
+  const CustomButton({Key? key, this.onPressed, this.title}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

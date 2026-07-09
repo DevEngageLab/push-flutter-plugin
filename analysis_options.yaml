@@ -1,4 +1,11 @@
 include: package:flutter_lints/flutter.yaml
 
+linter:
+  rules:
+    avoid_print: false
+    constant_identifier_names: false
+    prefer_generic_function_type_aliases: false
+    slash_for_doc_comments: false
+
 # Additional information about this file can be found at
 # https://dart.dev/guides/language/analysis-options

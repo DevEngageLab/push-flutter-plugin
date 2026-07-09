@@ -5,19 +5,20 @@ import 'package:flutter_plugin_engagelab/flutter_plugin_engagelab.dart';
 void main() {
   const MethodChannel channel = MethodChannel('flutter_plugin_engagelab');
 
-  TestWidgetsFlutterBinding.ensureInitialized();
+  final binding = TestWidgetsFlutterBinding.ensureInitialized();
 
   setUp(() {
-    channel.setMockMethodCallHandler((MethodCall methodCall) async {
-      return '42';
-    });
+    binding.defaultBinaryMessenger.setMockMethodCallHandler(
+      channel,
+      (MethodCall methodCall) async => '42',
+    );
   });
 
   tearDown(() {
-    channel.setMockMethodCallHandler(null);
+    binding.defaultBinaryMessenger.setMockMethodCallHandler(channel, null);
   });
 
-  // test('getPlatformVersion', () async {
-  //   expect(await FlutterPluginEngagelab.platformVersion, '42');
-  // });
+  test('getPlatformVersion', () async {
+    expect(await FlutterPluginEngagelab.getPlatformVersion(), '42');
+  });
 }
