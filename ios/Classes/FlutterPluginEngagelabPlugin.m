@@ -123,10 +123,26 @@ NSData * _deviceToken;
         [self setAppGroupId:data];
     }else if ([name isEqualToString:@"setEnableUdp"]) {
         [self setEnableUdp:data];
+    }else if ([name isEqualToString:@"reportCustomMessageDisplay"]) {
+        [self reportCustomMessageDisplay:data];
+    }else if ([name isEqualToString:@"reportCustomMessageClick"]) {
+        [self reportCustomMessageClick:data];
     } else{
-        
+
         result(FlutterMethodNotImplemented);
     }
+}
+
+// data: [messageId, platform, platformMessageId]，iOS 仅使用 messageId
+-(void)reportCustomMessageDisplay:(NSArray *)data {
+    NSString *messageId = [data objectAtIndex:0];
+    [MTPushService reportCustomDisplay:messageId];
+}
+
+// data: [messageId, platform, platformMessageId]，iOS 仅使用 messageId
+-(void)reportCustomMessageClick:(NSArray *)data {
+    NSString *messageId = [data objectAtIndex:0];
+    [MTPushService reportCustomClick:messageId];
 }
 
 - (void)addEventHandlerMethod {

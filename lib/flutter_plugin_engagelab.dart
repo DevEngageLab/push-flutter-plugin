@@ -424,6 +424,38 @@ class FlutterPluginEngagelab {
   }
 
   /**
+   * 上报自定义消息展示。Android/iOS 支持，与鸿蒙专用的 reportCustomDisplay() 是不同的接口。
+   * <p>
+   * 走http/https上报
+   *
+   * @param messageId         Engagelab消息id，不为空
+   * @param platform          厂商，取值范围（0:Engagelab、2:huawei、7:honor、8:google），仅Android使用，iOS忽略
+   * @param platformMessageId 厂商消息id，可为空，仅Android使用，iOS忽略
+   */
+  static reportCustomMessageDisplay(
+      messageId, platform, platformMessageId) {
+    printMy("reportCustomMessageDisplay");
+    _channel.invokeMethod("reportCustomMessageDisplay",
+        [messageId, platform, platformMessageId]);
+  }
+
+  /**
+   * 上报自定义消息点击。Android/iOS 支持，与鸿蒙专用的 reportCustomClick() 是不同的接口。
+   * <p>
+   * 走http/https上报
+   *
+   * @param messageId         Engagelab消息id，不为空
+   * @param platform          厂商，取值范围（0:Engagelab、2:huawei、7:honor、8:google），仅Android使用，iOS忽略
+   * @param platformMessageId 厂商消息id，可为空，仅Android使用，iOS忽略
+   */
+  static reportCustomMessageClick(
+      messageId, platform, platformMessageId) {
+    printMy("reportCustomMessageClick");
+    _channel.invokeMethod("reportCustomMessageClick",
+        [messageId, platform, platformMessageId]);
+  }
+
+  /**
    * 上传厂商token
    * <p>
    * 走tcp上传

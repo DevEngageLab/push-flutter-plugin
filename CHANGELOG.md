@@ -1,3 +1,8 @@
+## 1.4.1+541541
++ update Android SDK 5.4.0 → 5.4.1，iOS SDK 5.4.0 → 5.4.1
++ 新增 `reportCustomMessageDisplay(messageId, platform, platformMessageId)`：上报自定义消息展示数据（Android/iOS，iOS 仅使用 messageId）。与鸿蒙专用的 `reportCustomDisplay()` 是不同的接口
++ 新增 `reportCustomMessageClick(messageId, platform, platformMessageId)`：上报自定义消息点击数据（Android/iOS，iOS 仅使用 messageId）。与鸿蒙专用的 `reportCustomClick()` 是不同的接口
+
 ## 1.4.0+540540
 + update Android SDK 5.3.0 → 5.4.0，iOS SDK 5.3.0 → 5.4.0
 + Android: 小米厂商 SDK 升级（6.0.1 → 7.9.2），合规优化：AndroidId 采集默认关闭

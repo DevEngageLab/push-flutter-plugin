@@ -741,6 +741,50 @@ public class FlutterPluginEngagelabPlugin implements FlutterPlugin, MethodCallHa
     }
 
     /**
+     * 上报自定义消息展示
+     * <p>
+     * 走http/https上报
+     *
+     * @param context           不为空
+     * @param messageId         Engagelab消息id，不为空
+     * @param platform          厂商，取值范围（0:Engagelab、2:huawei、7:honor、8:google）
+     * @param platformMessageId 厂商消息id，可为空
+     */
+    void reportCustomMessageDisplay(JSONArray data, Result result) {
+        try {
+            Context context = getApplicationContext();
+            String messageId = data.getString(0);
+            byte platform = (byte) data.getInt(1);
+            String platformMessageId = data.getString(2);
+            MTPushPrivatesApi.reportCustomDisplay(context, messageId, platform, platformMessageId);
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 上报自定义消息点击
+     * <p>
+     * 走http/https上报
+     *
+     * @param context           不为空
+     * @param messageId         Engagelab消息id，不为空
+     * @param platform          厂商，取值范围（0:Engagelab、2:huawei、7:honor、8:google）
+     * @param platformMessageId 厂商消息id，可为空
+     */
+    void reportCustomMessageClick(JSONArray data, Result result) {
+        try {
+            Context context = getApplicationContext();
+            String messageId = data.getString(0);
+            byte platform = (byte) data.getInt(1);
+            String platformMessageId = data.getString(2);
+            MTPushPrivatesApi.reportCustomClick(context, messageId, platform, platformMessageId);
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
      * 上传厂商token
      * <p>
      * 走tcp上传
