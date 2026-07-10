@@ -9,6 +9,7 @@ import com.engagelab.privates.push.api.InAppMessage;
 import com.engagelab.privates.push.api.NotificationMessage;
 import com.engagelab.privates.push.api.PlatformTokenMessage;
 import com.engagelab.privates.push.api.TagMessage;
+import com.engagelab.privates.push.api.VoipDataMessage;
 import com.engagelab.privates.flutter_plugin_engagelab.MsgToJson;
 
 /**
@@ -133,6 +134,18 @@ public class UserReceiver extends MTCommonReceiver {
     public void onInAppMessageClick(Context context, InAppMessage inAppMessage) {
         FlutterPluginEngagelabPlugin.logD(TAG, "onInAppMessageClick:" + inAppMessage.toString());
         FlutterPluginEngagelabPlugin.onCommonReceiver("onInAppMessageClick", MsgToJson.inappMessageToJson(inAppMessage));
+    }
+
+    /**
+     * VoIP消息回调，支持厂商：小米、OPPO、vivo、荣耀
+     *
+     * @param context         不为空
+     * @param voipDataMessage VoIP消息
+     */
+    @Override
+    public void onVoipMessage(Context context, VoipDataMessage voipDataMessage) {
+        FlutterPluginEngagelabPlugin.logD(TAG, "onVoipMessage:" + voipDataMessage.toString());
+        FlutterPluginEngagelabPlugin.onCommonReceiver("onVoipMessage", MsgToJson.voipMessageToJson(voipDataMessage));
     }
 }
 

@@ -1,3 +1,9 @@
+## 1.4.2+542541
++ update Android SDK 5.4.1 → 5.4.2，iOS SDK 保持 5.4.1
++ Android: 新增 VoIP 消息支持，覆盖小米、OPPO、vivo、荣耀四大厂商通道，通过 `onMTCommonReceiver` 事件的 `onVoipMessage` 名称接收
++ Android: OPPO/vivo/荣耀厂商 SDK 依赖版本升级，由 `com.engagelab.plugin:*` 封装模块内部处理，无需手动配置
++ Bug 修复
+
 ## 1.4.1+541541
 + update Android SDK 5.4.0 → 5.4.1，iOS SDK 5.4.0 → 5.4.1
 + 新增 `reportCustomMessageDisplay(messageId, platform, platformMessageId)`：上报自定义消息展示数据（Android/iOS，iOS 仅使用 messageId）。与鸿蒙专用的 `reportCustomDisplay()` 是不同的接口
