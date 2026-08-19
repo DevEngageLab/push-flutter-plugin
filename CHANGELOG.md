@@ -1,3 +1,7 @@
+## 1.4.4+543543
++ update Android SDK 5.4.2 → 5.4.3，iOS SDK 保持 5.4.3，HarmonyOS SDK 保持 1.0.1
++ Android: 支持 OPPO 与 vivo 厂商消息角标处理
+
 ## 1.4.3+542543
 + update iOS SDK 5.4.1 → 5.4.3，HarmonyOS SDK 1.0.0 → 1.0.1
 + iOS/HarmonyOS: 新增 `turnOffPush` 关闭推送服务接口
