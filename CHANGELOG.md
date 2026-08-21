@@ -1,3 +1,9 @@
+## 1.4.3+542543
++ update iOS SDK 5.4.1 → 5.4.3，HarmonyOS SDK 1.0.0 → 1.0.1
++ iOS/HarmonyOS: 新增 `turnOffPush` 关闭推送服务接口
++ iOS/HarmonyOS: 新增 `turnOnPush` 使用指定 AppKey 重新开启推送服务接口
++ HarmonyOS 接口迁移：旧版 `turnOnPush()` / `turnOffPush()` 实际对应 `resumePush()` / `stopPush()`，本版本分别更名为 `resumePush()` / `stopPush()`；原方法名用于上述新增的重新开启/关闭推送服务接口。已有 HarmonyOS 用户升级后需同步修改旧接口调用
+
 ## 1.4.2+542541
 + update Android SDK 5.4.1 → 5.4.2，iOS SDK 保持 5.4.1
 + Android: 新增 VoIP 消息支持，覆盖小米、OPPO、vivo、荣耀四大厂商通道，通过 `onMTCommonReceiver` 事件的 `onVoipMessage` 名称接收

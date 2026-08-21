@@ -562,3 +562,38 @@ You only need to call the following interface in Flutter to enable the text-to-s
 ```js
 FlutterPluginEngagelab.setEnablePushTextToSpeech(true);
 ```
+
+## Turn Push Service On or Off (iOS/HarmonyOS)
+
+### resumePush / stopPush
+
+The original HarmonyOS push reception controls remain available as `resumePush()` and `stopPush()`. They map to the native APIs with the same names and are different from push service registration.
+
+```dart
+FlutterPluginEngagelab.resumePush();
+FlutterPluginEngagelab.stopPush();
+```
+
+### turnOnPush
+
+Turn the push service on with the specified AppKey. `appKey` is required. HarmonyOS uses `appKey`; iOS also uses `channel`, `isProduction`, and `advertisingId`.
+
+```dart
+FlutterPluginEngagelab.turnOnPush(
+  appKey: "your_app_key",
+  channel: "your_channel",
+  isProduction: true,
+  advertisingId: "your_idfa",
+);
+```
+
+### turnOffPush
+
+Turn the push service off. On iOS and HarmonyOS, the returned map contains `code` and `msg`.
+
+Result codes are passed through from the native SDK. iOS returns `0`, `6050`, `6051`, or `6052`; HarmonyOS returns values from `0` through `5`. See the API reference for the corresponding native SDK for details.
+
+```dart
+final result = await FlutterPluginEngagelab.turnOffPush();
+print('turnOffPush code: ${result?["code"]}, msg: ${result?["msg"]}');
+```

@@ -243,12 +243,17 @@ export default class FlutterPluginEngagelabPlugin implements FlutterPlugin, Meth
       result.success(null);
     } else if (call.method == "clearToken") {
       this.clearToken(result);
-    } else if (call.method == "turnOnPush") {
+    } else if (call.method == "resumePush") {
       this.resumePush();
       result.success(null);
-    } else if (call.method == "turnOffPush") {
+    } else if (call.method == "stopPush") {
       this.stopPush();
       result.success(null);
+    } else if (call.method == "turnOnPush") {
+      this.turnOnPush(call.args);
+      result.success(null);
+    } else if (call.method == "turnOffPush") {
+      this.turnOffPush(result);
     } else if (call.method == "isPushStopped") {
       this.isPushStopped(result);
     } else if (call.method == "setTcpSSL") {
@@ -561,7 +566,18 @@ export default class FlutterPluginEngagelabPlugin implements FlutterPlugin, Meth
   }
 
   /**
-   * 停止推送。Dart 调用 turnOffPush。文档：EPushInterface.stopPush()
+   * 恢复推送接收。Dart 调用 resumePush，对应旧 EPushInterface.resumePush()。
+   */
+  private resumePush(): void {
+    try {
+      EPushInterface.resumePush();
+    } catch (e) {
+      console.error('FlutterPluginEngagelabPlugin resumePush error: ' + JSON.stringify(e));
+    }
+  }
+
+  /**
+   * 停止推送接收。Dart 调用 stopPush，对应旧 EPushInterface.stopPush()。
    */
   private stopPush(): void {
     try {
@@ -572,13 +588,35 @@ export default class FlutterPluginEngagelabPlugin implements FlutterPlugin, Meth
   }
 
   /**
-   * 恢复推送。Dart 调用 turnOnPush。文档：EPushInterface.resumePush()
+   * 关闭推送服务。Dart 调用 turnOffPush，结果透传为 { code, msg }。
    */
-  private resumePush(): void {
+  private turnOffPush(result: MethodResult): void {
+    if (this.applicationContext == null) {
+      result.success({ code: 5, msg: 'context is invalid' });
+      return;
+    }
+    EPushInterface.turnOffPush(this.applicationContext).then((pushResult) => {
+      result.success({ code: pushResult.code, msg: pushResult.msg });
+    }).catch((e: Error) => {
+      console.error('FlutterPluginEngagelabPlugin turnOffPush error: ' + JSON.stringify(e));
+      result.success({ code: 5, msg: e.message ?? 'turnOffPush failed' });
+    });
+  }
+
+  /**
+   * 使用指定 AppKey 开启推送服务。HarmonyOS 仅使用 appKey 参数。
+   */
+  private turnOnPush(args: Object | null): void {
     try {
-      EPushInterface.resumePush();
+      if (this.applicationContext == null) {
+        console.error('FlutterPluginEngagelabPlugin turnOnPush failed: context is null');
+        return;
+      }
+      let params = (args as Array<Record<string, Object>>)[0];
+      let appKey = params?.['appKey'] as string ?? '';
+      EPushInterface.turnOnPush(this.applicationContext, appKey);
     } catch (e) {
-      console.error('FlutterPluginEngagelabPlugin resumePush error: ' + JSON.stringify(e));
+      console.error('FlutterPluginEngagelabPlugin turnOnPush error: ' + JSON.stringify(e));
     }
   }
 

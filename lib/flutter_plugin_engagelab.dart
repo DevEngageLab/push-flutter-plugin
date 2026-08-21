@@ -432,11 +432,10 @@ class FlutterPluginEngagelab {
    * @param platform          厂商，取值范围（0:Engagelab、2:huawei、7:honor、8:google），仅Android使用，iOS忽略
    * @param platformMessageId 厂商消息id，可为空，仅Android使用，iOS忽略
    */
-  static reportCustomMessageDisplay(
-      messageId, platform, platformMessageId) {
+  static reportCustomMessageDisplay(messageId, platform, platformMessageId) {
     printMy("reportCustomMessageDisplay");
-    _channel.invokeMethod("reportCustomMessageDisplay",
-        [messageId, platform, platformMessageId]);
+    _channel.invokeMethod(
+        "reportCustomMessageDisplay", [messageId, platform, platformMessageId]);
   }
 
   /**
@@ -448,11 +447,10 @@ class FlutterPluginEngagelab {
    * @param platform          厂商，取值范围（0:Engagelab、2:huawei、7:honor、8:google），仅Android使用，iOS忽略
    * @param platformMessageId 厂商消息id，可为空，仅Android使用，iOS忽略
    */
-  static reportCustomMessageClick(
-      messageId, platform, platformMessageId) {
+  static reportCustomMessageClick(messageId, platform, platformMessageId) {
     printMy("reportCustomMessageClick");
-    _channel.invokeMethod("reportCustomMessageClick",
-        [messageId, platform, platformMessageId]);
+    _channel.invokeMethod(
+        "reportCustomMessageClick", [messageId, platform, platformMessageId]);
   }
 
   /**
@@ -757,24 +755,64 @@ class FlutterPluginEngagelab {
     _channel.invokeMethod("clearNotificationByMsgId", [msgId]);
   }
 
-  // ---------- 推送控制与上报等（当前鸿蒙已支持，后续 Android/iOS 可能支持） ----------
+  // ---------- 推送控制与上报等 ----------
 
   /**
-   * 开启推送。对应 EPushInterface.resumePush()。当前仅鸿蒙实现，非支持平台调用时直接返回。
+   * 恢复推送接收。对应 EPushInterface.resumePush()，当前仅 HarmonyOS 实现。
    */
-  static turnOnPush() {
+  static void resumePush() {
     if (!_isOhos) return;
-    printMy("turnOnPush");
-    _channel.invokeMethod("turnOnPush", []);
+    printMy("resumePush");
+    _channel.invokeMethod("resumePush", []);
   }
 
   /**
-   * 关闭推送。对应 EPushInterface.stopPush()。当前仅鸿蒙实现，非支持平台调用时直接返回。
+   * 停止推送接收。对应 EPushInterface.stopPush()，当前仅 HarmonyOS 实现。
    */
-  static turnOffPush() {
+  static void stopPush() {
     if (!_isOhos) return;
+    printMy("stopPush");
+    _channel.invokeMethod("stopPush", []);
+  }
+
+  /**
+   * 使用指定 AppKey 开启推送服务。
+   *
+   * HarmonyOS 使用 [appKey]；iOS 同时使用 [channel]、[isProduction]
+   * 和 [advertisingId]。
+   * Android 请继续使用 [turnOnPushAndroid]。
+   */
+  static void turnOnPush({
+    required String appKey,
+    String channel = '',
+    bool isProduction = false,
+    String advertisingId = '',
+  }) {
+    if (!Platform.isIOS && !_isOhos) return;
+    printMy("turnOnPush");
+    _channel.invokeMethod("turnOnPush", [
+      {
+        "appKey": appKey,
+        "channel": channel,
+        "production": isProduction,
+        "advertisingId": advertisingId,
+      }
+    ]);
+  }
+
+  /**
+   * 关闭推送服务。
+   *
+   * iOS 和 HarmonyOS 返回包含 `code`、`msg` 的结果；非支持平台返回 null。
+   */
+  static Future<Map<String, dynamic>?> turnOffPush() async {
+    if (!Platform.isIOS && !_isOhos) return null;
     printMy("turnOffPush");
-    _channel.invokeMethod("turnOffPush", []);
+    final dynamic result = await _channel.invokeMethod("turnOffPush", []);
+    if (result is Map) {
+      return Map<String, dynamic>.from(result);
+    }
+    return null;
   }
 
   /**

@@ -633,14 +633,16 @@ FlutterPluginEngagelab.setEnablePushTextToSpeech(true);
 ```
 
 
-### 鸿蒙其余 API
+### iOS/鸿蒙推送开关与鸿蒙其余 API
 
-鸿蒙端已对接 EPushInterface 文档中的以下能力，对应 Dart 方法如下（均在 **initOhos 之后** 按需调用）。
+iOS、鸿蒙已对接关闭与重新开启推送服务接口；其余能力为鸿蒙 EPushInterface 对应能力（鸿蒙接口均在 **initOhos 之后** 按需调用）。
 
 | 能力 | Dart 方法 | 说明 |
 |------|-----------|------|
-| 开启推送 | `turnOnPush()` | 对应 resumePush，当前仅鸿蒙实现 |
-| 关闭推送 | `turnOffPush()` | 对应 stopPush，当前仅鸿蒙实现 |
+| 恢复推送接收 | `resumePush()` | 对应 resumePush，当前仅鸿蒙实现 |
+| 停止推送接收 | `stopPush()` | 对应 stopPush，当前仅鸿蒙实现 |
+| 开启推送服务 | `turnOnPush({required String appKey, String channel, bool isProduction, String advertisingId})` | iOS/鸿蒙支持，鸿蒙仅使用 appKey |
+| 关闭推送 | `turnOffPush()` → Future&lt;Map&lt;String, dynamic&gt;?&gt; | iOS/鸿蒙支持，返回 `code`、`msg` |
 | 查询推送是否停止 | `isPushStopped()` → Future&lt;bool&gt; | 对应 isPushStopped，当前仅鸿蒙实现 |
 | 设置心跳周期 | `configHeartbeatInterval(int intervalMs)` | 单位毫秒，对应 setHeartbeatTime，当前仅鸿蒙实现 |
 | 设置 TCP SSL | `setTcpSSL(bool enable)` | 对应 setTcpSSl，当前仅鸿蒙实现 |
@@ -656,12 +658,24 @@ FlutterPluginEngagelab.setEnablePushTextToSpeech(true);
 | 上报自定义消息展示 | `reportCustomDisplay(int channel, String msgId)` | channel: 0 厂商 1 EngageLab，当前仅鸿蒙实现 |
 | 上报自定义消息点击 | `reportCustomClick(int channel, String msgId)` | 同上，当前仅鸿蒙实现 |
 
-#### 代码示例（鸿蒙）
+`turnOffPush` 结果码沿用各原生 SDK：iOS 返回 `0`、`6050`、`6051`、`6052`；鸿蒙返回 `0`～`5`。具体含义请分别参考对应平台的 SDK API 文档。
+
+#### 代码示例（iOS/鸿蒙）
 
 ```dart
+// 鸿蒙原有推送接收开关
+FlutterPluginEngagelab.resumePush();
+FlutterPluginEngagelab.stopPush();
+
 // 开启/关闭推送
-FlutterPluginEngagelab.turnOnPush();
-FlutterPluginEngagelab.turnOffPush();
+FlutterPluginEngagelab.turnOnPush(
+  appKey: "your_app_key",
+  channel: "your_channel",       // iOS 使用
+  isProduction: true,             // iOS 使用
+  advertisingId: "your_idfa",    // iOS 使用，可选
+);
+final result = await FlutterPluginEngagelab.turnOffPush();
+print('turnOffPush code: ${result?["code"]}, msg: ${result?["msg"]}');
 
 // 查询是否已停止
 bool stopped = await FlutterPluginEngagelab.isPushStopped();

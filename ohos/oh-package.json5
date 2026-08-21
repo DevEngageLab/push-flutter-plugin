@@ -7,6 +7,6 @@
   "license": "Apache-2.0",
   "dependencies": {
     "@ohos/flutter_ohos": "file:./har/flutter.har",
-    "@engagelab/push": "1.0.0"
+    "@engagelab/push": "1.0.1"
   }
 }

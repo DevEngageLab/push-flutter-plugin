@@ -123,6 +123,11 @@ NSData * _deviceToken;
         [self setAppGroupId:data];
     }else if ([name isEqualToString:@"setEnableUdp"]) {
         [self setEnableUdp:data];
+    }else if ([name isEqualToString:@"turnOnPush"]) {
+        [self turnOnPush:data];
+        result(nil);
+    }else if ([name isEqualToString:@"turnOffPush"]) {
+        [self turnOffPush:result];
     }else if ([name isEqualToString:@"reportCustomMessageDisplay"]) {
         [self reportCustomMessageDisplay:data];
     }else if ([name isEqualToString:@"reportCustomMessageClick"]) {
@@ -131,6 +136,31 @@ NSData * _deviceToken;
 
         result(FlutterMethodNotImplemented);
     }
+}
+
+- (void)turnOnPush:(NSArray *)data {
+    NSDictionary *arguments = data.firstObject;
+    if (![arguments isKindOfClass:[NSDictionary class]]) {
+        JPLog(@"turnOnPush ignored: invalid arguments");
+        return;
+    }
+    NSString *appKey = arguments[@"appKey"] ?: @"";
+    NSString *channel = arguments[@"channel"];
+    NSNumber *isProduction = arguments[@"production"];
+    NSString *advertisingId = arguments[@"advertisingId"];
+    [MTPushService turnOnPush:appKey
+                      channel:channel
+             apsForProduction:isProduction.boolValue
+        advertisingIdentifier:advertisingId];
+}
+
+- (void)turnOffPush:(FlutterResult)result {
+    [MTPushService turnOffPush:^(NSInteger code, NSString *message) {
+        result(@{
+            @"code": @(code),
+            @"msg": message ?: @""
+        });
+    }];
 }
 
 // data: [messageId, platform, platformMessageId]，iOS 仅使用 messageId
