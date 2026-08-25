@@ -1,3 +1,6 @@
+## 1.4.5+5431543
++ Android main SDK remains 5.4.3; upgrade the vivo vendor plugin to 5.4.3.1 to include launcher badge permissions
+
 ## 1.4.4+543543
 + update Android SDK 5.4.2 → 5.4.3，iOS SDK 保持 5.4.3，HarmonyOS SDK 保持 1.0.1
 + Android: 支持 OPPO 与 vivo 厂商消息角标处理
