@@ -1,3 +1,6 @@
+## 1.4.6+5431544
++ update iOS SDK 5.4.3 → 5.4.4，Android main SDK remains 5.4.3
+
 ## 1.4.5+5431543
 + Android main SDK remains 5.4.3; upgrade the vivo vendor plugin to 5.4.3.1 to include launcher badge permissions
 
