@@ -1,4 +1,12 @@
-cn-document/
+.dart_tool/
+.idea/
+.packages
+.pub/
+build/
+**/build/
+*.iml
+**/*.iml
+**/local.properties
 example/android/app/google-services.json
-cursor.md
-.cursor/
+.DS_Store
+**/.DS_Store
