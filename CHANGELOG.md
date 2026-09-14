@@ -1,3 +1,6 @@
+## 1.4.8+550544
++ update Android SDK and vendor plugins 5.4.4 → 5.5.0，iOS SDK remains 5.4.4
+
 ## 1.4.7+544544
 + update Android SDK and vendor plugins 5.4.3 → 5.4.4，iOS SDK remains 5.4.4
 
