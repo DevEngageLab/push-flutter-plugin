@@ -24,6 +24,7 @@ Register the sdk callback event
       - "onNotificationDeleted":Notification deletion callback, the content is the notification message body
       - "onPlatformToken":Manufacturer token message callback, the content is the manufacturer token message body
       - "onNotificationUnShow":Callback for not displaying notification messages in the foreground (when the notification sent in the background is foreground information)
+      - "onCommandResult":Generic command result callback. Xiaomi message channel subscription results are returned through this event
      
     - iOS Only:
       - "checkNotificationAuthorization":Callback events to notify permission authorization status, callback event returned when iOS calls checkNotificationAuthorization method
@@ -121,6 +122,20 @@ Register the sdk callback event
     - "title": string - Notification title
     - "extras": object - Extended fields (key-value pairs)
 
+- **onCommandResult** - Generic command result callback
+  - Return value type: JSON object, containing the following fields:
+    - "cmd": number - Always `2012` for Xiaomi channel subscription
+    - "errorCode": number - Xiaomi's overall result; `0` means the dialog was displayed and user choices were returned, not that every channel succeeded
+    - "msg": string - Result description; currently usually empty for this command
+    - "extra": object - Xiaomi result fields, plus `subscribe_code` (same as `errorCode`) and `platform` (`1` for Xiaomi)
+
+  `errorCode` values: `-100` unsupported; `-200` authentication failed; `-300` app not foreground or screen off;
+  `-400` another request is in progress; `-500` frequency limited; `-600` invalid parameters; `-700` user cancelled;
+  `-800` no notification permission; `-900` unknown error; `-10000` Xiaomi Push is not registered;
+  `-2147483648` Xiaomi SDK invocation exception.
+
+  When `errorCode` is `0`, `extra.open_channel_result`, when supplied by Xiaomi, is a JSON string containing per-channel results. Per-channel `code` values: `100` created successfully, `-100` creation failed, `-200` rejected, `-300` already created and enabled, `-400` already created but disabled, and `-500` invalid channel.
+
 ##### iOS Only Events
 
 - **checkNotificationAuthorization** - Callback events to notify permission authorization status
@@ -159,6 +174,52 @@ FlutterPluginEngagelab.addEventHandler(
   String event_name = message["event_name"];
   String event_data = message["event_data"];
 });
+```
+
+## Subscribe to Xiaomi message channels (Android only)
+
+### requestSubscribeChannelAndroid
+
+Requests subscription to one or more Xiaomi message channels. This feature currently supports only the Xiaomi
+channel. Results are delivered through `addEventHandler`'s `onMTCommonReceiver` callback with the event name
+`onCommandResult`.
+See the [EngageLab Android SDK documentation](https://www.engagelab.com/zh_CN/docs/app-push/developer-guide/client-sdk-reference/android-sdk/sdk-api-guide#requestsubscribechannel) for the native behavior and limits.
+
+The IDs must be subscription channel IDs created in the Xiaomi Push console. At most three IDs can be passed per
+call; Xiaomi discards additional entries. The dialog can be requested at most once every 30 seconds, and the same
+channel can be requested at most twice per month; exceeding the limit returns `-500`.
+
+#### Interface definition
+
+```dart
+FlutterPluginEngagelab.requestSubscribeChannelAndroid(List<String> channelIds);
+```
+
+#### Code example
+
+```dart
+import 'dart:convert';
+
+FlutterPluginEngagelab.addEventHandler(
+  onMTCommonReceiver: (Map<String, dynamic> message) async {
+    if (message['event_name'] == 'onCommandResult') {
+      final raw = message['event_data'];
+      final result = raw is String ? jsonDecode(raw) : raw;
+      if (result['cmd'] == 2012) {
+        print('Subscription result: ${result['errorCode']}, ${result['extra']}');
+        final channelResult = result['extra']?['open_channel_result'];
+        if (result['errorCode'] == 0 && channelResult is String) {
+          print('Per-channel results: ${jsonDecode(channelResult)}');
+        }
+      }
+    }
+  },
+);
+
+FlutterPluginEngagelab.requestSubscribeChannelAndroid([
+  'channel_id_1',
+  'channel_id_2',
+]);
 ```
 
 

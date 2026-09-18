@@ -24,6 +24,7 @@
       - "onNotificationDeleted":通知消息删除回调，内容为通知消息体
       - "onPlatformToken":厂商token消息回调，内容为厂商token消息体
       - "onNotificationUnShow":在前台，通知消息不显示回调（后台下发的通知是前台信息时）
+      - "onCommandResult":通用命令结果回调，小米消息频道订阅结果通过该事件返回
      
     - iOS Only:
       - "checkNotificationAuthorization":检测通知权限授权情况，iOS调用checkNotificationAuthorization方法的返回回调事件。
@@ -126,6 +127,17 @@
     - "title": string - 通知标题
     - "extras": object - 扩展字段（键值对）
 
+- **onCommandResult** - 通用命令结果回调
+  - 返回值类型：JSON对象，包含以下字段：
+    - "cmd": number - 小米频道订阅回调固定为 `2012`
+    - "errorCode": number - 小米整体结果码；`0` 表示弹窗正常展示并返回用户操作结果，不代表每个频道都订阅成功
+    - "msg": string - 结果描述；当前订阅命令通常为空字符串
+    - "extra": object - 小米扩展字段，并包含 `subscribe_code`（与 `errorCode` 一致）和 `platform`（小米为 `1`）
+
+  `errorCode`：`-100` 不支持、`-200` 鉴权失败、`-300` 应用不在前台或未亮屏、`-400` 正在处理其他订阅请求、`-500` 频控、`-600` 参数无效、`-700` 用户取消、`-800` 无通知权限、`-900` 未知异常、`-10000` 小米推送尚未完成注册、`-2147483648` 调用小米 SDK 异常。
+
+  当 `errorCode` 为 `0` 时，`extra.open_channel_result`（如果小米系统服务返回）为各频道结果的 JSON 字符串。单频道 `code`：`100` 创建成功、`-100` 创建失败、`-200` 用户拒绝、`-300` 已创建且开启、`-400` 已创建但关闭、`-500` 频道无效。
+
 ##### iOS Only 事件
 
 - **checkNotificationAuthorization** - 检测通知权限授权情况
@@ -164,6 +176,50 @@ FlutterPluginEngagelab.addEventHandler(
   String event_name = message["event_name"];
   String event_data = message["event_data"];
 });
+```
+
+## 订阅小米消息频道（仅 Android）
+
+### requestSubscribeChannelAndroid
+
+请求订阅一个或多个小米消息频道。该能力目前仅支持小米通道，结果通过
+`addEventHandler` 的 `onMTCommonReceiver` 回调返回，事件名为 `onCommandResult`。
+原生行为及限制参考 [EngageLab Android SDK requestSubscribeChannel](https://www.engagelab.com/zh_CN/docs/app-push/developer-guide/client-sdk-reference/android-sdk/sdk-api-guide#requestsubscribechannel)。
+
+`channelIds` 必须是在小米推送后台申请的订阅类频道 ID。单次最多传入 3 个，超出部分由小米 SDK 丢弃。
+订阅弹窗 30 秒内最多请求一次；同一频道一个月内最多请求两次，达到上限时返回 `-500`。
+
+#### 接口定义
+
+```dart
+FlutterPluginEngagelab.requestSubscribeChannelAndroid(List<String> channelIds);
+```
+
+#### 代码示例
+
+```dart
+import 'dart:convert';
+
+FlutterPluginEngagelab.addEventHandler(
+  onMTCommonReceiver: (Map<String, dynamic> message) async {
+    if (message['event_name'] == 'onCommandResult') {
+      final raw = message['event_data'];
+      final result = raw is String ? jsonDecode(raw) : raw;
+      if (result['cmd'] == 2012) {
+        print('订阅结果: ${result['errorCode']}, ${result['extra']}');
+        final channelResult = result['extra']?['open_channel_result'];
+        if (result['errorCode'] == 0 && channelResult is String) {
+          print('各频道结果: ${jsonDecode(channelResult)}');
+        }
+      }
+    }
+  },
+);
+
+FlutterPluginEngagelab.requestSubscribeChannelAndroid([
+  'channel_id_1',
+  'channel_id_2',
+]);
 ```
 
 

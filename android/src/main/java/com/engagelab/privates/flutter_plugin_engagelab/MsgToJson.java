@@ -3,6 +3,7 @@ package com.engagelab.privates.flutter_plugin_engagelab;
 import android.os.Bundle;
 
 import com.engagelab.privates.push.api.AliasMessage;
+import com.engagelab.privates.push.api.CmdMessage;
 import com.engagelab.privates.push.api.CustomMessage;
 import com.engagelab.privates.push.api.InAppMessage;
 import com.engagelab.privates.push.api.NotificationMessage;
@@ -16,6 +17,19 @@ import org.json.JSONObject;
 
 
 public class MsgToJson {
+
+    public static String cmdMessageToJson(CmdMessage cmdMessage) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("cmd", cmdMessage.cmd);
+            jsonObject.put("errorCode", cmdMessage.errorCode);
+            jsonObject.put("msg", cmdMessage.msg);
+            jsonObject.put("extra", bundleToJson(cmdMessage.extra));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return jsonObject.toString();
+    }
 
     public static String aliasMessageToJson(AliasMessage aliasMessage) {
         JSONObject jsonObject = new JSONObject();

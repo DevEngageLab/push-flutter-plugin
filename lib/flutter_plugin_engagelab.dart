@@ -476,6 +476,14 @@ class FlutterPluginEngagelab {
     _channel.invokeMethod("clearPlatformToken", []);
   }
 
+  /// 请求订阅小米消息频道（Android only）。
+  ///
+  /// 结果通过 [addEventHandler] 的 `onCommandResult` 事件返回。
+  static requestSubscribeChannelAndroid(List<String> channelIds) {
+    printMy("requestSubscribeChannel");
+    _channel.invokeMethod("requestSubscribeChannel", [channelIds]);
+  }
+
   static setCountryCodeAndroid(country) {
     printMy("setCountryCode");
     _channel.invokeMethod("setCountryCode", [country]);

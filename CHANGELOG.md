@@ -1,3 +1,8 @@
+## 1.4.9+551544
++ update Android SDK and vendor plugins 5.5.0 → 5.5.1，iOS SDK remains 5.4.4
++ Android plugin: add `FlutterPluginEngagelab.requestSubscribeChannelAndroid(channelIds)` for Xiaomi message-channel subscription; results are returned by `addEventHandler` through the `onMTCommonReceiver` event `onCommandResult` (`cmd = 2012`)
++ upgrade Xiaomi Push SDK to 7.12.4
+
 ## 1.4.8+550544
 + update Android SDK and vendor plugins 5.4.4 → 5.5.0，iOS SDK remains 5.4.4
 
