@@ -479,6 +479,13 @@ class FlutterPluginEngagelab {
   /// 请求订阅小米消息频道（Android only）。
   ///
   /// 结果通过 [addEventHandler] 的 `onCommandResult` 事件返回。
+  /// Dispatches the request. Authorization result arrives via onCommandResult (cmd 2013).
+  static Future<void> requestVivoSubscribeChannelAndroid(List<String> channelIds) async {
+    if (Platform.isAndroid) {
+      await _channel.invokeMethod("requestVivoSubscribeChannel", [channelIds]);
+    }
+  }
+
   static requestSubscribeChannelAndroid(List<String> channelIds) {
     printMy("requestSubscribeChannel");
     _channel.invokeMethod("requestSubscribeChannel", [channelIds]);
