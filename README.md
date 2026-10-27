@@ -15,7 +15,7 @@ dependencies:
       
 // by pub:
 dependencies:
-  flutter_plugin_engagelab: 1.3.9+530530
+  flutter_plugin_engagelab: 1.4.10+553544
 ```
 
 ### Configuration
