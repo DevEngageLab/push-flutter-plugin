@@ -130,6 +130,19 @@ class _MyAppState extends State<MyApp> {
                 width: 350,
                 height: 100,
               ),
+              if (Platform.isAndroid)
+                CustomButton(
+                    title: "vivo 通知渠道订阅",
+                    onPressed: () async {
+                      // 初始化并开启通知权限后，替换为 vivo 后台的通知渠道 ID。
+                      // 最终结果通过上面注册的 onMTCommonReceiver 返回 (cmd 2013)。
+                      try {
+                        await FlutterPluginEngagelab.requestVivoSubscribeChannelAndroid(
+                            ["your_vivo_channel_id"]);
+                      } catch (error) {
+                        FlutterPluginEngagelab.printMy("vivo request failed: $error");
+                      }
+                    }),
               Row(children: <Widget>[
                 const Text(" "),
                 CustomButton(

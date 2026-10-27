@@ -35,7 +35,7 @@ import io.flutter.plugin.common.MethodChannel.Result;
 /**
  * FlutterPluginEngagelabPlugin
  */
-public class FlutterPluginEngagelabPlugin implements FlutterPlugin, MethodCallHandler {
+public class FlutterPluginEngagelabPlugin implements FlutterPlugin, MethodCallHandler, io.flutter.embedding.engine.plugins.activity.ActivityAware {
     private static final String TAG = "FlutterEngagelabPlugin";
     /// The MethodChannel that will the communication between Flutter and native Android
     ///
@@ -45,6 +45,12 @@ public class FlutterPluginEngagelabPlugin implements FlutterPlugin, MethodCallHa
     public static FlutterPluginEngagelabPlugin instance;
     private MethodChannel channel;
     private Context context;
+    private android.app.Activity activity;
+    @Override public void onAttachedToActivity(io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding binding) { activity = binding.getActivity(); }
+    @Override public void onDetachedFromActivityForConfigChanges() { activity = null; }
+    @Override public void onReattachedToActivityForConfigChanges(io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding binding) { activity = binding.getActivity(); }
+    @Override public void onDetachedFromActivity() { activity = null; }
+
 
     @Override
     public void onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
@@ -822,8 +828,20 @@ public class FlutterPluginEngagelabPlugin implements FlutterPlugin, MethodCallHa
     }
 
     /**
-     * 请求订阅小米消息频道，结果通过 onCommandResult 回调返回。
+     * 请求订阅 vivo 通知渠道，最终结果通过 onCommandResult 回调返回。
      */
+    void requestVivoSubscribeChannel(JSONArray data, Result result) {
+        if (!"vivo".equalsIgnoreCase(android.os.Build.MANUFACTURER)) { result.success(null); return; }
+        if (activity == null) { result.error("ACTIVITY_UNAVAILABLE", "A foreground Activity is required", null); return; }
+        try {
+            JSONArray ids = data.getJSONArray(0);
+            ArrayList<String> channels = new ArrayList<String>();
+            for (int i = 0; i < ids.length(); i++) channels.add(ids.getString(i));
+            MTPushPrivatesApi.requestVivoSubscribeChannel(activity, channels);
+            result.success(null);
+        } catch (JSONException error) { result.error("PARAMETERS_ERROR", "Expected channel ID list", null); }
+    }
+
     void requestSubscribeChannel(JSONArray data, Result result) {
         try {
             JSONArray channelIdsJson = data.getJSONArray(0);

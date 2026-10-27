@@ -1,3 +1,8 @@
+## 1.4.10+553544 (2026-10-27)
++ Update Android SDK dependencies to 5.5.3; iOS SDK remains 5.4.4.
++ Add `requestVivoSubscribeChannelAndroid(channelIds)` for vivo notification channel subscription; final results arrive through `onMTCommonReceiver` / `onCommandResult` (`cmd = 2013`).
++ Upgrade vivo Push SDK to 4.1.7.0_517 and add API documentation and a button example.
+
 ## 1.4.9+551544
 + update Android SDK and vendor plugins 5.5.0 → 5.5.1，iOS SDK remains 5.4.4
 + Android plugin: add `FlutterPluginEngagelab.requestSubscribeChannelAndroid(channelIds)` for Xiaomi message-channel subscription; results are returned by `addEventHandler` through the `onMTCommonReceiver` event `onCommandResult` (`cmd = 2012`)

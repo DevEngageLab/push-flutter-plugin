@@ -476,9 +476,15 @@ class FlutterPluginEngagelab {
     _channel.invokeMethod("clearPlatformToken", []);
   }
 
-  /// 请求订阅小米消息频道（Android only）。
-  ///
-  /// 结果通过 [addEventHandler] 的 `onCommandResult` 事件返回。
+  /// 请求订阅 vivo 通知渠道（Android only）。
+  /// Future 仅表示请求已提交，最终授权结果通过 onCommandResult (cmd 2013) 返回。
+  static Future<void> requestVivoSubscribeChannelAndroid(List<String> channelIds) async {
+    if (Platform.isAndroid) {
+      await _channel.invokeMethod("requestVivoSubscribeChannel", [channelIds]);
+    }
+  }
+
+  /// 请求订阅小米消息频道；结果通过 onCommandResult (cmd 2012) 返回。
   static requestSubscribeChannelAndroid(List<String> channelIds) {
     printMy("requestSubscribeChannel");
     _channel.invokeMethod("requestSubscribeChannel", [channelIds]);

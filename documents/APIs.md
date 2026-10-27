@@ -658,3 +658,19 @@ Result codes are passed through from the native SDK. iOS returns `0`, `6050`, `6
 final result = await FlutterPluginEngagelab.turnOffPush();
 print('turnOffPush code: ${result?["code"]}, msg: ${result?["msg"]}');
 ```
+
+### requestVivoSubscribeChannelAndroid
+
+Android only. Requires EngageLab SDK 5.5.3, the vivo channel package 5.5.3 (vivo Push SDK 4.1.7.0_517), and an Android 10+ vivo device supporting the subscription dialog. After SDK initialization and notification permission approval, call from a foreground button handler with 1–3 nonempty vivo **notification channel IDs**, not template IDs. Calls on non-vivo devices are ignored without a subscription-result event.
+
+Final results use the existing command callback with `cmd = 2013`; Xiaomi subscription remains `2012`. Native fields `cmd`, `errorCode`, `msg`, and `extra` are preserved. `extra` contains `vivo_subscribe_result`, `platform`, `subscribe_code`, `operate_result`, and the JSON string `channel_operations`. Each channel keeps the vendor fields `channelId` and `operation` (`1`: allowed, `2`: denied). Request dispatch success or `errorCode=0` alone does not mean every channel was authorized; inspect each channel result.
+
+A concurrent request returns `6050`; the SDK timeout returns `6002`. After a timeout or an ambiguous dispatch failure following a vendor request, later vendor terminal results cannot be attributed safely and are discarded for the rest of the process. Retries can also time out; restart the process to restore terminal-result handling.
+
+Register `addEventHandler(onMTCommonReceiver: ...)` before the request; parse `event_data` when `event_name` is `onCommandResult`. The Future acknowledges dispatch only.
+
+```dart
+await FlutterPluginEngagelab.requestVivoSubscribeChannelAndroid(
+  ['your_vivo_channel_id'],
+);
+```
